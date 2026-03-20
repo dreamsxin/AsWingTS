@@ -668,6 +668,84 @@
 }
 
 /* ========================================
+   Separator
+   ======================================== */
+
+.aswing-separator {
+  position: absolute;
+}
+
+.aswing-separator[orientation="horizontal"] {
+  width: 100%;
+  height: 2px;
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #fff;
+}
+
+.aswing-separator[orientation="vertical"] {
+  width: 2px;
+  height: 100%;
+  border-left: 1px solid #ccc;
+  border-right: 1px solid #fff;
+}
+
+/* ========================================
+   ToolBar
+   ======================================== */
+
+.aswing-toolbar {
+  position: absolute;
+  background: #f5f5f5;
+  border: 1px solid #ccc;
+  padding: 2px;
+}
+
+/* ========================================
+   Menu
+   ======================================== */
+
+.aswing-menubar {
+  position: absolute;
+  background: #f5f5f5;
+  border: 1px solid #ccc;
+  padding: 0;
+  display: flex;
+}
+
+.aswing-menu-popup {
+  position: absolute;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  min-width: 150px;
+  padding: 4px 0;
+  z-index: 1000;
+}
+
+.aswing-menu-popup .aswing-button {
+  position: relative;
+  width: 100%;
+  padding: 8px 16px;
+  margin: 0;
+  border: none;
+  background: transparent;
+  text-align: left;
+  border-radius: 0;
+  transition: background 0.15s;
+}
+
+.aswing-menu-popup .aswing-button:hover {
+  background: #f0f0f0;
+}
+
+.aswing-menu-popup hr {
+  margin: 4px 0;
+  border: none;
+  border-top: 1px solid #e0e0e0;
+}
+
+/* ========================================
    JFrame - Window Styles
    ======================================== */
 

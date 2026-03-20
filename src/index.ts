@@ -39,6 +39,11 @@ export { JScrollPane, ScrollPaneConstants } from './org/aswing/JScrollPane.js';
 export { JSlider } from './org/aswing/JSlider.js';
 export { JSpinner } from './org/aswing/JSpinner.js';
 export { JTabbedPane } from './org/aswing/JTabbedPane.js';
+export { JToolBar } from './org/aswing/JToolBar.js';
+export { JSeparator } from './org/aswing/JSeparator.js';
+export { JMenuBar } from './org/aswing/JMenuBar.js';
+export { JMenu } from './org/aswing/JMenu.js';
+export { JMenuItem } from './org/aswing/JMenuItem.js';
 
 // Geometry
 export { IntDimension } from './org/aswing/geom/IntDimension.js';

@@ -62,6 +62,11 @@ AsWingTS is a TypeScript reimplementation of the AsWing Flash/ActionScript UI fr
 - [x] `JSlider` - Slider control (horizontal/vertical)
 - [x] `JSpinner` - Number spinner selector
 - [x] `JTabbedPane` - Tabbed panel container
+- [x] `JToolBar` - Toolbar container
+- [x] `JSeparator` - Separator line
+- [x] `JMenuBar` - Menu bar container
+- [x] `JMenu` - Dropdown menu
+- [x] `JMenuItem` - Menu item
 
 **Documentation:**
 - [x] README.md
