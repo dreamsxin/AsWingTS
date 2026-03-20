@@ -31,16 +31,22 @@
   background: #fff;
 }
 
-/* Button */
+/* ========================================
+   Button States
+   ======================================== */
+
+/* Normal State (Default) */
 .aswing-button {
   position: absolute;
   padding: 6px 12px;
-  background: #f0f0f0;
+  background: linear-gradient(to bottom, #ffffff, #f0f0f0);
   border: 1px solid #ccc;
   border-radius: 3px;
   cursor: pointer;
   font-size: 13px;
-  transition: background-color 0.15s, border-color 0.15s;
+  color: #333;
+  transition: all 0.15s ease;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
   /* Ensure text is centered */
   text-align: center !important;
   display: inline-flex !important;
@@ -49,29 +55,48 @@
   box-sizing: border-box !important;
 }
 
-.aswing-button:hover {
-  background: #e8e8e8;
+/* Hover State (MouseOver) */
+.aswing-button:hover:not(:disabled) {
+  background: linear-gradient(to bottom, #ffffff, #e8e8e8);
   border-color: #bbb;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+  transform: translateY(-1px);
 }
 
-.aswing-button:active {
-  background: #d0d0d0;
+/* Pressed State (Clicked/Active) */
+.aswing-button:active:not(:disabled),
+.aswing-button.pressed {
+  background: linear-gradient(to bottom, #d0d0d0, #c0c0c0);
   border-color: #aaa;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1) inset;
+  transform: translateY(0);
 }
 
-.aswing-button:focus {
+/* Focused State (Keyboard Focus) */
+.aswing-button:focus:not(:disabled) {
   outline: 2px solid #4a90d9;
-  outline-offset: 1px;
-}
-
-.aswing-button.selected {
-  background: #d0e0f0;
+  outline-offset: 2px;
   border-color: #4a90d9;
+  box-shadow: 0 0 0 3px rgba(74, 144, 217, 0.2);
 }
 
+/* Selected State (Toggle buttons) */
+.aswing-button.selected {
+  background: linear-gradient(to bottom, #d0e0f0, #b0d0f0);
+  border-color: #4a90d9;
+  color: #0056b3;
+  box-shadow: 0 1px 2px rgba(74, 144, 217, 0.3);
+}
+
+/* Disabled State */
 .aswing-button:disabled {
-  opacity: 0.5;
+  background: linear-gradient(to bottom, #f5f5f5, #e8e8e8);
+  color: #999;
+  border-color: #ddd;
   cursor: not-allowed;
+  opacity: 0.6;
+  box-shadow: none;
+  transform: none;
 }
 
 /* Fix button text centering with rounded style */
@@ -388,6 +413,302 @@
 .theme-info { }
 .theme-light { }
 .theme-dark { }
+
+/* ========================================
+   New Components
+   ======================================== */
+
+/* Toggle Button */
+.aswing-toggle-button {
+  position: absolute;
+  padding: 6px 12px;
+  background: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.15s;
+}
+
+.aswing-toggle-button:hover {
+  background: #e8e8e8;
+}
+
+.aswing-toggle-button.selected {
+  background: #007bff !important;
+  color: #fff !important;
+  border-color: #0056b3 !important;
+}
+
+.aswing-toggle-button.selected:hover {
+  background: #0056b3 !important;
+}
+
+/* Radio Button */
+.aswing-radiobutton-wrapper {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.aswing-radiobutton {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: #007bff;
+}
+
+.aswing-radiobutton-label {
+  font-size: 13px;
+  color: #333;
+}
+
+/* Text Area */
+.aswing-textarea-wrapper {
+  position: absolute;
+}
+
+.aswing-textarea {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+  resize: both;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.aswing-textarea:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+}
+
+.aswing-textarea:read-only {
+  background: #f5f5f5;
+  cursor: not-allowed;
+}
+
+/* Combo Box */
+.aswing-combobox-wrapper {
+  position: absolute;
+}
+
+.aswing-combobox {
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  font-size: 13px;
+  font-family: inherit;
+  background: #fff;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.aswing-combobox:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+}
+
+/* List */
+.aswing-list-wrapper {
+  position: absolute;
+  overflow: auto;
+  border: 1px solid #ccc;
+  background: #fff;
+}
+
+.aswing-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.aswing-list-item {
+  padding: 8px 12px;
+  cursor: pointer;
+  user-select: none;
+  border-bottom: 1px solid #eee;
+  font-size: 13px;
+  transition: background 0.15s, color 0.15s;
+}
+
+.aswing-list-item:hover {
+  background: #f5f5f5;
+}
+
+.aswing-list-item:last-child {
+  border-bottom: none;
+}
+
+/* Scroll Pane */
+.aswing-scrollpane {
+  position: absolute;
+  overflow: auto;
+  background: #fff;
+  border: 1px solid #ccc;
+}
+
+.aswing-scrollpane::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.aswing-scrollpane::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 5px;
+}
+
+.aswing-scrollpane::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 5px;
+}
+
+.aswing-scrollpane::-webkit-scrollbar-thumb:hover {
+  background: #a1a1a1;
+}
+
+.aswing-viewport {
+  position: relative;
+  min-width: 100%;
+  min-height: 100%;
+}
+
+/* ========================================
+   JFrame - Window Styles
+   ======================================== */
+
+.aswing-frame {
+  position: absolute;
+  background: #fff;
+  border: 1px solid #999;
+  box-shadow: 2px 2px 15px rgba(0,0,0,0.3);
+  overflow: hidden;
+  border-radius: 6px;
+  transition: box-shadow 0.2s;
+}
+
+.aswing-frame:hover {
+  box-shadow: 3px 3px 20px rgba(0,0,0,0.4);
+}
+
+.aswing-frame-titlebar {
+  background: linear-gradient(to bottom, #f5f5f5, #e0e0e0);
+  padding: 0 8px;
+  border-bottom: 1px solid #ccc;
+  cursor: move;
+  user-select: none;
+  height: 28px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 6px 6px 0 0;
+  color: #333;
+  min-width: 0;
+}
+
+.aswing-frame-titlebar > div:first-child {
+  min-width: 0;
+  overflow: hidden;
+  margin-right: 4px;
+}
+
+.aswing-frame-titlebar > div:last-child {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  flex-shrink: 0;
+  width: 28px;
+  height: 100%;
+}
+
+.aswing-frame .window-btn,
+.aswing-frame button.aswing-button {
+  min-width: 24px;
+  width: 24px;
+  height: 24px;
+}
+
+.aswing-frame-titlebar span {
+  font-weight: bold;
+  font-size: 13px;
+  line-height: 1;
+  color: #333;
+  text-shadow: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Frame theme variants (override default) */
+.frame-primary .aswing-frame-titlebar {
+  background: linear-gradient(135deg, #007bff, #0056b3) !important;
+  color: #fff !important;
+}
+.frame-success .aswing-frame-titlebar {
+  background: linear-gradient(135deg, #28a745, #1e7e34) !important;
+  color: #fff !important;
+}
+.frame-danger .aswing-frame-titlebar {
+  background: linear-gradient(135deg, #dc3545, #bd2130) !important;
+  color: #fff !important;
+}
+.frame-warning .aswing-frame-titlebar {
+  background: linear-gradient(135deg, #ffc107, #e0a800) !important;
+  color: #333 !important;
+}
+.frame-info .aswing-frame-titlebar {
+  background: linear-gradient(135deg, #17a2b8, #117a8b) !important;
+  color: #fff !important;
+}
+.frame-dark .aswing-frame-titlebar {
+  background: linear-gradient(135deg, #343a40, #23272b) !important;
+  color: #fff !important;
+}
+
+/* Window control buttons */
+.aswing-frame .window-btn {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 1;
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+
+.aswing-frame .window-btn:hover {
+  background: rgba(255,255,255,0.3);
+}
+
+.aswing-frame .window-btn.close-btn:hover {
+  background: #dc3545;
+}
+
+/* Frame content pane */
+.aswing-frame > .aswing-container {
+  position: absolute;
+  top: 28px;
+  left: 0;
+  width: 100%;
+  height: calc(100% - 28px);
+  overflow: auto;
+  border-radius: 0 0 6px 6px;
+}
 
 /* Label */
 .aswing-label {

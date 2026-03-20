@@ -128,18 +128,14 @@
 
     // Sidebar description
     const sidebarDesc = new JLabel('✅ 验证：点击导航按钮切换内容');
-    sidebarDesc.getElement().style.fontSize = '10px';
-    sidebarDesc.getElement().style.color = '#666';
-    sidebarDesc.setLocation(10, 240);
-    sidebarDesc.setSize(160, 30);
-    sidebarDesc.getElement().style.position = 'absolute';
+    sidebarDesc.setFontSize('10px').setColor('#666');
+    sidebarDesc.setLocation(10, 240).setSize(160, 30);
     sidebarPanel.add(sidebarDesc);
 
     navLabels.forEach((text, index) => {
       const navBtn = new JButton(text);
       navBtn.setLocation(10, 10 + index * 45);
-      navBtn.getElement().style.position = 'absolute';
-      navBtn.getElement().style.width = '160px';
+      // Use API: navBtn.setLocation(10, 10 + index * 45).setSize(160, 35);
       navBtn.getElement().style.background = '#fff';
       navBtn.getElement().style.border = '1px solid #ddd';
       navBtn.getElement().style.borderRadius = '4px';
@@ -184,11 +180,8 @@
 
     // Add some stat cards
     const statsDesc = new JLabel('✅ 验证：嵌套面板内组件定位正确');
-    statsDesc.getElement().style.fontSize = '11px';
-    statsDesc.getElement().style.color = '#666';
-    statsDesc.setLocation(30, 280);
-    statsDesc.setSize(350, 20);
-    statsDesc.getElement().style.position = 'absolute';
+    statsDesc.setFontSize('11px').setColor('#666');
+    statsDesc.setLocation(30, 280).setSize(350, 20);
     contentPanel.add(statsDesc);
 
     const stats = [
@@ -205,25 +198,18 @@
       const cardPanel = new JPanel();
       cardPanel.setLocation(cardX, cardY);
       cardPanel.setSize(180, 100);
-      cardPanel.getElement().style.position = 'absolute';
-      cardPanel.getElement().style.background = '#fff';
-      cardPanel.getElement().style.borderRadius = '8px';
-      cardPanel.getElement().style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
-      cardPanel.getElement().style.padding = '15px';
+      cardPanel.setBackground('#fff').setBorder('1px solid #ddd');
+      // Note: borderRadius and boxShadow need CSS classes or direct style for now
 
       const statLabel = new JLabel(stat.label);
       statLabel.getElement().style.fontSize = '12px';
       statLabel.getElement().style.color = '#666';
-      statLabel.setLocation(0, 5);
-      statLabel.getElement().style.position = 'absolute';
+      statLabel.setLocation(5, 5).setSize(160, 20);
       cardPanel.add(statLabel);
 
       const statValue = new JLabel(stat.value);
-      statValue.getElement().style.fontSize = '28px';
-      statValue.getElement().style.fontWeight = 'bold';
-      statValue.getElement().style.color = '#667eea';
-      statValue.setLocation(0, 40);
-      statValue.getElement().style.position = 'absolute';
+      statValue.setFontSize('24px').setFontWeight('bold').setColor('#667eea');
+      statValue.setLocation(5, 25).setSize(160, 30);
       cardPanel.add(statValue);
 
       contentPanel.add(cardPanel);
@@ -238,19 +224,13 @@
     infoPanel.setSize(200, 662);
 
     const infoTitle = new JLabel('ℹ️ Info');
-    infoTitle.getElement().style.fontWeight = 'bold';
-    infoTitle.getElement().style.color = '#856404';
-    infoTitle.setLocation(10, 10);
-    infoTitle.getElement().style.position = 'absolute';
+    infoTitle.setFontWeight('bold').setColor('#856404');
+    infoTitle.setLocation(10, 10).setSize(180, 25);
     infoPanel.add(infoTitle);
 
-    const infoText = new JLabel('Click navigation buttons to change content. This demonstrates BorderLayout with nested panels.');
-    infoText.getElement().style.fontSize = '11px';
-    infoText.getElement().style.color = '#856404';
-    infoText.setLocation(10, 40);
-    infoText.setSize(180, 200);
-    infoText.getElement().style.position = 'absolute';
-    infoText.getElement().style.lineHeight = '1.6';
+    const infoText = new JLabel('Click navigation buttons to change content.');
+    infoText.setFontSize('11px').setColor('#856404').setLineHeight('1.6');
+    infoText.setLocation(10, 40).setSize(180, 150);
     infoPanel.add(infoText);
 
     mainFrame.getContentPane().add(infoPanel, AsWingConstants.EAST);

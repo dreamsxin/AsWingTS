@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AsWingTS - JFrame Features Demo</title>
+  <link rel="stylesheet" href="../src/styles.css?v=2">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      padding: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      min-height: 100vh;
+    }
+    h1 {
+      text-align: center;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+    .demo-info {
+      text-align: center;
+      color: rgba(255,255,255,0.9);
+      margin-bottom: 20px;
+    }
+    #app {
+      position: relative;
+      width: 100%;
+      max-width: 1400px;
+      height: calc(100vh - 140px);
+      min-height: 700px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+      margin: 0 auto;
+      overflow: auto;
+    }
+    .tip {
+      text-align: center;
+      color: #fff;
+      font-size: 13px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎨 JFrame Features Demo</h1>
+  <p class="demo-info">自定义标题栏、关闭按钮、拖拉功能、Theme 支持</p>
+  <div id="app"></div>
+  <p class="tip">💡 提示：拖动标题栏移动窗口，点击 × 关闭窗口</p>
+
+  <script type="module">
+    import { 
+      AsWingManager, 
+      JFrame, 
+      JButton, 
+      JLabel, 
+      JPanel,
+      BorderLayout,
+      FlowLayout,
+      Theme,
+      Debug
+    } from '../dist/index.js?v=2';
+
+    // Enable debug
+    Debug.enabled = false;
+
+    const app = document.getElementById('app');
+    AsWingManager.initAsStandard(app);
+
+    // === Demo 1: Basic JFrame with close button ===
+    const frame1 = new JFrame('Demo 1: Basic Frame (可关闭)');
+    app.appendChild(frame1.getElement());
+    frame1.setLocation(20, 20);
+    frame1.setSize(300, 180);
+    frame1.setClosable(true);
+    frame1.setDraggable(true);
+    frame1.setOnClose(() => {
+      console.log('Frame 1 closed!');
+      alert('Frame 1 will be hidden!');
+    });
+
+    const panel1 = new JPanel();
+    panel1.setLayout(new FlowLayout());
+    panel1.setLocation(10, 10);
+    panel1.setSize(260, 130);
+    
+    const label1 = new JLabel('Drag the title bar to move\nClick × to close')
+      .setSize(240, 60)
+      .setTextAlign('center')
+      .setLineHeight('2');
+    panel1.add(label1);
+
+    const closeBtn = new JButton('Close Programmatically')
+      .setSize(180, 35)
+      .applyTheme('danger');
+    closeBtn.addEventListener('act', () => frame1.doClose());
+    panel1.add(closeBtn);
+
+    frame1.getContentPane().add(panel1);
+
+    // === Demo 2: Themed JFrame ===
+    const frame2 = new JFrame('Demo 2: Themed Frame');
+    app.appendChild(frame2.getElement());
+    frame2.setLocation(340, 20);
+    frame2.setSize(300, 180);
+    frame2.setClosable(true);
+    frame2.applyTheme('success'); // Apply success theme to title bar
+
+    const panel2 = new JPanel();
+    panel2.setLayout(new FlowLayout());
+    panel2.setLocation(10, 10);
+    panel2.setSize(260, 130);
+    
+    const label2 = new JLabel('This frame has a green theme!\nTitle bar color changes with theme')
+      .setSize(240, 60)
+      .setTextAlign('center')
+      .setLineHeight('2')
+      .setColor('#28a745')
+      .setFontWeight('bold');
+    panel2.add(label2);
+
+    const themeBtn = new JButton('Change Theme')
+      .setSize(150, 35)
+      .applyTheme('primary');
+    
+    const themes = ['primary', 'success', 'danger', 'warning', 'info', 'dark'];
+    let themeIndex = 0;
+    
+    themeBtn.addEventListener('act', () => {
+      themeIndex = (themeIndex + 1) % themes.length;
+      frame2.clearTheme().applyTheme(themes[themeIndex]);
+      label2.setText(`Current theme: ${themes[themeIndex]}`);
+    });
+    panel2.add(themeBtn);
+
+    frame2.getContentPane().add(panel2);
+
+    // === Demo 3: Non-draggable JFrame ===
+    const frame3 = new JFrame('Demo 3: Fixed Position (不可拖动)');
+    app.appendChild(frame3.getElement());
+    frame3.setLocation(20, 220);
+    frame3.setSize(300, 180);
+    frame3.setClosable(true);
+    frame3.setDraggable(false); // Disable dragging
+    frame3.applyTheme('secondary');
+
+    const panel3 = new JPanel();
+    panel3.setLayout(new FlowLayout());
+    panel3.setLocation(10, 10);
+    panel3.setSize(260, 130);
+    
+    const label3 = new JLabel('This frame cannot be dragged\nTitle bar cursor is default')
+      .setSize(240, 60)
+      .setTextAlign('center')
+      .setLineHeight('2');
+    panel3.add(label3);
+
+    const toggleDragBtn = new JButton('Toggle Draggable')
+      .setSize(160, 35)
+      .applyTheme('info');
+    toggleDragBtn.addEventListener('act', () => {
+      const draggable = !frame3.isDraggable();
+      frame3.setDraggable(draggable);
+      label3.setText(`Draggable: ${draggable}\n${draggable ? 'You can now drag this frame' : 'Frame is now fixed'}`);
+    });
+    panel3.add(toggleDragBtn);
+
+    frame3.getContentPane().add(panel3);
+
+    // === Demo 4: Different close operations ===
+    const frame4 = new JFrame('Demo 4: Close Operations');
+    app.appendChild(frame4.getElement());
+    frame4.setLocation(340, 220);
+    frame4.setSize(300, 220);
+    frame4.setClosable(true);
+    frame4.applyTheme('warning');
+
+    const panel4 = new JPanel();
+    panel4.setLayout(new FlowLayout());
+    panel4.setLocation(10, 10);
+    panel4.setSize(260, 170);
+    
+    const label4 = new JLabel('Try different close operations:')
+      .setSize(240, 25)
+      .setTextAlign('center')
+      .setFontWeight('bold');
+    panel4.add(label4);
+
+    const hideBtn = new JButton('HIDE_ON_CLOSE')
+      .setSize(180, 30)
+      .applyTheme('info');
+    hideBtn.addEventListener('act', () => {
+      frame4.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+      frame4.doClose();
+      setTimeout(() => {
+        frame4.setVisible(true);
+        alert('Frame was hidden and then shown again!');
+      }, 100);
+    });
+    panel4.add(hideBtn);
+
+    const disposeBtn = new JButton('DISPOSE_ON_CLOSE')
+      .setSize(180, 30)
+      .applyTheme('danger');
+    disposeBtn.addEventListener('act', () => {
+      frame4.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+      frame4.doClose();
+      setTimeout(() => {
+        const newFrame = new JFrame('New Frame (Disposed & Recreated)');
+        app.appendChild(newFrame.getElement());
+        newFrame.setLocation(340, 220);
+        newFrame.setSize(300, 220);
+        newFrame.applyTheme('warning');
+        newFrame.getContentPane().add(new JLabel('Frame was disposed and recreated!').setSize(200, 30));
+      }, 100);
+    });
+    panel4.add(disposeBtn);
+
+    frame4.getContentPane().add(panel4);
+
+    // === Demo 5: Resizable JFrame ===
+    const frame5 = new JFrame('Demo 5: Resizable Frame');
+    app.appendChild(frame5.getElement());
+    frame5.setLocation(660, 20);
+    frame5.setSize(300, 180);
+    frame5.setClosable(true);
+    frame5.setResizable(true);
+    frame5.applyTheme('info');
+
+    const panel5 = new JPanel();
+    panel5.setLayout(new FlowLayout());
+    panel5.setLocation(10, 10);
+    panel5.setSize(260, 130);
+    
+    const label5 = new JLabel('Resize this frame by dragging\nthe bottom-right corner')
+      .setSize(240, 60)
+      .setTextAlign('center')
+      .setLineHeight('2');
+    panel5.add(label5);
+
+    const resizeInfo = new JLabel('Current size: 300 x 180')
+      .setSize(200, 25)
+      .setFontWeight('bold')
+      .setColor('#17a2b8');
+    panel5.add(resizeInfo);
+
+    // Update size display
+    const resizeObserver = new ResizeObserver(() => {
+      resizeInfo.setText(`Current size: ${frame5.getWidth()} x ${frame5.getHeight()}`);
+    });
+    const frame5Element = frame5.getElement();
+    if (frame5Element) {
+      resizeObserver.observe(frame5Element);
+    }
+
+    frame5.getContentPane().add(panel5);
+
+    console.log('✅ JFrame features demo loaded!');
+
+    // Debug info
+    setTimeout(() => {
+      console.log('=== JFrame Features Debug ===');
+      console.log('Frame 1 closable:', frame1.isClosable());
+      console.log('Frame 1 draggable:', frame1.isDraggable());
+      console.log('Frame 2 theme:', frame2.getAppliedThemes());
+      console.log('Frame 3 draggable:', frame3.isDraggable());
+      console.log('Frame 5 resizable:', frame5.isResizable());
+      
+      // Debug close button
+      console.log('--- Title Bar Elements Debug ---');
+      const frames = [frame1, frame2, frame3, frame4, frame5];
+      frames.forEach((frame, i) => {
+        const frameAny = frame;
+        const titleBar = frameAny._titleBar;
+        const closeButton = frameAny._closeButton;
+        
+        console.log(`\n=== Frame ${i+1} ===`);
+        console.log('Frame size:', frame.getWidth(), 'x', frame.getHeight());
+        console.log('Frame location:', frame.getX(), frame.getY());
+        
+        let titleBarRect = null;
+        
+        if (titleBar) {
+          console.log('Title bar element:', titleBar);
+          console.log('Title bar width:', titleBar.offsetWidth);
+          console.log('Title bar height:', titleBar.offsetHeight);
+          console.log('Title bar children count:', titleBar.children.length);
+          
+          for (let j = 0; j < titleBar.children.length; j++) {
+            const child = titleBar.children[j];
+            const rect = child.getBoundingClientRect();
+            console.log(`  Child ${j}:`, child.className);
+            console.log(`    Offset: ${child.offsetLeft} x ${child.offsetTop}`);
+            console.log(`    Size: ${child.offsetWidth} x ${child.offsetHeight}`);
+            console.log(`    Screen rect: x=${rect.left.toFixed(1)}, y=${rect.top.toFixed(1)}, w=${rect.width}, h=${rect.height}`);
+          }
+          
+          titleBarRect = titleBar.getBoundingClientRect();
+          console.log('Title bar screen rect:', 'x=', titleBarRect.left.toFixed(1), ', y=', titleBarRect.top.toFixed(1), ', w=', titleBarRect.width, ', h=', titleBarRect.height);
+        }
+        
+        if (closeButton?.getElement()) {
+          const btnEl = closeButton.getElement();
+          const btnRect = btnEl.getBoundingClientRect();
+          console.log('Close button:');
+          console.log('  Parent:', btnEl.parentElement?.className);
+          console.log('  Screen rect: x=', btnRect.left.toFixed(1), ', y=', btnRect.top.toFixed(1), ', w=', btnRect.width, ', h=', btnRect.height);
+          if (titleBarRect) {
+            console.log('  Should be at right edge: x=', (titleBarRect.right - 24).toFixed(1));
+          }
+        }
+      });
+      
+      console.log('✅ All frames verified!');
+      
+      // Check if close button is within title bar bounds
+      console.log('\n=== Boundary Check ===');
+      frames.forEach((frame, i) => {
+        const frameAny = frame;
+        const titleBar = frameAny._titleBar;
+        const closeButton = frameAny._closeButton;
+        
+        if (titleBar && closeButton?.getElement()) {
+          const titleBarRect = titleBar.getBoundingClientRect();
+          const btnRect = closeButton.getElement().getBoundingClientRect();
+          
+          const isWithinBounds = btnRect.right <= titleBarRect.right;
+          const overflow = btnRect.right - titleBarRect.right;
+          
+          console.log(`Frame ${i+1}: ${isWithinBounds ? '✅ OK' : '❌ OVERFLOW'} (overflow: ${overflow.toFixed(1)}px)`);
+        }
+      });
+    }, 500);
+  </script>
+</body>
+</html>

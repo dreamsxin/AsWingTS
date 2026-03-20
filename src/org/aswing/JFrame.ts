@@ -2,16 +2,27 @@ import { Container } from './Container.js';
 import { BorderLayout } from './BorderLayout.js';
 import { IntDimension } from './geom/IntDimension.js';
 import { AsWingManager } from './AsWingManager.js';
+import { JButton } from './JButton.js';
+import { AWEvent } from './event/AWEvent.js';
 
 /**
  * A top-level window with a title and border.
+ * Supports custom title bar, close button, dragging, and themes.
  */
 export class JFrame extends Container {
   private _title: string;
   private _closable: boolean;
+  private _resizable: boolean;
+  private _draggable: boolean;
   private _titleBar: HTMLElement | null = null;
   private _titleLabel: HTMLElement | null = null;
+  private _closeButton: JButton | null = null;
+  private _minimizeButton: JButton | null = null;
+  private _maximizeButton: JButton | null = null;
   private _contentPane: Container | null = null;
+  private _dragOffsetX: number = 0;
+  private _dragOffsetY: number = 0;
+  private _isDragging: boolean = false;
 
   private _titleBarHeight: number = 28;
 
@@ -19,8 +30,10 @@ export class JFrame extends Container {
     super();
     this._name = 'JFrame';
     this._title = title;
-    this._closable = false;
-    this._defaultCloseOperation = JFrame.DO_NOTHING_ON_CLOSE;
+    this._closable = true;
+    this._resizable = true;
+    this._draggable = true;
+    this._defaultCloseOperation = JFrame.HIDE_ON_CLOSE;
     // Initialize content pane eagerly
     this._contentPane = new Container();
     this._contentPane.setLayout(new BorderLayout());
@@ -29,8 +42,10 @@ export class JFrame extends Container {
   static readonly DO_NOTHING_ON_CLOSE = 0;
   static readonly HIDE_ON_CLOSE = 1;
   static readonly DISPOSE_ON_CLOSE = 2;
+  static readonly EXIT_ON_CLOSE = 3;
 
   private _defaultCloseOperation: number;
+  private _onCloseCallback: (() => void) | null = null;
 
   override createRootElement(): HTMLElement {
     const element = document.createElement('div');
@@ -40,32 +55,119 @@ export class JFrame extends Container {
     element.style.border = '1px solid #999';
     element.style.boxShadow = '2px 2px 10px rgba(0,0,0,0.3)';
     element.style.overflow = 'hidden';
+    element.style.borderRadius = '6px';
 
     // Create title bar
     this._titleBar = document.createElement('div');
     this._titleBar.className = 'aswing-frame-titlebar';
     this._titleBar.style.background = 'linear-gradient(to bottom, #f5f5f5, #e0e0e0)';
     this._titleBar.style.padding = '0 8px';
-    this._titleBar.style.borderBottom = '1px solid #999';
-    this._titleBar.style.cursor = 'default';
+    this._titleBar.style.borderBottom = 'none';
+    this._titleBar.style.cursor = 'move';
     this._titleBar.style.userSelect = 'none';
-    this._titleBar.style.height = '28px';
+    this._titleBar.style.height = `${this._titleBarHeight}px`;
     this._titleBar.style.boxSizing = 'border-box';
     this._titleBar.style.display = 'flex';
     this._titleBar.style.alignItems = 'center';
-    this._titleBar.style.overflow = 'hidden';
+    this._titleBar.style.justifyContent = 'space-between';
+    this._titleBar.style.borderRadius = '6px 6px 0 0';
+    this._titleBar.style.color = '#fff';
+
+    // Left side: Title
+    const titleContainer = document.createElement('div');
+    titleContainer.style.display = 'flex';
+    titleContainer.style.alignItems = 'center';
+    titleContainer.style.gap = '8px';
+    titleContainer.style.flex = '1';
+    titleContainer.style.minWidth = '0'; // Allow shrinking
+    titleContainer.style.overflow = 'hidden'; // Hide overflow text
+    titleContainer.style.marginRight = '4px'; // Gap before controls
 
     this._titleLabel = document.createElement('span');
     this._titleLabel.textContent = this._title;
     this._titleLabel.style.fontWeight = 'bold';
     this._titleLabel.style.fontSize = '13px';
     this._titleLabel.style.lineHeight = '1';
+    this._titleLabel.style.color = '#333';
+    this._titleLabel.style.textShadow = 'none';
+    this._titleLabel.style.whiteSpace = 'nowrap';
+    this._titleLabel.style.overflow = 'hidden';
+    this._titleLabel.style.textOverflow = 'ellipsis';
 
-    this._titleBar.appendChild(this._titleLabel);
+    titleContainer.appendChild(this._titleLabel);
+    this._titleBar.appendChild(titleContainer);
+
+    // Right side: Window controls
+    const controlsContainer = document.createElement('div');
+    controlsContainer.style.display = 'flex';
+    controlsContainer.style.alignItems = 'center';
+    controlsContainer.style.gap = '4px';
+    controlsContainer.style.flexShrink = '0';
+    controlsContainer.style.width = '28px'; // Fixed width for close button
+    controlsContainer.style.height = '100%';
+    controlsContainer.style.marginLeft = 'auto'; // Push to right
+    controlsContainer.style.justifyContent = 'flex-end';
+
+    // Minimize button (optional)
+    if (this._minimizeButton) {
+      const minEl = this._minimizeButton.getElement();
+      if (minEl) {
+        minEl.style.margin = '0';
+        controlsContainer.appendChild(minEl);
+      }
+    }
+
+    // Maximize button (optional)
+    if (this._maximizeButton) {
+      const maxEl = this._maximizeButton.getElement();
+      if (maxEl) {
+        maxEl.style.margin = '0';
+        controlsContainer.appendChild(maxEl);
+      }
+    }
+
+    // Close button
+    if (this._closable) {
+      this._closeButton = new JButton('×');
+      // Force element creation first
+      const closeBtnElement = this._closeButton.getElement()!;
+      // Then set size to ensure CSS is applied
+      this._closeButton.setSize(24, 24);
+      closeBtnElement.style.padding = '0';
+      closeBtnElement.style.fontSize = '18px';
+      closeBtnElement.style.fontWeight = 'bold';
+      closeBtnElement.style.lineHeight = '1';
+      closeBtnElement.style.background = 'transparent';
+      closeBtnElement.style.color = '#666';
+      closeBtnElement.style.border = 'none';
+      closeBtnElement.style.borderRadius = '4px';
+      closeBtnElement.style.cursor = 'pointer';
+      closeBtnElement.style.width = '24px';
+      closeBtnElement.style.height = '24px';
+      closeBtnElement.style.minWidth = '24px'; // Ensure minimum width
+      closeBtnElement.style.display = 'flex';
+      closeBtnElement.style.alignItems = 'center';
+      closeBtnElement.style.justifyContent = 'center';
+      closeBtnElement.style.flexShrink = '0';
+      closeBtnElement.style.margin = '0';
+      
+      this._closeButton.addEventListener('act', () => {
+        this.doClose();
+      });
+      
+      controlsContainer.appendChild(closeBtnElement);
+    }
+
+    this._titleBar.appendChild(controlsContainer);
+    
+    // Force reflow to ensure flex layout is calculated
+    void controlsContainer.offsetWidth;
     element.appendChild(this._titleBar);
 
-    // Store title bar height
-    this._titleBarHeight = 28;
+    // Setup dragging
+    if (this._draggable) {
+      this._setupDragging(element);
+    }
 
     // Attach content pane element
     if (this._contentPane) {
@@ -75,7 +177,8 @@ export class JFrame extends Container {
       contentElement.style.left = '0';
       contentElement.style.width = '100%';
       contentElement.style.height = `calc(100% - ${this._titleBarHeight}px)`;
-      contentElement.style.overflow = 'hidden';
+      contentElement.style.overflow = 'auto';
+      contentElement.style.borderRadius = '0 0 6px 6px';
       element.appendChild(contentElement);
     }
 
@@ -97,34 +200,6 @@ export class JFrame extends Container {
    */
   getTitle(): string {
     return this._title;
-  }
-
-  /**
-   * Sets whether the frame can be closed.
-   */
-  setClosable(closable: boolean): void {
-    this._closable = closable;
-  }
-
-  /**
-   * Returns whether the frame is closable.
-   */
-  isClosable(): boolean {
-    return this._closable;
-  }
-
-  /**
-   * Sets the default close operation.
-   */
-  setDefaultCloseOperation(operation: number): void {
-    this._defaultCloseOperation = operation;
-  }
-
-  /**
-   * Gets the default close operation.
-   */
-  getDefaultCloseOperation(): number {
-    return this._defaultCloseOperation;
   }
 
   /**
@@ -150,6 +225,180 @@ export class JFrame extends Container {
    */
   override add(child: any, constraints?: any): any {
     return this.getContentPane().add(child, constraints);
+  }
+
+  /**
+   * Sets whether the frame is closable.
+   * Chainable - returns this for method chaining.
+   */
+  setClosable(closable: boolean): this {
+    this._closable = closable;
+    return this;
+  }
+
+  /**
+   * Returns whether the frame is closable.
+   */
+  isClosable(): boolean {
+    return this._closable;
+  }
+
+  /**
+   * Sets whether the frame is draggable.
+   * Chainable - returns this for method chaining.
+   */
+  setDraggable(draggable: boolean): this {
+    this._draggable = draggable;
+    if (this._titleBar) {
+      this._titleBar.style.cursor = draggable ? 'move' : 'default';
+    }
+    return this;
+  }
+
+  /**
+   * Returns whether the frame is draggable.
+   */
+  isDraggable(): boolean {
+    return this._draggable;
+  }
+
+  /**
+   * Sets whether the frame is resizable.
+   * Chainable - returns this for method chaining.
+   */
+  setResizable(resizable: boolean): this {
+    this._resizable = resizable;
+    if (this._element) {
+      this._element.style.resize = resizable ? 'both' : 'none';
+    }
+    return this;
+  }
+
+  /**
+   * Returns whether the frame is resizable.
+   */
+  isResizable(): boolean {
+    return this._resizable;
+  }
+
+  /**
+   * Sets the default close operation.
+   * Chainable - returns this for method chaining.
+   */
+  setDefaultCloseOperation(operation: number): this {
+    this._defaultCloseOperation = operation;
+    return this;
+  }
+
+  /**
+   * Gets the default close operation.
+   */
+  getDefaultCloseOperation(): number {
+    return this._defaultCloseOperation;
+  }
+
+  /**
+   * Sets a custom close callback.
+   * Chainable - returns this for method chaining.
+   */
+  setOnClose(callback: () => void): this {
+    this._onCloseCallback = callback;
+    return this;
+  }
+
+  /**
+   * Performs the close operation.
+   */
+  doClose(): void {
+    // Call custom callback first
+    if (this._onCloseCallback) {
+      this._onCloseCallback();
+      return;
+    }
+
+    // Handle default close operation
+    switch (this._defaultCloseOperation) {
+      case JFrame.DO_NOTHING_ON_CLOSE:
+        // Do nothing
+        break;
+      case JFrame.HIDE_ON_CLOSE:
+        this.setVisible(false);
+        break;
+      case JFrame.DISPOSE_ON_CLOSE:
+        if (this._element && this._element.parentElement) {
+          this._element.parentElement.removeChild(this._element);
+        }
+        break;
+      case JFrame.EXIT_ON_CLOSE:
+        // In browser context, just hide
+        this.setVisible(false);
+        break;
+    }
+
+    this.dispatchEvent(new AWEvent('windowClosed'));
+  }
+
+  /**
+   * Minimizes the frame.
+   */
+  minimize(): this {
+    // Could implement minimize functionality
+    return this;
+  }
+
+  /**
+   * Maximizes the frame.
+   */
+  maximize(): this {
+    if (this._element && this._element.parentElement) {
+      const parent = this._element.parentElement;
+      this.setSize(parent.clientWidth, parent.clientHeight);
+      this.setLocation(0, 0);
+    }
+    return this;
+  }
+
+  /**
+   * Restores the frame to its previous size.
+   */
+  restore(): this {
+    // Could implement restore functionality
+    return this;
+  }
+
+  /**
+   * Sets up dragging functionality.
+   */
+  private _setupDragging(element: HTMLElement): void {
+    if (!this._titleBar) return;
+
+    this._titleBar.addEventListener('mousedown', (e) => {
+      // Don't start drag if clicking on buttons
+      if ((e.target as HTMLElement).closest('button')) return;
+
+      this._isDragging = true;
+      this._dragOffsetX = e.clientX - this._x;
+      this._dragOffsetY = e.clientY - this._y;
+
+      // Bring to front
+      element.style.zIndex = '1000';
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (!this._isDragging) return;
+
+      const newX = e.clientX - this._dragOffsetX;
+      const newY = e.clientY - this._dragOffsetY;
+
+      this.setLocationXY(newX, newY);
+    });
+
+    document.addEventListener('mouseup', () => {
+      if (this._isDragging && this._element) {
+        this._element.style.zIndex = '';
+      }
+      this._isDragging = false;
+    });
   }
 
   /**
@@ -188,6 +437,60 @@ export class JFrame extends Container {
         root.appendChild(this._element!);
       }
     }
+    return this;
+  }
+
+  /**
+   * Applies a theme to the frame title bar.
+   * Chainable - returns this for method chaining.
+   */
+  override applyTheme(themeName: string | string[], clearExisting: boolean = false): this {
+    super.applyTheme(themeName, clearExisting);
+    
+    // Apply theme to title bar
+    const themes = Array.isArray(themeName) ? themeName : [themeName];
+    const themeClasses = themes.map(t => `frame-${t}`).join(' ');
+    
+    if (this._titleBar) {
+      if (clearExisting) {
+        this._titleBar.className = 'aswing-frame-titlebar';
+      }
+      this._titleBar.classList.add(...themes.map(t => `frame-${t}`));
+      
+      // Apply gradient based on theme (overrides default)
+      const themeGradients: Record<string, string> = {
+        'primary': 'linear-gradient(135deg, #007bff, #0056b3)',
+        'secondary': 'linear-gradient(135deg, #6c757d, #545b62)',
+        'success': 'linear-gradient(135deg, #28a745, #1e7e34)',
+        'danger': 'linear-gradient(135deg, #dc3545, #bd2130)',
+        'warning': 'linear-gradient(135deg, #ffc107, #e0a800)',
+        'info': 'linear-gradient(135deg, #17a2b8, #117a8b)',
+        'light': 'linear-gradient(135deg, #f8f9fa, #e2e6ea)',
+        'dark': 'linear-gradient(135deg, #343a40, #23272b)',
+      };
+      
+      for (const theme of themes) {
+        if (themeGradients[theme]) {
+          this._titleBar.style.background = themeGradients[theme];
+          // Update text color for dark themes
+          if (['primary', 'success', 'danger', 'info', 'dark'].includes(theme)) {
+            if (this._titleLabel) this._titleLabel.style.color = '#fff';
+            if (this._closeButton) {
+              const closeEl = this._closeButton.getElement();
+              if (closeEl) closeEl.style.color = '#fff';
+            }
+          } else {
+            if (this._titleLabel) this._titleLabel.style.color = '#333';
+            if (this._closeButton) {
+              const closeEl = this._closeButton.getElement();
+              if (closeEl) closeEl.style.color = '#666';
+            }
+          }
+          break;
+        }
+      }
+    }
+    
     return this;
   }
 

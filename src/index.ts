@@ -28,8 +28,14 @@ export { JLabel } from './org/aswing/JLabel.js';
 export { JPanel } from './org/aswing/JPanel.js';
 export { JFrame } from './org/aswing/JFrame.js';
 export { JTextField } from './org/aswing/JTextField.js';
+export { JTextArea } from './org/aswing/JTextArea.js';
 export { JCheckBox } from './org/aswing/JCheckBox.js';
 export { JProgressBar } from './org/aswing/JProgressBar.js';
+export { JToggleButton } from './org/aswing/JToggleButton.js';
+export { JRadioButton, ButtonGroup } from './org/aswing/JRadioButton.js';
+export { JComboBox } from './org/aswing/JComboBox.js';
+export { JList, ListSelectionModel } from './org/aswing/JList.js';
+export { JScrollPane, ScrollPaneConstants } from './org/aswing/JScrollPane.js';
 
 // Geometry
 export { IntDimension } from './org/aswing/geom/IntDimension.js';

@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AsWingTS - Advanced Components Demo</title>
+  <link rel="stylesheet" href="../src/styles.css?v=2">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      padding: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      min-height: 100vh;
+    }
+    h1 {
+      text-align: center;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+    .demo-info {
+      text-align: center;
+      color: rgba(255,255,255,0.9);
+      margin-bottom: 20px;
+    }
+    #app {
+      position: relative;
+      width: 100%;
+      max-width: 1400px;
+      height: calc(100vh - 140px);
+      min-height: 800px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+      margin: 0 auto;
+      overflow: auto;
+    }
+    .tip {
+      text-align: center;
+      color: #fff;
+      font-size: 13px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🚀 Advanced Components Demo</h1>
+  <p class="demo-info">展示新增组件：JToggleButton, JRadioButton, JTextArea, JComboBox, JList, JScrollPane</p>
+  <div id="app"></div>
+  <p class="tip">💡 提示：所有组件支持链式调用和主题系统</p>
+
+  <script type="module">
+    import { 
+      AsWingManager, 
+      JFrame, 
+      JButton, 
+      JLabel, 
+      JPanel,
+      JTextField,
+      JTextArea,
+      JCheckBox,
+      JToggleButton,
+      JRadioButton,
+      ButtonGroup,
+      JComboBox,
+      JList,
+      JScrollPane,
+      ScrollPaneConstants,
+      ListSelectionModel,
+      BorderLayout,
+      FlowLayout,
+      AsWingConstants,
+      Theme,
+      Debug
+    } from '../dist/index.js?v=2';
+
+    // Enable debug
+    Debug.enabled = false;
+
+    const app = document.getElementById('app');
+    AsWingManager.initAsStandard(app);
+
+    // === Demo 1: JToggleButton ===
+    const frame1 = new JFrame('Demo 1: JToggleButton (切换按钮)');
+    app.appendChild(frame1.getElement());
+    frame1.setLocation(20, 20);
+    frame1.setSize(320, 200);
+
+    const togglePanel = new JPanel();
+    togglePanel.setLayout(new FlowLayout());
+    togglePanel.setLocation(10, 10);
+    togglePanel.setSize(280, 150);
+    togglePanel.setBackground('#f8f9fa').setBorder('1px solid #dee2e6');
+
+    const toggleBtn1 = new JToggleButton('Toggle 1', false)
+      .setSize(100, 35)
+      .applyTheme('primary');
+    toggleBtn1.addEventListener('act', () => {
+      console.log('Toggle 1:', toggleBtn1.isSelected() ? 'ON' : 'OFF');
+    });
+    togglePanel.add(toggleBtn1);
+
+    const toggleBtn2 = new JToggleButton('Toggle 2', true)
+      .setSize(100, 35)
+      .applyTheme('success');
+    togglePanel.add(toggleBtn2);
+
+    const toggleBtn3 = new JToggleButton('Toggle 3', false)
+      .setSize(100, 35)
+      .applyTheme('danger');
+    togglePanel.add(toggleBtn3);
+
+    frame1.getContentPane().add(togglePanel);
+
+    // === Demo 2: JRadioButton ===
+    const frame2 = new JFrame('Demo 2: JRadioButton (单选按钮)');
+    app.appendChild(frame2.getElement());
+    frame2.setLocation(360, 20);
+    frame2.setSize(320, 200);
+
+    const radioPanel = new JPanel();
+    radioPanel.setLayout(new FlowLayout());
+    radioPanel.setLocation(10, 10);
+    radioPanel.setSize(280, 150);
+    radioPanel.setBackground('#f8f9fa').setBorder('1px solid #dee2e6');
+
+    const radioGroup = new ButtonGroup();
+    
+    const radio1 = new JRadioButton('Option 1', true)
+      .setSize(100, 25);
+    radioGroup.add(radio1);
+    radioPanel.add(radio1);
+
+    const radio2 = new JRadioButton('Option 2', false)
+      .setSize(100, 25);
+    radioGroup.add(radio2);
+    radioPanel.add(radio2);
+
+    const radio3 = new JRadioButton('Option 3', false)
+      .setSize(100, 25);
+    radioGroup.add(radio3);
+    radioPanel.add(radio3);
+
+    const radioResult = new JLabel('Selected: Option 1')
+      .setSize(150, 25)
+      .setFontWeight('bold')
+      .setColor('#007bff');
+    radioPanel.add(radioResult);
+
+    radio1.addEventListener('act', () => radioResult.setText('Selected: Option 1'));
+    radio2.addEventListener('act', () => radioResult.setText('Selected: Option 2'));
+    radio3.addEventListener('act', () => radioResult.setText('Selected: Option 3'));
+
+    frame2.getContentPane().add(radioPanel);
+
+    // === Demo 3: JTextArea ===
+    const frame3 = new JFrame('Demo 3: JTextArea (多行文本)');
+    app.appendChild(frame3.getElement());
+    frame3.setLocation(700, 20);
+    frame3.setSize(320, 300);
+
+    const textAreaPanel = new JPanel();
+    textAreaPanel.setLayout(new BorderLayout(5, 5));
+    textAreaPanel.setLocation(10, 10);
+    textAreaPanel.setSize(280, 230);
+
+    const textArea = new JTextArea('Enter your text here...\n\n支持多行输入\nSupports multiple lines', 8, 30)
+      .setSize(260, 150)
+      .setPlaceholder('Type something...');
+    textAreaPanel.add(textArea, AsWingConstants.CENTER);
+
+    const textAreaBtns = new JPanel();
+    textAreaBtns.setLayout(new FlowLayout());
+    
+    const clearBtn = new JButton('Clear')
+      .setSize(80, 30)
+      .applyTheme('secondary');
+    clearBtn.addEventListener('act', () => textArea.setText(''));
+    textAreaBtns.add(clearBtn);
+
+    const appendBtn = new JButton('Append')
+      .setSize(80, 30)
+      .applyTheme('primary');
+    appendBtn.addEventListener('act', () => textArea.append('\n[Appended text]'));
+    textAreaBtns.add(appendBtn);
+
+    textAreaPanel.add(textAreaBtns, AsWingConstants.SOUTH);
+
+    frame3.getContentPane().add(textAreaPanel);
+
+    // === Demo 4: JComboBox ===
+    const frame4 = new JFrame('Demo 4: JComboBox (下拉选择)');
+    app.appendChild(frame4.getElement());
+    frame4.setLocation(20, 240);
+    frame4.setSize(320, 200);
+
+    const comboPanel = new JPanel();
+    comboPanel.setLayout(new FlowLayout());
+    comboPanel.setLocation(10, 10);
+    comboPanel.setSize(280, 150);
+    comboPanel.setBackground('#f8f9fa').setBorder('1px solid #dee2e6');
+
+    const comboLabel = new JLabel('Select fruit:')
+      .setSize(100, 25);
+    comboPanel.add(comboLabel);
+
+    const fruits = ['🍎 Apple', '🍌 Banana', '🍇 Grape', '🍊 Orange', '🍓 Strawberry'];
+    const comboBox = new JComboBox(fruits)
+      .setSize(150, 35);
+    comboBox.addEventListener('act', () => {
+      console.log('Selected:', comboBox.getSelectedItem());
+      comboResult.setText(`Selected: ${comboBox.getSelectedItem()}`);
+    });
+    comboPanel.add(comboBox);
+
+    const comboResult = new JLabel('Selected: 🍎 Apple')
+      .setSize(200, 25)
+      .setFontWeight('bold')
+      .setColor('#28a745');
+    comboPanel.add(comboResult);
+
+    const addBtn = new JButton('Add Item')
+      .setSize(100, 30)
+      .applyTheme('primary');
+    addBtn.addEventListener('act', () => {
+      const count = comboBox.getItemCount() + 1;
+      const newItem = `🍒 Cherry ${count}`;
+      comboBox.addItem(newItem);
+      comboResult.setText(`Selected: ${newItem}`);
+      console.log('Added:', newItem);
+      console.log('Total items:', comboBox.getItemCount());
+    });
+    comboPanel.add(addBtn);
+
+    frame4.getContentPane().add(comboPanel);
+
+    // === Demo 5: JList ===
+    const frame5 = new JFrame('Demo 5: JList (列表)');
+    app.appendChild(frame5.getElement());
+    frame5.setLocation(360, 240);
+    frame5.setSize(320, 280);
+
+    const listPanel = new JPanel();
+    listPanel.setLayout(new BorderLayout(5, 5));
+    listPanel.setLocation(10, 10);
+    listPanel.setSize(280, 230);
+
+    const items = [
+      '📄 Document 1',
+      '📄 Document 2',
+      '📄 Document 3',
+      '📁 Folder 1',
+      '📁 Folder 2',
+      '🖼️ Image 1',
+      '🖼️ Image 2',
+      '🎵 Music 1',
+      '🎵 Music 2',
+      '🎬 Video 1'
+    ];
+
+    const list = new JList(items)
+      .setSize(200, 150)
+      .setSelectionMode(ListSelectionModel.SINGLE);
+    list.addEventListener('act', () => {
+      console.log('Selected:', list.getSelectedValue());
+      listResult.setText(`Selected: ${list.getSelectedValue()}`);
+    });
+
+    const listScrollPane = new JScrollPane(list)
+      .setSize(220, 160);
+    listPanel.add(listScrollPane, AsWingConstants.CENTER);
+
+    const listResult = new JLabel('Selected: None')
+      .setSize(200, 25)
+      .setFontWeight('bold')
+      .setColor('#17a2b8');
+    listPanel.add(listResult, AsWingConstants.SOUTH);
+
+    frame5.getContentPane().add(listPanel);
+
+    // === Demo 6: JScrollPane ===
+    const frame6 = new JFrame('Demo 6: JScrollPane (滚动容器)');
+    app.appendChild(frame6.getElement());
+    frame6.setLocation(700, 340);
+    frame6.setSize(320, 280);
+
+    const scrollPanel = new JPanel();
+    scrollPanel.setLayout(new BorderLayout());
+    scrollPanel.setLocation(10, 10);
+    scrollPanel.setSize(280, 230);
+
+    // Create content larger than viewport
+    const contentPanel = new JPanel();
+    contentPanel.setLayout(new FlowLayout());
+    contentPanel.setSize(400, 400);
+    contentPanel.getElement().style.background = 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)';
+
+    for (let i = 1; i <= 20; i++) {
+      const btn = new JButton(`Btn ${i}`)
+        .setSize(80, 30)
+        .applyTheme('light');
+      contentPanel.add(btn);
+    }
+
+    const scrollPane = new JScrollPane(contentPanel, 
+      ScrollPaneConstants.AS_NEEDED, 
+      ScrollPaneConstants.AS_NEEDED)
+      .setSize(260, 180);
+    scrollPanel.add(scrollPane, AsWingConstants.CENTER);
+
+    const scrollBtns = new JPanel();
+    scrollBtns.setLayout(new FlowLayout());
+    
+    const topBtn = new JButton('Top')
+      .setSize(70, 28)
+      .applyTheme('secondary');
+    topBtn.addEventListener('act', () => scrollPane.scrollToTop());
+    scrollBtns.add(topBtn);
+
+    const bottomBtn = new JButton('Bottom')
+      .setSize(70, 28)
+      .applyTheme('secondary');
+    bottomBtn.addEventListener('act', () => scrollPane.scrollToBottom());
+    scrollBtns.add(bottomBtn);
+
+    scrollPanel.add(scrollBtns, AsWingConstants.SOUTH);
+
+    frame6.getContentPane().add(scrollPanel);
+
+    console.log('✅ Advanced components demo loaded!');
+
+    // Debug info
+    setTimeout(() => {
+      console.log('=== Advanced Components Debug ===');
+      console.log('Toggle buttons:', togglePanel.getComponentCount());
+      console.log('Radio buttons:', radioGroup.getButtonCount());
+      console.log('ComboBox items:', comboBox.getItemCount());
+      console.log('List items:', list.getSize());
+      console.log('✅ All components verified!');
+    }, 500);
+  </script>
+</body>
+</html>

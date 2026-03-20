@@ -51,8 +51,14 @@ AsWingTS is a TypeScript reimplementation of the AsWing Flash/ActionScript UI fr
 - [x] `JPanel` - Generic container panel
 - [x] `JFrame` - Top-level window with title bar
 - [x] `JTextField` - Single-line text input
+- [x] `JTextArea` - Multi-line text area
 - [x] `JCheckBox` - Checkbox with label
 - [x] `JProgressBar` - Progress indicator (horizontal/vertical)
+- [x] `JToggleButton` - Toggle button
+- [x] `JRadioButton` - Radio button with ButtonGroup
+- [x] `JComboBox` - Dropdown selection box
+- [x] `JList` - Scrollable list with selection
+- [x] `JScrollPane` - Scrollable container
 
 **Documentation:**
 - [x] README.md
