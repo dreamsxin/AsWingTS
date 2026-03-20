@@ -673,6 +673,30 @@ export class Component extends EventTarget {
   _setParent(parent: Container | null): void {
     this._parent = parent;
   }
+
+  /**
+   * Called when mouse is pressed down on the component.
+   * Can be overridden by subclasses.
+   */
+  onMouseDown(): void {
+    // To be overridden
+  }
+
+  /**
+   * Called when mouse is released.
+   * Can be overridden by subclasses.
+   */
+  onMouseUp(): void {
+    // To be overridden
+  }
+
+  /**
+   * Called when mouse leaves the component.
+   * Can be overridden by subclasses.
+   */
+  onMouseLeave(): void {
+    // To be overridden
+  }
 }
 
 // Initialize parent reference

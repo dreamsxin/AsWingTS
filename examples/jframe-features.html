@@ -223,13 +223,13 @@
 
     frame4.getContentPane().add(panel4);
 
-    // === Demo 5: Resizable JFrame ===
-    const frame5 = new JFrame('Demo 5: Resizable Frame');
+    // === Demo 5: No Close Button JFrame ===
+    const frame5 = new JFrame('Demo 5: No Close Button (无关闭按钮)');
+    frame5.setClosable(false); // Set BEFORE getElement()
     app.appendChild(frame5.getElement());
     frame5.setLocation(660, 20);
     frame5.setSize(300, 180);
-    frame5.setClosable(true);
-    frame5.setResizable(true);
+    frame5.setDraggable(true);
     frame5.applyTheme('info');
 
     const panel5 = new JPanel();
@@ -237,28 +237,56 @@
     panel5.setLocation(10, 10);
     panel5.setSize(260, 130);
     
-    const label5 = new JLabel('Resize this frame by dragging\nthe bottom-right corner')
+    const label5 = new JLabel('This frame has no close button!\nUse the button below to close it.')
       .setSize(240, 60)
       .setTextAlign('center')
       .setLineHeight('2');
     panel5.add(label5);
 
+    const closeBtn5 = new JButton('Close This Frame')
+      .setSize(160, 35)
+      .applyTheme('danger');
+    closeBtn5.addEventListener('act', () => frame5.doClose());
+    panel5.add(closeBtn5);
+
+    frame5.getContentPane().add(panel5);
+
+    // === Demo 6: Resizable JFrame ===
+    const frame6 = new JFrame('Demo 6: Resizable Frame (可调整大小)');
+    app.appendChild(frame6.getElement());
+    frame6.setLocation(660, 220);
+    frame6.setSize(300, 180);
+    frame6.setClosable(true);
+    frame6.setResizable(true);
+    frame6.applyTheme('info');
+
+    const panel6 = new JPanel();
+    panel6.setLayout(new FlowLayout());
+    panel6.setLocation(10, 10);
+    panel6.setSize(260, 130);
+    
+    const label6 = new JLabel('Resize this frame by dragging\nthe bottom-right corner')
+      .setSize(240, 60)
+      .setTextAlign('center')
+      .setLineHeight('2');
+    panel6.add(label6);
+
     const resizeInfo = new JLabel('Current size: 300 x 180')
       .setSize(200, 25)
       .setFontWeight('bold')
       .setColor('#17a2b8');
-    panel5.add(resizeInfo);
+    panel6.add(resizeInfo);
 
     // Update size display
     const resizeObserver = new ResizeObserver(() => {
-      resizeInfo.setText(`Current size: ${frame5.getWidth()} x ${frame5.getHeight()}`);
+      resizeInfo.setText(`Current size: ${frame6.getWidth()} x ${frame6.getHeight()}`);
     });
-    const frame5Element = frame5.getElement();
-    if (frame5Element) {
-      resizeObserver.observe(frame5Element);
+    const frame6Element = frame6.getElement();
+    if (frame6Element) {
+      resizeObserver.observe(frame6Element);
     }
 
-    frame5.getContentPane().add(panel5);
+    frame6.getContentPane().add(panel6);
 
     console.log('✅ JFrame features demo loaded!');
 
@@ -269,11 +297,12 @@
       console.log('Frame 1 draggable:', frame1.isDraggable());
       console.log('Frame 2 theme:', frame2.getAppliedThemes());
       console.log('Frame 3 draggable:', frame3.isDraggable());
-      console.log('Frame 5 resizable:', frame5.isResizable());
+      console.log('Frame 5 closable:', frame5.isClosable());
+      console.log('Frame 6 resizable:', frame6.isResizable());
       
       // Debug close button
       console.log('--- Title Bar Elements Debug ---');
-      const frames = [frame1, frame2, frame3, frame4, frame5];
+      const frames = [frame1, frame2, frame3, frame4, frame5, frame6];
       frames.forEach((frame, i) => {
         const frameAny = frame;
         const titleBar = frameAny._titleBar;
@@ -321,6 +350,7 @@
       // Check if close button is within title bar bounds
       console.log('\n=== Boundary Check ===');
       frames.forEach((frame, i) => {
+        if (i >= 5) return; // Skip frame6 in boundary check
         const frameAny = frame;
         const titleBar = frameAny._titleBar;
         const closeButton = frameAny._closeButton;

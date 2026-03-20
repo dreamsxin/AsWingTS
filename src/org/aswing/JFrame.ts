@@ -101,11 +101,12 @@ export class JFrame extends Container {
     const controlsContainer = document.createElement('div');
     controlsContainer.style.display = 'flex';
     controlsContainer.style.alignItems = 'center';
-    controlsContainer.style.gap = '4px';
+    controlsContainer.style.gap = '0';
     controlsContainer.style.flexShrink = '0';
-    controlsContainer.style.width = '28px'; // Fixed width for close button
+    controlsContainer.style.width = '28px';
     controlsContainer.style.height = '100%';
-    controlsContainer.style.marginLeft = 'auto'; // Push to right
+    controlsContainer.style.marginLeft = 'auto';
+    controlsContainer.style.marginRight = '-5px'; // Move 5px to the right
     controlsContainer.style.justifyContent = 'flex-end';
 
     // Minimize button (optional)
@@ -132,19 +133,17 @@ export class JFrame extends Container {
       // Force element creation first
       const closeBtnElement = this._closeButton.getElement()!;
       // Then set size to ensure CSS is applied
-      this._closeButton.setSize(24, 24);
+      this._closeButton.setSize(28, 28);
+      // Add special class for close button styling
+      closeBtnElement.classList.add('close-btn');
       closeBtnElement.style.padding = '0';
-      closeBtnElement.style.fontSize = '18px';
-      closeBtnElement.style.fontWeight = 'bold';
+      closeBtnElement.style.fontSize = '20px';
+      closeBtnElement.style.fontWeight = '300';
       closeBtnElement.style.lineHeight = '1';
-      closeBtnElement.style.background = 'transparent';
-      closeBtnElement.style.color = '#666';
-      closeBtnElement.style.border = 'none';
-      closeBtnElement.style.borderRadius = '4px';
       closeBtnElement.style.cursor = 'pointer';
-      closeBtnElement.style.width = '24px';
-      closeBtnElement.style.height = '24px';
-      closeBtnElement.style.minWidth = '24px'; // Ensure minimum width
+      closeBtnElement.style.width = '28px';
+      closeBtnElement.style.height = '28px';
+      closeBtnElement.style.minWidth = '28px';
       closeBtnElement.style.display = 'flex';
       closeBtnElement.style.alignItems = 'center';
       closeBtnElement.style.justifyContent = 'center';
@@ -233,6 +232,12 @@ export class JFrame extends Container {
    */
   setClosable(closable: boolean): this {
     this._closable = closable;
+    
+    // Update close button visibility if element exists
+    if (this._closeButton && this._closeButton.getElement()) {
+      this._closeButton.setVisible(closable);
+    }
+    
     return this;
   }
 

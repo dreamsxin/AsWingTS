@@ -16,17 +16,20 @@ export class JButton extends JAbstractButton {
     element.textContent = this._text;
 
     element.addEventListener('click', (e) => this.handleClick(e));
-    element.addEventListener('mousedown', () => {
+    element.addEventListener('mousedown', (e) => {
       this._armed = true;
       this._pressed = true;
+      this.onMouseDown();
     });
-    element.addEventListener('mouseup', () => {
+    element.addEventListener('mouseup', (e) => {
       this._armed = false;
       this._pressed = false;
+      this.onMouseUp();
     });
     element.addEventListener('mouseleave', () => {
       this._armed = false;
       this._pressed = false;
+      this.onMouseLeave();
     });
 
     return element;
@@ -34,6 +37,30 @@ export class JButton extends JAbstractButton {
 
   private handleClick(_e: MouseEvent): void {
     this.dispatchEvent(new AWEvent(AWEvent.ACT));
+  }
+
+  override onMouseDown(): void {
+    super.onMouseDown();
+    this._pressed = true;
+    if (this._element) {
+      this._element.classList.add('pressed');
+    }
+  }
+
+  override onMouseUp(): void {
+    super.onMouseUp();
+    this._pressed = false;
+    if (this._element) {
+      this._element.classList.remove('pressed');
+    }
+  }
+
+  override onMouseLeave(): void {
+    super.onMouseLeave();
+    this._pressed = false;
+    if (this._element) {
+      this._element.classList.remove('pressed');
+    }
   }
 
   override toString(): string {

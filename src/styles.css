@@ -60,16 +60,20 @@
   background: linear-gradient(to bottom, #ffffff, #e8e8e8);
   border-color: #bbb;
   box-shadow: 0 2px 4px rgba(0,0,0,0.15);
-  transform: translateY(-1px);
 }
 
 /* Pressed State (Clicked/Active) */
-.aswing-button:active:not(:disabled),
+.aswing-button:active:not(:disabled) {
+  background: linear-gradient(to bottom, #d0d0d0, #c0c0c0);
+  border-color: #aaa;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1) inset;
+}
+
+/* Pressed State (Programmatic) */
 .aswing-button.pressed {
   background: linear-gradient(to bottom, #d0d0d0, #c0c0c0);
   border-color: #aaa;
   box-shadow: 0 1px 2px rgba(0,0,0,0.1) inset;
-  transform: translateY(0);
 }
 
 /* Focused State (Keyboard Focus) */
@@ -96,7 +100,6 @@
   cursor: not-allowed;
   opacity: 0.6;
   box-shadow: none;
-  transform: none;
 }
 
 /* Fix button text centering with rounded style */
@@ -622,17 +625,48 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 4px;
+  gap: 0;
   flex-shrink: 0;
   width: 28px;
   height: 100%;
+  margin-right: -5px; /* Move 5px beyond right edge */
 }
 
+/* JFrame Close Button - Special Style (overrides button states) */
 .aswing-frame .window-btn,
-.aswing-frame button.aswing-button {
-  min-width: 24px;
-  width: 24px;
-  height: 24px;
+.aswing-frame button.aswing-button.close-btn {
+  min-width: 28px;
+  width: 28px;
+  height: 28px;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  color: inherit !important; /* Inherit color from title bar */
+  font-size: 20px;
+  font-weight: 300;
+  transition: all 0.15s ease;
+  padding: 0 !important;
+  margin: 0 !important;
+  opacity: 0.7;
+}
+
+/* Hover State - Subtle background and shadow */
+.aswing-frame .window-btn:hover,
+.aswing-frame button.aswing-button.close-btn:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) !important;
+  opacity: 1;
+  color: inherit !important;
+}
+
+/* Pressed/Active State - Pressed effect */
+.aswing-frame .window-btn:active,
+.aswing-frame button.aswing-button.close-btn:active {
+  background: rgba(255, 255, 255, 0.3) !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) inset !important;
+  opacity: 1;
+  color: inherit !important;
 }
 
 .aswing-frame-titlebar span {
