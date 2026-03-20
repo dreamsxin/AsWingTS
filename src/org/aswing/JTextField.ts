@@ -169,6 +169,24 @@ export class JTextField extends Component {
     return this;
   }
 
+  /**
+   * Sets the maximum length of the text field.
+   * Chainable - returns this for method chaining.
+   */
+  setMaxLength(maxLength: number): this {
+    if (this._inputElement) {
+      this._inputElement.maxLength = maxLength;
+    }
+    return this;
+  }
+
+  /**
+   * Gets the maximum length.
+   */
+  getMaxLength(): number {
+    return this._inputElement?.maxLength || 0;
+  }
+
   override getPreferredSize(): IntDimension {
     const width = Math.max(this._columns * 8 + 16, 100);
     return new IntDimension(width, 28);

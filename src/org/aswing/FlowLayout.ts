@@ -63,9 +63,9 @@ export class FlowLayout implements LayoutManager {
     let rowMaxHeight = 0;
 
     for (const comp of components) {
-      const prefSize = comp.getPreferredSize();
-      const compWidth = prefSize.width;
-      const compHeight = prefSize.height;
+      // Use explicit size if set, otherwise use preferred size
+      const compWidth = comp.getWidth() > 0 ? comp.getWidth() : comp.getPreferredSize().width;
+      const compHeight = comp.getHeight() > 0 ? comp.getHeight() : comp.getPreferredSize().height;
 
       // Check if component fits in current row
       if (currentRow.length > 0 && x + compWidth > containerWidth - this._hgap) {
@@ -143,7 +143,10 @@ export class FlowLayout implements LayoutManager {
 
         comp.getElement(); // Force element creation
         comp.setLocationXY(finalX, finalY);
-        comp.setSizeWH(compWidth, compHeight);
+        // Only set size if it wasn't explicitly set before
+        if (comp.getWidth() <= 0 || comp.getHeight() <= 0) {
+          comp.setSizeWH(compWidth, compHeight);
+        }
       }
 
       y += row.maxHeight + this._vgap;
@@ -162,17 +165,19 @@ export class FlowLayout implements LayoutManager {
     let currentRowHeight = 0;
 
     for (const comp of components) {
-      const prefSize = comp.getPreferredSize();
+      // Use explicit size if set, otherwise use preferred size
+      const compWidth = comp.getWidth() > 0 ? comp.getWidth() : comp.getPreferredSize().width;
+      const compHeight = comp.getHeight() > 0 ? comp.getHeight() : comp.getPreferredSize().height;
       
-      if (currentRowWidth + prefSize.width > maxWidth && currentRowWidth > 0) {
+      if (currentRowWidth + compWidth > maxWidth && currentRowWidth > 0) {
         // New row
         maxWidth = Math.max(maxWidth, currentRowWidth);
         totalHeight += currentRowHeight + this._vgap;
-        currentRowWidth = prefSize.width + this._hgap;
-        currentRowHeight = prefSize.height;
+        currentRowWidth = compWidth + this._hgap;
+        currentRowHeight = compHeight;
       } else {
-        currentRowWidth += prefSize.width + this._hgap;
-        currentRowHeight = Math.max(currentRowHeight, prefSize.height);
+        currentRowWidth += compWidth + this._hgap;
+        currentRowHeight = Math.max(currentRowHeight, compHeight);
       }
     }
 

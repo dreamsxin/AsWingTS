@@ -41,6 +41,12 @@
   cursor: pointer;
   font-size: 13px;
   transition: background-color 0.15s, border-color 0.15s;
+  /* Ensure text is centered */
+  text-align: center !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-sizing: border-box !important;
 }
 
 .aswing-button:hover {
@@ -66,6 +72,13 @@
 .aswing-button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+/* Fix button text centering with rounded style */
+.btn-lg.rounded-pill {
+  padding-left: 25px !important;
+  padding-right: 25px !important;
+  white-space: nowrap !important;
 }
 
 /* Abstract Button base */
@@ -176,6 +189,205 @@
   color: #333;
   pointer-events: none;
 }
+
+/* ========================================
+   Theme System - Color Themes
+   ======================================== */
+
+/* Primary Theme */
+.btn-primary {
+  background: linear-gradient(135deg, #007bff, #0056b3) !important;
+  color: #fff !important;
+  border: none !important;
+}
+.btn-primary:hover {
+  background: linear-gradient(135deg, #0056b3, #004494) !important;
+}
+.label-primary {
+  color: #007bff !important;
+}
+.panel-primary {
+  border-color: #007bff !important;
+}
+
+/* Secondary Theme */
+.btn-secondary {
+  background: linear-gradient(135deg, #6c757d, #545b62) !important;
+  color: #fff !important;
+  border: none !important;
+}
+.btn-secondary:hover {
+  background: linear-gradient(135deg, #545b62, #3e4444) !important;
+}
+.label-secondary {
+  color: #6c757d !important;
+}
+.panel-secondary {
+  border-color: #6c757d !important;
+}
+
+/* Success Theme */
+.btn-success {
+  background: linear-gradient(135deg, #28a745, #1e7e34) !important;
+  color: #fff !important;
+  border: none !important;
+}
+.btn-success:hover {
+  background: linear-gradient(135deg, #1e7e34, #155824) !important;
+}
+.label-success {
+  color: #28a745 !important;
+}
+.panel-success {
+  border-color: #28a745 !important;
+}
+
+/* Danger Theme */
+.btn-danger {
+  background: linear-gradient(135deg, #dc3545, #bd2130) !important;
+  color: #fff !important;
+  border: none !important;
+}
+.btn-danger:hover {
+  background: linear-gradient(135deg, #bd2130, #a71d2a) !important;
+}
+.label-danger {
+  color: #dc3545 !important;
+}
+.panel-danger {
+  border-color: #dc3545 !important;
+}
+
+/* Warning Theme */
+.btn-warning {
+  background: linear-gradient(135deg, #ffc107, #e0a800) !important;
+  color: #212529 !important;
+  border: none !important;
+}
+.btn-warning:hover {
+  background: linear-gradient(135deg, #e0a800, #c79400) !important;
+}
+.label-warning {
+  color: #ffc107 !important;
+}
+.panel-warning {
+  border-color: #ffc107 !important;
+}
+
+/* Info Theme */
+.btn-info {
+  background: linear-gradient(135deg, #17a2b8, #117a8b) !important;
+  color: #fff !important;
+  border: none !important;
+}
+.btn-info:hover {
+  background: linear-gradient(135deg, #117a8b, #0d616d) !important;
+}
+.label-info {
+  color: #17a2b8 !important;
+}
+.panel-info {
+  border-color: #17a2b8 !important;
+}
+
+/* Light Theme */
+.btn-light {
+  background: linear-gradient(135deg, #f8f9fa, #e2e6ea) !important;
+  color: #212529 !important;
+  border: 1px solid #ddd !important;
+}
+.btn-light:hover {
+  background: linear-gradient(135deg, #e2e6ea, #dae0e5) !important;
+}
+.label-light {
+  color: #f8f9fa !important;
+}
+.panel-light {
+  border-color: #f8f9fa !important;
+}
+
+/* Dark Theme */
+.btn-dark {
+  background: linear-gradient(135deg, #343a40, #23272b) !important;
+  color: #fff !important;
+  border: none !important;
+}
+.btn-dark:hover {
+  background: linear-gradient(135deg, #23272b, #151719) !important;
+}
+.label-dark {
+  color: #343a40 !important;
+}
+.panel-dark {
+  border-color: #343a40 !important;
+}
+
+/* ========================================
+   Theme System - Size Variants
+   ======================================== */
+
+/* Small Size */
+.btn-sm {
+  padding: 4px 8px !important;
+  font-size: 12px !important;
+}
+.input-sm {
+  height: 28px !important;
+  font-size: 12px !important;
+}
+
+/* Large Size */
+.btn-lg {
+  padding: 10px 20px !important;
+  font-size: 16px !important;
+}
+.input-lg {
+  height: 45px !important;
+  font-size: 16px !important;
+}
+
+/* ========================================
+   Theme System - Style Variants
+   ======================================== */
+
+/* Outline Style */
+.btn-outline {
+  background: transparent !important;
+  border: 2px solid currentColor !important;
+}
+
+/* Rounded Style */
+.rounded, .rounded-pill {
+  border-radius: 50px !important;
+}
+.rounded-panel {
+  border-radius: 10px !important;
+}
+
+/* Fix button text centering with rounded style */
+.btn.rounded-pill, .btn-lg.rounded-pill {
+  padding-left: 20px !important;
+  padding-right: 20px !important;
+  white-space: nowrap !important;
+}
+
+/* Shadow Style */
+.shadow, .panel-shadow {
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15) !important;
+}
+
+/* ========================================
+   Theme System - Base Theme Classes
+   ======================================== */
+
+.theme-primary { }
+.theme-secondary { }
+.theme-success { }
+.theme-danger { }
+.theme-warning { }
+.theme-info { }
+.theme-light { }
+.theme-dark { }
 
 /* Label */
 .aswing-label {

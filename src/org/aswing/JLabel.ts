@@ -111,6 +111,15 @@ export class JLabel extends Component {
     return this._verticalAlignment;
   }
 
+  /**
+   * Sets text alignment (alias for setHorizontalAlignment with textAlign values).
+   * Chainable - returns this for method chaining.
+   */
+  setTextAlign(align: 'left' | 'center' | 'right' | 'justify'): this {
+    this.setHorizontalAlignment(align);
+    return this;
+  }
+
   override getPreferredSize(): IntDimension {
     const textWidth = this._text.length * 8 + 10; // Rough estimate
     return new IntDimension(textWidth, 20);

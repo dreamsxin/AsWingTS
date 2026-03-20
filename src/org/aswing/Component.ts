@@ -5,6 +5,7 @@ import { IntDimension } from './geom/IntDimension.js';
 import { IntPoint } from './geom/IntPoint.js';
 import { IntRectangle } from './geom/IntRectangle.js';
 import { AsWingManager } from './AsWingManager.js';
+import { Theme } from './Theme.js';
 import type { Container } from './Container.js';
 
 /**
@@ -264,10 +265,12 @@ export class Component extends EventTarget {
 
   /**
    * Sets the bounds of this component.
+   * Chainable - returns this for method chaining.
    */
-  setBounds(x: number, y: number, width: number, height: number): void {
-    this.setLocation(x, y);
-    this.setSize(width, height);
+  setBounds(x: number, y: number, width: number, height: number): this {
+    this.setLocationXY(x, y);
+    this.setSizeWH(width, height);
+    return this;
   }
 
   /**
@@ -520,6 +523,7 @@ export class Component extends EventTarget {
 
   /**
    * Sets text alignment.
+   * Chainable - returns this for method chaining.
    */
   setTextAlign(align: 'left' | 'center' | 'right' | 'justify'): this {
     return this.setStyle('textAlign', align);
@@ -527,9 +531,139 @@ export class Component extends EventTarget {
 
   /**
    * Sets line height.
+   * Chainable - returns this for method chaining.
    */
   setLineHeight(height: string): this {
     return this.setStyle('lineHeight', height);
+  }
+
+  /**
+   * Sets font family.
+   * Chainable - returns this for method chaining.
+   */
+  setFontFamily(family: string): this {
+    return this.setStyle('fontFamily', family);
+  }
+
+  /**
+   * Sets font style (normal, italic, oblique).
+   * Chainable - returns this for method chaining.
+   */
+  setFontStyle(style: string): this {
+    return this.setStyle('fontStyle', style);
+  }
+
+  /**
+   * Sets font variant (normal, small-caps).
+   * Chainable - returns this for method chaining.
+   */
+  setFontVariant(variant: string): this {
+    return this.setStyle('fontVariant', variant);
+  }
+
+  /**
+   * Sets width only (convenience method).
+   * Chainable - returns this for method chaining.
+   */
+  setWidth(width: number): this {
+    this.setSizeWH(width, this._height);
+    return this;
+  }
+
+  /**
+   * Sets height only (convenience method).
+   * Chainable - returns this for method chaining.
+   */
+  setHeight(height: number): this {
+    this.setSizeWH(this._width, height);
+    return this;
+  }
+
+  /**
+   * Sets opacity (0.0 to 1.0).
+   * Chainable - returns this for method chaining.
+   */
+  setOpacity(opacity: number): this {
+    return this.setStyle('opacity', String(Math.max(0, Math.min(1, opacity))));
+  }
+
+  /**
+   * Sets cursor style.
+   * Chainable - returns this for method chaining.
+   */
+  setCursor(cursor: string): this {
+    return this.setStyle('cursor', cursor);
+  }
+
+  /**
+   * Sets visibility (show/hide).
+   * Alias for setVisible().
+   * Chainable - returns this for method chaining.
+   */
+  setShow(show: boolean): this {
+    return this.setVisible(show);
+  }
+
+  /**
+   * Hides the component.
+   * Chainable - returns this for method chaining.
+   */
+  hide(): this {
+    return this.setVisible(false);
+  }
+
+  /**
+   * Shows the component.
+   * Chainable - returns this for method chaining.
+   */
+  show(): this {
+    return this.setVisible(true);
+  }
+
+  // === Theme Methods ===
+
+  /**
+   * Applies a theme to this component.
+   * Chainable - returns this for method chaining.
+   * 
+   * @param themeName Theme name or array of theme names
+   * @param clearExisting Clear existing themes first
+   * 
+   * @example
+   * ```typescript
+   * button.applyTheme('primary');
+   * button.applyTheme(['primary', 'lg', 'rounded']);
+   * ```
+   */
+  applyTheme(themeName: string | string[], clearExisting: boolean = false): this {
+    Theme.apply(this, themeName, clearExisting);
+    return this;
+  }
+
+  /**
+   * Removes all themes from this component.
+   * Chainable - returns this for method chaining.
+   */
+  clearTheme(): this {
+    Theme.clear(this);
+    return this;
+  }
+
+  /**
+   * Gets the themes applied to this component.
+   * @returns Array of applied theme names
+   */
+  getAppliedThemes(): string[] {
+    return Theme.getApplied(this);
+  }
+
+  /**
+   * Checks if a theme is applied to this component.
+   * @param themeName Theme name to check
+   * @returns True if theme is applied
+   */
+  hasTheme(themeName: string): boolean {
+    return Theme.getApplied(this).includes(themeName);
   }
 
   /**

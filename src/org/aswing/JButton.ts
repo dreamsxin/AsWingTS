@@ -39,4 +39,15 @@ export class JButton extends JAbstractButton {
   override toString(): string {
     return `JButton[text="${this._text}"]`;
   }
+
+  /**
+   * Sets button type (button, submit, reset).
+   * Chainable - returns this for method chaining.
+   */
+  setType(type: 'button' | 'submit' | 'reset'): this {
+    if (this._element) {
+      (this._element as HTMLButtonElement).type = type;
+    }
+    return this;
+  }
 }

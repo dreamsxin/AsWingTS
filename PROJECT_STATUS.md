@@ -62,7 +62,10 @@ AsWingTS is a TypeScript reimplementation of the AsWing Flash/ActionScript UI fr
   - [x] `examples/index.html` - Examples index page
   - [x] `examples/basic.html` - Basic usage demo
   - [x] `examples/components.html` - Components showcase
-  - [x] `examples/layout.html` - Layout demonstration
+  - [x] `examples/layout.html` - Layout managers demo
+  - [x] `examples/absolute-layout.html` - AbsoluteLayout demo
+  - [x] `examples/new-components.html` - New components demo
+  - [x] `examples/themes.html` - Theme system demo
 
 ### 📋 Remaining Work (Phase 2+)
 
@@ -127,11 +130,11 @@ The original AsWing has ~446 files. Major categories remaining:
 
 ## Next Steps
 
-1. **Add more basic components** (JTextField, JComboBox, etc.)
-2. **Implement additional layouts** (FlowLayout, BoxLayout)
-3. **Add border support**
+1. **Add more basic components** (JComboBox, JList, JTable, JTree)
+2. **Add border support** (LineBorder, BevelBorder, TitledBorder)
+3. **Implement look and feel system**
 4. **Create comprehensive test suite**
-5. **Add more examples**
+5. **Add more examples and documentation**
 
 ## Architecture Notes
 

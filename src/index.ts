@@ -9,6 +9,8 @@ export { Container } from './org/aswing/Container.js';
 export { AsWingManager } from './org/aswing/AsWingManager.js';
 export { AsWingConstants } from './org/aswing/AsWingConstants.js';
 export { Debug } from './org/aswing/Debug.js';
+export { Theme } from './org/aswing/Theme.js';
+export type { ThemeDefinition } from './org/aswing/Theme.js';
 
 // Layout Managers
 export type { LayoutManager, LayoutConstraint } from './org/aswing/LayoutManager.js';

@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AsWingTS - Theme System Demo</title>
+  <link rel="stylesheet" href="../src/styles.css?v=2">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      padding: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      min-height: 100vh;
+    }
+    h1 {
+      text-align: center;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+    .demo-info {
+      text-align: center;
+      color: rgba(255,255,255,0.9);
+      margin-bottom: 20px;
+    }
+    #app {
+      position: relative;
+      width: 100%;
+      max-width: 1400px;
+      height: calc(100vh - 140px);
+      min-height: 700px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+      margin: 0 auto;
+      overflow: auto;
+    }
+    .tip {
+      text-align: center;
+      color: #fff;
+      font-size: 13px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎨 Theme System Demo</h1>
+  <p class="demo-info">通过 CSS 类管理样式 - 预定义主题和自定义主题</p>
+  <div id="app"></div>
+  <p class="tip">💡 提示：使用 applyTheme() 方法应用主题，支持链式调用和多个主题组合</p>
+
+  <script type="module">
+    import { 
+      AsWingManager, 
+      JFrame, 
+      JButton, 
+      JLabel, 
+      JPanel,
+      JTextField,
+      JCheckBox,
+      JProgressBar,
+      FlowLayout,
+      Theme,
+      Debug,
+      AsWingConstants
+    } from '../dist/index.js?v=2';
+
+    // Enable debug
+    Debug.enabled = true;
+
+    const app = document.getElementById('app');
+    AsWingManager.initAsStandard(app);
+
+    // === Demo 1: Color Themes ===
+    const frame1 = new JFrame('Demo 1: Color Themes (颜色主题)');
+    app.appendChild(frame1.getElement());
+    frame1.setLocation(20, 20);
+    frame1.setSize(680, 280);
+
+    const panel1 = new JPanel();
+    panel1.setLayout(new FlowLayout());
+    panel1.setLocation(10, 10);
+    panel1.setSize(640, 230);
+    panel1.setBackground('#f8f9fa').setBorder('1px solid #dee2e6');
+
+    // Color theme buttons
+    const colors = ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark'];
+    colors.forEach(color => {
+      const btn = new JButton(color.charAt(0).toUpperCase() + color.slice(1))
+        .setSize(100, 35)
+        .applyTheme(color);
+      console.log(`[${color}] Button element:`, btn.getElement());
+      console.log(`[${color}] Button classes:`, btn.getElement()?.className);
+      console.log(`[${color}] Applied themes:`, btn.getAppliedThemes());
+      panel1.add(btn);
+    });
+
+    frame1.getContentPane().add(panel1);
+
+    // === Demo 2: Size Variants ===
+    const frame2 = new JFrame('Demo 2: Size Variants (尺寸变体)');
+    app.appendChild(frame2.getElement());
+    frame2.setLocation(20, 320);
+    frame2.setSize(680, 200);
+
+    const panel2 = new JPanel();
+    panel2.setLayout(new FlowLayout());
+    panel2.setLocation(10, 10);
+    panel2.setSize(640, 150);
+    panel2.setBackground('#f8f9fa').setBorder('1px solid #dee2e6');
+
+    // Small buttons
+    const smBtn = new JButton('Small')
+      .setSize(80, 28)
+      .applyTheme(['primary', 'sm']);
+    console.log('[smBtn] Classes:', smBtn.getElement()?.className);
+    console.log('[smBtn] Applied themes:', smBtn.getAppliedThemes());
+    console.log('[smBtn] Location:', smBtn.getX(), smBtn.getY());
+    console.log('[smBtn] Size:', smBtn.getWidth(), 'x', smBtn.getHeight());
+    console.log('[smBtn] Element:', smBtn.getElement());
+    panel2.add(smBtn);
+
+    // Default button
+    const defaultBtn = new JButton('Default')
+      .setSize(100, 35)
+      .applyTheme('primary');
+    console.log('[defaultBtn] Classes:', defaultBtn.getElement()?.className);
+    console.log('[defaultBtn] Location:', defaultBtn.getX(), defaultBtn.getY());
+    console.log('[defaultBtn] Size:', defaultBtn.getWidth(), 'x', defaultBtn.getHeight());
+    console.log('[defaultBtn] Element:', defaultBtn.getElement());
+    panel2.add(defaultBtn);
+
+    // Large button
+    const lgBtn = new JButton('Large')
+      .setSize(120, 45)
+      .applyTheme(['primary', 'lg']);
+    console.log('[lgBtn] Classes:', lgBtn.getElement()?.className);
+    console.log('[lgBtn] Applied themes:', lgBtn.getAppliedThemes());
+    console.log('[lgBtn] Location:', lgBtn.getX(), lgBtn.getY());
+    console.log('[lgBtn] Size:', lgBtn.getWidth(), 'x', lgBtn.getHeight());
+    console.log('[lgBtn] Element:', lgBtn.getElement());
+    panel2.add(lgBtn);
+
+    frame2.getContentPane().add(panel2);
+
+    // === Demo 3: Style Variants ===
+    const frame3 = new JFrame('Demo 3: Style Variants (样式变体)');
+    app.appendChild(frame3.getElement());
+    frame3.setLocation(20, 540);
+    frame3.setSize(680, 200);
+
+    const panel3 = new JPanel();
+    panel3.setLayout(new FlowLayout());
+    panel3.setLocation(10, 10);
+    panel3.setSize(640, 150);
+    panel3.setBackground('#f8f9fa').setBorder('1px solid #dee2e6');
+
+    // Outline button
+    const outlineBtn = new JButton('Outline')
+      .setSize(100, 35)
+      .applyTheme(['primary', 'outline']);
+    panel3.add(outlineBtn);
+
+    // Rounded button
+    const roundedBtn = new JButton('Rounded')
+      .setSize(100, 35)
+      .applyTheme(['success', 'rounded']);
+    panel3.add(roundedBtn);
+
+    // Shadow panel - use manual positioning for proper centering
+    const shadowPanel = new JPanel();
+    shadowPanel.setSize(150, 60);
+    shadowPanel.applyTheme(['shadow']);
+    shadowPanel.getElement().style.background = '#fff';
+    shadowPanel.getElement().style.display = 'flex';
+    shadowPanel.getElement().style.alignItems = 'center';
+    shadowPanel.getElement().style.justifyContent = 'center';
+    
+    const shadowLabel = new JLabel('Shadow Effect');
+    shadowLabel.setSize(150, 60);
+    shadowLabel.getElement().style.display = 'flex';
+    shadowLabel.getElement().style.alignItems = 'center';
+    shadowLabel.getElement().style.justifyContent = 'center';
+    shadowLabel.getElement().style.width = '100%';
+    shadowLabel.getElement().style.height = '100%';
+    shadowPanel.add(shadowLabel);
+    
+    console.log('[shadowPanel] Element:', shadowPanel.getElement());
+    console.log('[shadowPanel] Classes:', shadowPanel.getElement()?.className);
+    console.log('[shadowPanel] Size:', shadowPanel.getWidth(), 'x', shadowPanel.getHeight());
+    console.log('[shadowPanel] Layout:', shadowPanel.getLayout());
+    console.log('[shadowLabel] Element:', shadowLabel.getElement());
+    console.log('[shadowLabel] Location:', shadowLabel.getX(), shadowLabel.getY());
+    console.log('[shadowLabel] Size:', shadowLabel.getWidth(), 'x', shadowLabel.getHeight());
+    
+    panel3.add(shadowPanel);
+
+    frame3.getContentPane().add(panel3);
+
+    // Force layout
+    setTimeout(() => {
+      panel3.revalidate();
+    }, 100);
+
+    // === Demo 4: Combined Themes ===
+    const frame4 = new JFrame('Demo 4: Combined Themes (组合主题)');
+    app.appendChild(frame4.getElement());
+    frame4.setLocation(720, 20);
+    frame4.setSize(600, 280);
+
+    const panel4 = new JPanel();
+    panel4.setLayout(new FlowLayout(AsWingConstants.CENTER, 10, 10));  // Add gap
+    panel4.setLocation(10, 10);
+    panel4.setSize(650, 230);  // Even wider panel
+    panel4.setBackground('#f8f9fa').setBorder('1px solid #dee2e6');
+
+    // Multiple themes combined - use wider panel to prevent wrapping
+    const comboBtn1 = new JButton('Primary + LG + Rounded')
+      .setSize(220, 50)
+      .applyTheme(['primary', 'lg', 'rounded', 'shadow']);
+    console.log('[comboBtn1] Location:', comboBtn1.getX(), comboBtn1.getY());
+    console.log('[comboBtn1] Size:', comboBtn1.getWidth(), 'x', comboBtn1.getHeight());
+    console.log('[comboBtn1] Element:', comboBtn1.getElement());
+    panel4.add(comboBtn1);
+
+    const comboBtn2 = new JButton('Success + Outline')
+      .setSize(180, 40)
+      .applyTheme(['success', 'outline', 'rounded']);
+    console.log('[comboBtn2] Location:', comboBtn2.getX(), comboBtn2.getY());
+    console.log('[comboBtn2] Size:', comboBtn2.getWidth(), 'x', comboBtn2.getHeight());
+    console.log('[comboBtn2] Element:', comboBtn2.getElement());
+    panel4.add(comboBtn2);
+
+    const comboBtn3 = new JButton('Danger + LG + Shadow')
+      .setSize(220, 50)
+      .applyTheme(['danger', 'lg', 'shadow']);
+    console.log('[comboBtn3] Location:', comboBtn3.getX(), comboBtn3.getY());
+    console.log('[comboBtn3] Size:', comboBtn3.getWidth(), 'x', comboBtn3.getHeight());
+    console.log('[comboBtn3] Element:', comboBtn3.getElement());
+    panel4.add(comboBtn3);
+
+    const comboBtn4 = new JButton('Warning + Rounded')
+      .setSize(180, 40)
+      .applyTheme(['warning', 'rounded']);
+    console.log('[comboBtn4] Location:', comboBtn4.getX(), comboBtn4.getY());
+    console.log('[comboBtn4] Size:', comboBtn4.getWidth(), 'x', comboBtn4.getHeight());
+    console.log('[comboBtn4] Element:', comboBtn4.getElement());
+    panel4.add(comboBtn4);
+
+    frame4.getContentPane().add(panel4);
+
+    // Force layout after all buttons added
+    setTimeout(() => {
+      console.log('=== Demo 4 Layout Debug ===');
+      console.log('Panel4 element:', panel4.getElement());
+      console.log('Panel4 size:', panel4.getWidth(), 'x', panel4.getHeight());
+      console.log('Panel4 layout:', panel4.getLayout());
+      
+      const panel4Children = panel4.getComponents();
+      console.log('Panel4 children count:', panel4Children.length);
+      panel4Children.forEach((comp, i) => {
+        console.log(`Panel4 child ${i} (${comp.constructor.name}):`);
+        console.log('  Location:', comp.getX(), comp.getY());
+        console.log('  Size:', comp.getWidth(), 'x', comp.getHeight());
+        console.log('  Element:', comp.getElement());
+        console.log('  Element style:', comp.getElement()?.style.cssText);
+        console.log('  Visible:', comp.isVisible());
+      });
+      
+      // Check frame4
+      console.log('Frame4 size:', frame4.getWidth(), 'x', frame4.getHeight());
+      console.log('Frame4 contentPane size:', frame4.getContentPane().getWidth(), 'x', frame4.getContentPane().getHeight());
+    }, 300);
+
+    // === Demo 5: Theme Methods ===
+    const frame5 = new JFrame('Demo 5: Theme Methods (主题方法)');
+    app.appendChild(frame5.getElement());
+    frame5.setLocation(720, 320);
+    frame5.setSize(600, 200);
+
+    const panel5 = new JPanel();
+    panel5.setLayout(new FlowLayout());
+    panel5.setLocation(10, 10);
+    panel5.setSize(560, 150);
+    panel5.setBackground('#f8f9fa').setBorder('1px solid #dee2e6');
+
+    // Button with theme switching
+    const switchBtn = new JButton('Click to Change Theme')
+      .setSize(180, 40)
+      .applyTheme('primary');
+    
+    let themeIndex = 0;
+    const themes = ['primary', 'success', 'danger', 'warning', 'info'];
+    
+    switchBtn.addEventListener('act', () => {
+      themeIndex = (themeIndex + 1) % themes.length;
+      switchBtn.clearTheme().applyTheme(themes[themeIndex]);
+      console.log(`Theme changed to: ${themes[themeIndex]}`);
+      console.log('Applied themes:', switchBtn.getAppliedThemes());
+    });
+    panel5.add(switchBtn);
+
+    // Check theme button
+    const checkBtn = new JButton('Check Theme')
+      .setSize(120, 35)
+      .applyTheme('secondary');
+    
+    checkBtn.addEventListener('act', () => {
+      const hasPrimary = switchBtn.hasTheme('primary');
+      const appliedThemes = switchBtn.getAppliedThemes();
+      console.log('Has primary theme:', hasPrimary);
+      console.log('All applied themes:', appliedThemes);
+      alert(`Current theme: ${appliedThemes.join(', ')}\nHas primary: ${hasPrimary}`);
+    });
+    panel5.add(checkBtn);
+
+    frame5.getContentPane().add(panel5);
+
+    // === Demo 6: Custom Theme ===
+    const frame6 = new JFrame('Demo 6: Custom Theme (自定义主题)');
+    app.appendChild(frame6.getElement());
+    frame6.setLocation(720, 540);
+    frame6.setSize(600, 200);
+
+    const panel6 = new JPanel();
+    panel6.setLayout(new FlowLayout());
+    panel6.setLocation(10, 10);
+    panel6.setSize(560, 150);
+    panel6.setBackground('#f8f9fa').setBorder('1px solid #dee2e6');
+
+    // Register custom theme
+    Theme.register('custom', {
+      name: 'Custom Theme',
+      classes: {
+        button: 'btn-custom',
+      },
+      colors: {
+        custom: '#6610f2'
+      }
+    });
+
+    const customBtn = new JButton('Custom Theme')
+      .setSize(150, 40)
+      .applyTheme('custom');
+    customBtn.getElement().style.background = 'linear-gradient(135deg, #6610f2, #a767f2)';
+    customBtn.getElement().style.color = '#fff';
+    customBtn.getElement().style.border = 'none';
+    panel6.add(customBtn);
+
+    // Show registered themes
+    const registeredThemes = Theme.getRegisteredThemes();
+    console.log('Registered themes:', registeredThemes);
+
+    const infoLabel = new JLabel(`Registered: ${registeredThemes.length} themes`)
+      .setFontWeight('bold')
+      .setColor('#666');
+    panel6.add(infoLabel);
+
+    frame6.getContentPane().add(panel6);
+
+    console.log('✅ Theme system demo loaded!');
+
+    // Debug info
+    setTimeout(() => {
+      console.log('=== Theme System Debug ===');
+      console.log('Registered themes:', Theme.getRegisteredThemes());
+      console.log('Default theme:', Theme.getDefault());
+      console.log('Primary theme colors:', Theme.colors('primary'));
+      
+      // Check all buttons in panel1
+      const panel1Children = panel1.getComponents();
+      console.log('Panel1 children count:', panel1Children.length);
+      panel1Children.forEach((comp, i) => {
+        console.log(`Panel1 child ${i}:`, comp.constructor.name, comp.getElement()?.className);
+      });
+      
+      console.log('✅ All themes verified!');
+    }, 500);
+  </script>
+</body>
+</html>
