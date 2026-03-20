@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AsWingTS - Basic Example</title>
+  <link rel="stylesheet" href="../src/styles.css?v=2">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      padding: 20px;
+      background: #f5f5f5;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      min-height: 100vh;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+    }
+    #app {
+      position: relative;
+      width: 100%;
+      max-width: 1200px;
+      height: calc(100vh - 120px);
+      min-height: 500px;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      margin: 0 auto;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+  <h1>AsWingTS Basic Example</h1>
+  <div id="app"></div>
+
+  <script type="module">
+    import { 
+      AsWingManager, 
+      JFrame, 
+      JButton, 
+      JLabel, 
+      JPanel,
+      BorderLayout,
+      AWEvent,
+      AsWingConstants,
+      Debug
+    } from '../dist/index.js?v=2';
+
+    // Enable debug logging (set to false in production)
+    Debug.enabled = true;
+    Debug.layout = true;
+    Debug.container = true;
+
+    // Initialize AsWing
+    const app = document.getElementById('app');
+    AsWingManager.initAsStandard(app);
+
+    // Create a frame
+    const frame = new JFrame('My Application');
+    
+    // Add frame to root first to ensure DOM is ready
+    app.appendChild(frame.getElement());
+    
+    // Set size first before adding components
+    frame.setLocation(50, 50);
+    frame.setSize(400, 300);
+    
+    // Create a label
+    const label = new JLabel('Hello, AsWingTS!');
+    frame.getContentPane().add(label, AsWingConstants.CENTER);
+
+    // Create a button
+    const button = new JButton('Click Me');
+    button.addEventListener(AWEvent.ACT, () => {
+      label.setText('Button clicked! 🎉');
+      console.log('=== Button Clicked! ===');
+      console.log('Label text changed to:', label.getText());
+      console.log('Label element style:', label.getElement()?.style.cssText);
+    });
+    frame.getContentPane().add(button, AsWingConstants.SOUTH);
+    
+    // Debug info
+    setTimeout(() => {
+      console.log('=== Basic Demo Debug ===');
+      console.log('Frame size:', frame.getWidth(), 'x', frame.getHeight());
+      console.log('Frame location:', frame.getX(), frame.getY());
+      console.log('ContentPane size:', frame.getContentPane().getWidth(), 'x', frame.getContentPane().getHeight());
+      console.log('Label location:', label.getX(), label.getY(), 'size:', label.getWidth(), 'x', label.getHeight());
+      console.log('Label element style:', label.getElement()?.style.cssText);
+      console.log('Button location:', button.getX(), button.getY(), 'size:', button.getWidth(), 'x', button.getHeight());
+      console.log('Button element style:', button.getElement()?.style.cssText);
+      console.log('✅ All components initialized successfully!');
+    }, 500);
+    
+    console.log('Frame added, size:', frame.getWidth(), 'x', frame.getHeight());
+    console.log('ContentPane children:', frame.getContentPane().getComponentCount());
+    console.log('ContentPane size:', frame.getContentPane().getWidth(), 'x', frame.getContentPane().getHeight());
+
+    console.log('AsWingTS example loaded!', frame.toString());
+  </script>
+</body>
+</html>

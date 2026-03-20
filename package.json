@@ -1,0 +1,34 @@
+{
+  "name": "aswing-ts",
+  "version": "1.0.0",
+  "description": "TypeScript reimplementation of AsWing - A UI framework similar to Java Swing",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "test": "jest",
+    "lint": "eslint src/**/*.ts"
+  },
+  "keywords": [
+    "ui",
+    "framework",
+    "swing",
+    "typescript",
+    "canvas"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dreamsxin/AsWingTS.git"
+  },
+  "homepage": "https://github.com/dreamsxin/AsWingTS#readme",
+  "bugs": {
+    "url": "https://github.com/dreamsxin/AsWingTS/issues"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}

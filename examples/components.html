@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AsWingTS - Components Demo</title>
+  <link rel="stylesheet" href="../src/styles.css?v=2">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      padding: 20px;
+      background: #f5f5f5;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      min-height: 100vh;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 10px;
+    }
+    .demo-info {
+      text-align: center;
+      color: #666;
+      margin-bottom: 20px;
+    }
+    #app {
+      position: relative;
+      width: 100%;
+      max-width: 1400px;
+      height: calc(100vh - 140px);
+      min-height: 650px;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      margin: 0 auto;
+      overflow: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>AsWingTS Components Demo</h1>
+  <p class="demo-info">展示基础组件：JButton, JLabel, JPanel 与 BorderLayout</p>
+  <div id="app"></div>
+
+  <script type="module">
+    import { 
+      AsWingManager, 
+      JFrame, 
+      JButton, 
+      JLabel, 
+      JPanel,
+      BorderLayout,
+      AWEvent,
+      AsWingConstants,
+      IntDimension,
+      Debug
+    } from '../dist/index.js?v=2';
+
+    // Enable debug logging (set to false in production)
+    Debug.enabled = true;
+    Debug.layout = true;
+    Debug.container = true;
+
+    // Initialize AsWing
+    const app = document.getElementById('app');
+    AsWingManager.initAsStandard(app);
+
+    // === Demo 1: Basic Frame with BorderLayout ===
+    const frame1 = new JFrame('Demo 1: BorderLayout');
+    app.appendChild(frame1.getElement());
+    frame1.setLocation(20, 20);
+    frame1.setSize(400, 320);
+
+    // North - combined title and description
+    const northLabel = new JLabel('North Panel ✅ 5 个区域正确布局');
+    northLabel.getElement().style.fontSize = '12px';
+    northLabel.getElement().style.fontWeight = 'bold';
+    frame1.getContentPane().add(northLabel, AsWingConstants.NORTH);
+
+    // South
+    const southLabel = new JLabel('South Panel');
+    frame1.getContentPane().add(southLabel, AsWingConstants.SOUTH);
+
+    // West
+    const westLabel = new JLabel('West');
+    frame1.getContentPane().add(westLabel, AsWingConstants.WEST);
+
+    // East
+    const eastLabel = new JLabel('East');
+    frame1.getContentPane().add(eastLabel, AsWingConstants.EAST);
+
+    // Center
+    const centerLabel1 = new JLabel('Center - Main Content Area');
+    frame1.getContentPane().add(centerLabel1, AsWingConstants.CENTER);
+
+    // === Demo 2: Buttons with Events ===
+    const frame2 = new JFrame('Demo 2: Interactive Buttons');
+    app.appendChild(frame2.getElement());
+    frame2.setLocation(440, 20);
+    frame2.setSize(420, 320);  // Match Demo1 height
+
+    // Status label (CENTER) - with description
+    const statusLabel = new JLabel('Click a button!\n✅ 验证：按钮点击事件触发');
+    statusLabel.getElement().style.fontSize = '14px';
+    statusLabel.getElement().style.fontWeight = 'bold';
+    statusLabel.getElement().style.lineHeight = '1.8';
+    frame2.getContentPane().add(statusLabel, AsWingConstants.CENTER);
+
+    // Button panel (SOUTH)
+    const btnPanel = new JPanel();
+    btnPanel.getElement().style.background = '#f9f9f9';
+    btnPanel.getElement().style.padding = '10px';
+    btnPanel.getElement().style.borderTop = '1px solid #eee';
+
+    const btn1 = new JButton('Button 1');
+    btn1.setSize(100, 30);
+    btn1.getElement().style.position = 'absolute';
+    btn1.getElement().style.left = '10px';
+    btn1.getElement().style.top = '10px';
+    btn1.addEventListener(AWEvent.ACT, () => {
+      statusLabel.setText('Button 1 clicked! 🎯');
+      statusLabel.getElement().style.color = '#d9534f';
+    });
+    btnPanel.add(btn1);
+
+    const btn2 = new JButton('Button 2');
+    btn2.setSize(100, 30);
+    btn2.getElement().style.position = 'absolute';
+    btn2.getElement().style.left = '120px';
+    btn2.getElement().style.top = '10px';
+    btn2.addEventListener(AWEvent.ACT, () => {
+      statusLabel.setText('Button 2 clicked! ✅');
+      statusLabel.getElement().style.color = '#5cb85c';
+    });
+    btnPanel.add(btn2);
+
+    const btn3 = new JButton('Reset');
+    btn3.setSize(100, 30);
+    btn3.getElement().style.position = 'absolute';
+    btn3.getElement().style.left = '230px';
+    btn3.getElement().style.top = '10px';
+    btn3.addEventListener(AWEvent.ACT, () => {
+      statusLabel.setText('Click a button!');
+      statusLabel.getElement().style.color = '#333';
+    });
+    btnPanel.add(btn3);
+
+    frame2.getContentPane().add(btnPanel, AsWingConstants.SOUTH);
+
+    // Debug Demo 2
+    setTimeout(() => {
+      console.log('=== Demo 2 Debug ===');
+      console.log('--- Frame ---');
+      console.log('Frame2 size:', frame2.getWidth(), 'x', frame2.getHeight());
+      console.log('Frame2 location:', frame2.getX(), frame2.getY());
+      console.log('Frame2 element style:', frame2.getElement()?.style.cssText);
+      
+      console.log('--- ContentPane ---');
+      console.log('ContentPane2 size:', frame2.getContentPane().getWidth(), 'x', frame2.getContentPane().getHeight());
+      console.log('ContentPane2 children:', frame2.getContentPane().getComponentCount());
+      
+      console.log('--- Status Label (CENTER) ---');
+      console.log('statusLabel location:', statusLabel.getX(), statusLabel.getY());
+      console.log('statusLabel size:', statusLabel.getWidth(), 'x', statusLabel.getHeight());
+      console.log('statusLabel text:', statusLabel.getText());
+      console.log('statusLabel element style:', statusLabel.getElement()?.style.cssText);
+      
+      console.log('--- Button Panel (SOUTH) ---');
+      console.log('btnPanel location:', btnPanel.getX(), btnPanel.getY());
+      console.log('btnPanel size:', btnPanel.getWidth(), 'x', btnPanel.getHeight());
+      console.log('btnPanel element style:', btnPanel.getElement()?.style.cssText);
+      console.log('btnPanel children:', btnPanel.getComponentCount());
+      
+      console.log('--- Button 1 ---');
+      console.log('btn1 location:', btn1.getX(), btn1.getY());
+      console.log('btn1 size:', btn1.getWidth(), 'x', btn1.getHeight());
+      console.log('btn1 text:', btn1.getText());
+      console.log('btn1 element style:', btn1.getElement()?.style.cssText);
+      
+      console.log('--- Button 2 ---');
+      console.log('btn2 location:', btn2.getX(), btn2.getY());
+      console.log('btn2 size:', btn2.getWidth(), 'x', btn2.getHeight());
+      console.log('btn2 text:', btn2.getText());
+      console.log('btn2 element style:', btn2.getElement()?.style.cssText);
+      
+      console.log('--- Button 3 (Reset) ---');
+      console.log('btn3 location:', btn3.getX(), btn3.getY());
+      console.log('btn3 size:', btn3.getWidth(), 'x', btn3.getHeight());
+      console.log('btn3 text:', btn3.getText());
+      console.log('btn3 element style:', btn3.getElement()?.style.cssText);
+      
+      console.log('✅ Demo 2 all components verified!');
+    }, 500);
+
+    // === Demo 3: Nested Panels ===
+    const frame3 = new JFrame('Demo 3: Nested Panels');
+    app.appendChild(frame3.getElement());
+    frame3.setLocation(20, 360);  // 20px gap after Demo1 (20 + 320 + 20 = 360)
+    frame3.setSize(400, 300);
+
+    // Demo 3: Add description inside the nested panel
+    const mainPanel = new JPanel();
+    mainPanel.getElement().style.background = '#e8f4f8';
+    mainPanel.getElement().style.border = '2px solid #5bc0de';
+    mainPanel.setLocation(10, 10);
+    mainPanel.setSize(360, 240);
+    frame3.getContentPane().add(mainPanel);
+
+    const innerLabel = new JLabel('Nested Panel Content\n✅ 验证：面板嵌套显示，自定义样式生效');
+    innerLabel.getElement().style.fontWeight = 'bold';
+    innerLabel.getElement().style.color = '#31708f';
+    innerLabel.getElement().style.lineHeight = '2';
+    mainPanel.add(innerLabel);
+
+    const actionBtn = new JButton('Click Me');
+    actionBtn.setLocation(120, 100);
+    actionBtn.setSize(100, 30);
+    actionBtn.addEventListener(AWEvent.ACT, () => {
+      innerLabel.setText('Button Clicked! 🎉');
+    });
+    mainPanel.add(actionBtn);
+
+    // Debug Demo 3
+    setTimeout(() => {
+      console.log('=== Demo 3 Debug ===');
+      console.log('Frame3 size:', frame3.getWidth(), 'x', frame3.getHeight());
+      console.log('ContentPane3 size:', frame3.getContentPane().getWidth(), 'x', frame3.getContentPane().getHeight());
+      console.log('mainPanel element:', mainPanel.getElement());
+      console.log('mainPanel size:', mainPanel.getWidth(), 'x', mainPanel.getHeight());
+      console.log('mainPanel element style:', mainPanel.getElement()?.style.cssText);
+      console.log('mainPanel location:', mainPanel.getX(), mainPanel.getY());
+      console.log('innerLabel element style:', innerLabel.getElement()?.style.cssText);
+      console.log('actionBtn element style:', actionBtn.getElement()?.style.cssText);
+      console.log('actionBtn location:', actionBtn.getX(), actionBtn.getY());
+      console.log('actionBtn size:', actionBtn.getWidth(), actionBtn.getHeight());
+    }, 600);
+
+    // === Demo 4: Label Alignments ===
+    const frame4 = new JFrame('Demo 4: Label Alignments');
+    app.appendChild(frame4.getElement());
+    frame4.setLocation(440, 360);  // 20px gap after Demo2 (20 + 320 + 20 = 360)
+    frame4.setSize(420, 300);
+
+    // Demo 4: First label includes description
+    const leftLabel = new JLabel('⬅️ Left Aligned\n✅ 验证：标签左/中/右三种对齐方式');
+    leftLabel.getElement().style.lineHeight = '2';
+    leftLabel.setHorizontalAlignment(AsWingConstants.LEFT);
+    leftLabel.setLocation(10, 20);
+    leftLabel.setSize(380, 30);
+    leftLabel.getElement().style.background = '#f0f0f0';
+    leftLabel.getElement().style.border = '1px solid #ddd';
+    frame4.getContentPane().add(leftLabel);
+
+    // Debug Demo 4
+    setTimeout(() => {
+      console.log('=== Demo 4 Debug ===');
+      console.log('Frame4 size:', frame4.getWidth(), 'x', frame4.getHeight());
+      console.log('ContentPane4 size:', frame4.getContentPane().getWidth(), 'x', frame4.getContentPane().getHeight());
+      console.log('leftLabel location:', leftLabel.getX(), leftLabel.getY(), 'size:', leftLabel.getWidth(), 'x', leftLabel.getHeight());
+      console.log('leftLabel element style:', leftLabel.getElement()?.style.cssText);
+      console.log('centerLabel4 location:', centerLabel4.getX(), centerLabel4.getY(), 'size:', centerLabel4.getWidth(), 'x', centerLabel4.getHeight());
+      console.log('centerLabel4 element style:', centerLabel4.getElement()?.style.cssText);
+      console.log('rightLabel location:', rightLabel.getX(), rightLabel.getY(), 'size:', rightLabel.getWidth(), 'x', rightLabel.getHeight());
+      console.log('rightLabel element style:', rightLabel.getElement()?.style.cssText);
+    }, 700);
+
+    const centerLabel4 = new JLabel('➡️ Center Aligned ⬅️');
+    centerLabel4.setHorizontalAlignment(AsWingConstants.CENTER);
+    centerLabel4.setLocation(10, 60);
+    centerLabel4.setSize(380, 30);
+    centerLabel4.getElement().style.position = 'absolute';
+    centerLabel4.getElement().style.background = '#f0f0f0';
+    centerLabel4.getElement().style.border = '1px solid #ddd';
+    frame4.getContentPane().add(centerLabel4);
+
+    const rightLabel = new JLabel('Right Aligned ➡️');
+    rightLabel.setHorizontalAlignment(AsWingConstants.RIGHT);
+    rightLabel.setLocation(10, 100);
+    rightLabel.setSize(380, 30);
+    rightLabel.getElement().style.position = 'absolute';
+    rightLabel.getElement().style.background = '#f0f0f0';
+    rightLabel.getElement().style.border = '1px solid #ddd';
+    frame4.getContentPane().add(rightLabel);
+
+    console.log('All demos loaded successfully!');
+  </script>
+</body>
+</html>

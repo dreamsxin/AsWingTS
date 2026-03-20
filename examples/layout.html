@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AsWingTS - Layout Demo</title>
+  <link rel="stylesheet" href="../src/styles.css?v=2">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      padding: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      min-height: 100vh;
+    }
+    #app {
+      position: relative;
+      width: 100%;
+      max-width: 1600px;
+      height: calc(100vh - 40px);
+      min-height: 600px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      margin: 0 auto;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+
+  <script type="module">
+    import { 
+      AsWingManager, 
+      JFrame, 
+      JButton, 
+      JLabel, 
+      JPanel,
+      BorderLayout,
+      AWEvent,
+      AsWingConstants,
+      Debug
+    } from '../dist/index.js?v=2';
+
+    // Enable debug logging (set to false in production)
+    Debug.enabled = true;
+    Debug.layout = true;
+    Debug.container = true;
+
+    const app = document.getElementById('app');
+    AsWingManager.initAsStandard(app);
+
+    // Main application frame
+    const mainFrame = new JFrame('AsWingTS Layout Showcase');
+    app.appendChild(mainFrame.getElement());
+    mainFrame.setLocation(0, 0);
+    // Make frame responsive to app container
+    const appWidth = app.clientWidth || 1200;
+    const appHeight = app.clientHeight || 700;
+    mainFrame.setSize(appWidth, appHeight);
+
+    // Header panel
+    const headerPanel = new JPanel();
+    headerPanel.getElement().style.background = 'linear-gradient(135deg, #667eea, #764ba2)';
+    headerPanel.getElement().style.borderBottom = '2px solid #5a67d8';
+    
+    const titleLabel = new JLabel('🎨 Layout Manager Demonstration');
+    titleLabel.getElement().style.color = '#fff';
+    titleLabel.getElement().style.fontSize = '18px';
+    titleLabel.getElement().style.fontWeight = 'bold';
+    titleLabel.setLocation(0, 0);
+    titleLabel.setSize(1600, 20);
+    titleLabel.getElement().style.position = 'absolute';
+    headerPanel.add(titleLabel);
+
+    const headerDesc = new JLabel('✅ 验证：顶部/底部面板、左侧导航、右侧信息栏、中央内容区');
+    headerDesc.getElement().style.color = 'rgba(255,255,255,0.9)';
+    headerDesc.getElement().style.fontSize = '11px';
+    headerDesc.getElement().style.fontStyle = 'italic';
+    headerDesc.setLocation(0, 0);
+    headerDesc.setSize(1600, 20);
+    headerDesc.getElement().style.position = 'absolute';
+    headerDesc.getElement().style.top = 'auto';
+    headerDesc.getElement().style.bottom = '0';
+    headerPanel.add(headerDesc);
+    
+    mainFrame.getContentPane().add(headerPanel, AsWingConstants.NORTH);
+
+    // Debug header
+    setTimeout(() => {
+      console.log('=== Header Debug ===');
+      console.log('HeaderPanel size:', headerPanel.getWidth(), 'x', headerPanel.getHeight());
+      console.log('HeaderPanel element style:', headerPanel.getElement()?.style.cssText);
+      console.log('titleLabel size:', titleLabel.getWidth(), 'x', titleLabel.getHeight());
+      console.log('titleLabel element style:', titleLabel.getElement()?.style.cssText);
+      console.log('headerDesc size:', headerDesc.getWidth(), 'x', headerDesc.getHeight());
+      console.log('headerDesc element style:', headerDesc.getElement()?.style.cssText);
+    }, 600);
+
+    // Footer panel
+    const footerPanel = new JPanel();
+    footerPanel.getElement().style.background = '#f8f9fa';
+    footerPanel.getElement().style.borderTop = '1px solid #dee2e6';
+    footerPanel.getElement().style.display = 'flex';
+    footerPanel.getElement().style.justifyContent = 'center';
+    footerPanel.getElement().style.alignItems = 'center';
+    
+    const footerLabel = new JLabel('AsWingTS v1.0 - BorderLayout Example');
+    footerLabel.getElement().style.color = '#6c757d';
+    footerLabel.getElement().style.fontSize = '12px';
+    footerPanel.add(footerLabel);
+    
+    mainFrame.getContentPane().add(footerPanel, AsWingConstants.SOUTH);
+
+    // Sidebar (West)
+    const sidebarPanel = new JPanel();
+    sidebarPanel.getElement().style.background = '#f8f9fa';
+    sidebarPanel.getElement().style.borderRight = '1px solid #dee2e6';
+    sidebarPanel.setSize(180, 662);
+
+    const navLabels = ['📁 Dashboard', '📊 Analytics', '⚙️ Settings', '👤 Profile', '📧 Messages'];
+    let selectedIndex = -1;
+
+    // Sidebar description
+    const sidebarDesc = new JLabel('✅ 验证：点击导航按钮切换内容');
+    sidebarDesc.getElement().style.fontSize = '10px';
+    sidebarDesc.getElement().style.color = '#666';
+    sidebarDesc.setLocation(10, 240);
+    sidebarDesc.setSize(160, 30);
+    sidebarDesc.getElement().style.position = 'absolute';
+    sidebarPanel.add(sidebarDesc);
+
+    navLabels.forEach((text, index) => {
+      const navBtn = new JButton(text);
+      navBtn.setLocation(10, 10 + index * 45);
+      navBtn.getElement().style.position = 'absolute';
+      navBtn.getElement().style.width = '160px';
+      navBtn.getElement().style.background = '#fff';
+      navBtn.getElement().style.border = '1px solid #ddd';
+      navBtn.getElement().style.borderRadius = '4px';
+      
+      navBtn.addEventListener(AWEvent.ACT, () => {
+        if (selectedIndex >= 0) {
+          const prevBtn = sidebarPanel.getComponentAt(selectedIndex);
+          if (prevBtn) {
+            prevBtn.getElement().style.background = '#fff';
+            prevBtn.getElement().style.color = '#333';
+          }
+        }
+        selectedIndex = index;
+        navBtn.getElement().style.background = '#667eea';
+        navBtn.getElement().style.color = '#fff';
+        
+        // Update content
+        contentLabelLayout.setText(`Viewing: ${text}`);
+        contentPanel.getElement().style.background = getColorForIndex(index);
+      });
+      
+      sidebarPanel.add(navBtn);
+    });
+
+    function getColorForIndex(index) {
+      const colors = ['#e8f4f8', '#f0f8e8', '#fff8e8', '#f8e8f0', '#e8f0f8'];
+      return colors[index] || '#fff';
+    }
+
+    mainFrame.getContentPane().add(sidebarPanel, AsWingConstants.WEST);
+
+    // Content area (Center)
+    const contentPanel = new JPanel();
+    contentPanel.getElement().style.background = '#e8f4f8';
+    contentPanel.getElement().style.transition = 'background 0.3s ease';
+
+    const contentLabelLayout = new JLabel('📁 Dashboard');
+    contentLabelLayout.getElement().style.fontSize = '24px';
+    contentLabelLayout.getElement().style.fontWeight = 'bold';
+    contentLabelLayout.getElement().style.color = '#333';
+    contentPanel.add(contentLabelLayout);
+
+    // Add some stat cards
+    const statsDesc = new JLabel('✅ 验证：嵌套面板内组件定位正确');
+    statsDesc.getElement().style.fontSize = '11px';
+    statsDesc.getElement().style.color = '#666';
+    statsDesc.setLocation(30, 280);
+    statsDesc.setSize(350, 20);
+    statsDesc.getElement().style.position = 'absolute';
+    contentPanel.add(statsDesc);
+
+    const stats = [
+      { label: 'Total Users', value: '1,234' },
+      { label: 'Active Now', value: '56' },
+      { label: 'Revenue', value: '$12.5K' },
+      { label: 'Orders', value: '89' }
+    ];
+
+    stats.forEach((stat, i) => {
+      const cardX = 30 + (i % 2) * 200;
+      const cardY = 60 + Math.floor(i / 2) * 120;
+      
+      const cardPanel = new JPanel();
+      cardPanel.setLocation(cardX, cardY);
+      cardPanel.setSize(180, 100);
+      cardPanel.getElement().style.position = 'absolute';
+      cardPanel.getElement().style.background = '#fff';
+      cardPanel.getElement().style.borderRadius = '8px';
+      cardPanel.getElement().style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
+      cardPanel.getElement().style.padding = '15px';
+
+      const statLabel = new JLabel(stat.label);
+      statLabel.getElement().style.fontSize = '12px';
+      statLabel.getElement().style.color = '#666';
+      statLabel.setLocation(0, 5);
+      statLabel.getElement().style.position = 'absolute';
+      cardPanel.add(statLabel);
+
+      const statValue = new JLabel(stat.value);
+      statValue.getElement().style.fontSize = '28px';
+      statValue.getElement().style.fontWeight = 'bold';
+      statValue.getElement().style.color = '#667eea';
+      statValue.setLocation(0, 40);
+      statValue.getElement().style.position = 'absolute';
+      cardPanel.add(statValue);
+
+      contentPanel.add(cardPanel);
+    });
+
+    mainFrame.getContentPane().add(contentPanel, AsWingConstants.CENTER);
+
+    // East panel - Info
+    const infoPanel = new JPanel();
+    infoPanel.getElement().style.background = '#fff3cd';
+    infoPanel.getElement().style.borderLeft = '1px solid #ffc107';
+    infoPanel.setSize(200, 662);
+
+    const infoTitle = new JLabel('ℹ️ Info');
+    infoTitle.getElement().style.fontWeight = 'bold';
+    infoTitle.getElement().style.color = '#856404';
+    infoTitle.setLocation(10, 10);
+    infoTitle.getElement().style.position = 'absolute';
+    infoPanel.add(infoTitle);
+
+    const infoText = new JLabel('Click navigation buttons to change content. This demonstrates BorderLayout with nested panels.');
+    infoText.getElement().style.fontSize = '11px';
+    infoText.getElement().style.color = '#856404';
+    infoText.setLocation(10, 40);
+    infoText.setSize(180, 200);
+    infoText.getElement().style.position = 'absolute';
+    infoText.getElement().style.lineHeight = '1.6';
+    infoPanel.add(infoText);
+
+    mainFrame.getContentPane().add(infoPanel, AsWingConstants.EAST);
+
+    // Debug info
+    setTimeout(() => {
+      console.log('=== Layout Demo Debug ===');
+      console.log('MainFrame size:', mainFrame.getWidth(), 'x', mainFrame.getHeight());
+      console.log('ContentPane size:', mainFrame.getContentPane().getWidth(), 'x', mainFrame.getContentPane().getHeight());
+      console.log('Sidebar (West) size:', sidebarPanel.getWidth(), 'x', sidebarPanel.getHeight());
+      console.log('Sidebar location:', sidebarPanel.getX(), sidebarPanel.getY());
+      console.log('ContentPanel (Center) size:', contentPanel.getWidth(), 'x', contentPanel.getHeight());
+      console.log('ContentPanel location:', contentPanel.getX(), contentPanel.getY());
+      console.log('InfoPanel (East) size:', infoPanel.getWidth(), 'x', infoPanel.getHeight());
+      console.log('InfoPanel location:', infoPanel.getX(), infoPanel.getY());
+      console.log('HeaderPanel (North) size:', headerPanel.getWidth(), 'x', headerPanel.getHeight());
+      console.log('FooterPanel (South) size:', footerPanel.getWidth(), 'x', footerPanel.getHeight());
+      console.log('Stat cards count:', contentPanel.getComponentCount());
+      console.log('✅ Layout demo initialized successfully!');
+    }, 500);
+
+    console.log('Layout demo loaded!');
+
+    // Handle window resize
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        const newWidth = app.clientWidth;
+        const newHeight = app.clientHeight;
+        mainFrame.setSize(newWidth, newHeight);
+        console.log('Window resized, frame updated to:', newWidth, 'x', newHeight);
+      }, 150);
+    });
+  </script>
+</body>
+</html>

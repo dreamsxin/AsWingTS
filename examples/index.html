@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AsWingTS - Examples</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    h1 {
+      text-align: center;
+      color: #fff;
+      font-size: 42px;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+    .subtitle {
+      text-align: center;
+      color: rgba(255,255,255,0.9);
+      font-size: 18px;
+      margin-bottom: 40px;
+    }
+    .examples-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+    }
+    .example-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      transition: transform 0.2s, box-shadow 0.2s;
+      text-decoration: none;
+      color: inherit;
+    }
+    .example-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+    }
+    .example-card h2 {
+      color: #667eea;
+      font-size: 22px;
+      margin-bottom: 12px;
+    }
+    .example-card p {
+      color: #666;
+      line-height: 1.6;
+      font-size: 14px;
+    }
+    .example-card .tags {
+      margin-top: 15px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .tag {
+      background: #f0f0f0;
+      color: #666;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .tag.blue { background: #e3f2fd; color: #1976d2; }
+    .tag.green { background: #e8f5e9; color: #388e3c; }
+    .tag.purple { background: #f3e5f5; color: #7b1fa2; }
+    .footer {
+      text-align: center;
+      color: rgba(255,255,255,0.8);
+      margin-top: 50px;
+      font-size: 14px;
+    }
+    .footer a {
+      color: #fff;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎨 AsWingTS Examples</h1>
+    <p class="subtitle">TypeScript UI Framework - Swing-style components for the web</p>
+    
+    <div class="examples-grid">
+      <a href="basic.html" class="example-card">
+        <h2>📦 Basic Example</h2>
+        <p>Getting started with AsWingTS. Learn how to create a JFrame, add components with BorderLayout, and handle button click events.</p>
+        <div class="tags">
+          <span class="tag blue">JFrame</span>
+          <span class="tag blue">JButton</span>
+          <span class="tag blue">JLabel</span>
+          <span class="tag green">BorderLayout</span>
+        </div>
+      </a>
+
+      <a href="components.html" class="example-card">
+        <h2>🧩 Components Demo</h2>
+        <p>Explore all available components: buttons with event handlers, labels with different alignments, and nested panels with custom styling.</p>
+        <div class="tags">
+          <span class="tag blue">JPanel</span>
+          <span class="tag blue">Events</span>
+          <span class="tag purple">Nesting</span>
+          <span class="tag green">Styling</span>
+        </div>
+      </a>
+
+      <a href="layout.html" class="example-card">
+        <h2>📐 Layout Showcase</h2>
+        <p>A complete dashboard UI demonstrating BorderLayout with sidebar navigation, content area with stat cards, and info panel.</p>
+        <div class="tags">
+          <span class="tag green">BorderLayout</span>
+          <span class="tag purple">Dashboard</span>
+          <span class="tag blue">Interactive</span>
+        </div>
+      </a>
+    </div>
+
+    <div class="footer">
+      <p>AsWingTS v1.0 | <a href="https://github.com/dreamsxin/AsWingTS">GitHub</a></p>
+      <p style="margin-top: 10px; font-size: 12px;">A TypeScript reimplementation of AsWing</p>
+    </div>
+  </div>
+</body>
+</html>
