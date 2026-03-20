@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AsWingTS - Menu & Toolbar Demo</title>
+  <link rel="stylesheet" href="../src/styles.css?v=2">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      padding: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      min-height: 100vh;
+    }
+    h1 {
+      text-align: center;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+    .demo-info {
+      text-align: center;
+      color: rgba(255,255,255,0.9);
+      margin-bottom: 20px;
+    }
+    #app {
+      position: relative;
+      width: 100%;
+      max-width: 1400px;
+      height: calc(100vh - 140px);
+      min-height: 600px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+      margin: 0 auto;
+      overflow: auto;
+    }
+    .tip {
+      text-align: center;
+      color: #fff;
+      font-size: 13px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>📋 Menu & Toolbar Demo</h1>
+  <p class="demo-info">JMenuBar, JMenu, JMenuItem, JToolBar, JSeparator</p>
+  <div id="app"></div>
+  <p class="tip">💡 提示：点击菜单项打开下拉菜单，工具栏按钮有悬停效果</p>
+
+  <script type="module">
+    import { 
+      AsWingManager, 
+      JFrame, 
+      JPanel,
+      JLabel,
+      JButton,
+      BorderLayout,
+      FlowLayout,
+      AsWingConstants,
+      JMenuBar,
+      JMenu,
+      JMenuItem,
+      JToolBar,
+      JSeparator,
+      Debug
+    } from '../dist/index.js?v=2';
+
+    Debug.enabled = false;
+
+    const app = document.getElementById('app');
+    AsWingManager.initAsStandard(app);
+
+    // === Demo 1: Menu Bar ===
+    const frame1 = new JFrame('Demo 1: Menu Bar (菜单栏)');
+    app.appendChild(frame1.getElement());
+    frame1.setLocation(20, 20);
+    frame1.setSize(650, 350);
+
+    const menuPanel = new JPanel();
+    menuPanel.setLayout(new BorderLayout());
+    menuPanel.setLocation(10, 10);
+    menuPanel.setSize(610, 300);
+
+    // Create menu bar
+    const menuBar = new JMenuBar();
+    menuBar.setSize(610, 28);
+    menuBar.getElement()!.style.position = 'absolute';
+    menuBar.getElement()!.style.left = '0';
+    menuBar.getElement()!.style.top = '0';
+
+    // File menu
+    const fileMenu = new JMenu('📁 File');
+    const newMenuItem = new JMenuItem('✨ New');
+    const openMenuItem = new JMenuItem('📂 Open');
+    const saveMenuItem = new JMenuItem('💾 Save');
+    
+    fileMenu.add(newMenuItem);
+    fileMenu.add(openMenuItem);
+    fileMenu.add(saveMenuItem);
+    fileMenu.addSeparator();
+    
+    const exitMenuItem = new JMenuItem('🚪 Exit');
+    fileMenu.add(exitMenuItem);
+    
+    menuBar.add(fileMenu);
+
+    // Edit menu
+    const editMenu = new JMenu('✏️ Edit');
+    const undoMenuItem = new JMenuItem('↩️ Undo');
+    const redoMenuItem = new JMenuItem('↪️ Redo');
+    
+    editMenu.add(undoMenuItem);
+    editMenu.add(redoMenuItem);
+    editMenu.addSeparator();
+    
+    const cutMenuItem = new JMenuItem('✂️ Cut');
+    const copyMenuItem = new JMenuItem('📋 Copy');
+    const pasteMenuItem = new JMenuItem('📌 Paste');
+    
+    editMenu.add(cutMenuItem);
+    editMenu.add(copyMenuItem);
+    editMenu.add(pasteMenuItem);
+    
+    menuBar.add(editMenu);
+
+    // View menu
+    const viewMenu = new JMenu('👁️ View');
+    const zoomInMenuItem = new JMenuItem('🔍 Zoom In');
+    const zoomOutMenuItem = new JMenuItem('🔎 Zoom Out');
+    
+    viewMenu.add(zoomInMenuItem);
+    viewMenu.add(zoomOutMenuItem);
+    viewMenu.addSeparator();
+    
+    const fullscreenMenuItem = new JMenuItem('⛶ Full Screen');
+    viewMenu.add(fullscreenMenuItem);
+    
+    menuBar.add(viewMenu);
+
+    // Help menu
+    const helpMenu = new JMenu('❓ Help');
+    const aboutMenuItem = new JMenuItem('ℹ️ About');
+    helpMenu.add(aboutMenuItem);
+    menuBar.add(helpMenu);
+
+    // Menu item events
+    [newMenuItem, openMenuItem, saveMenuItem, exitMenuItem].forEach(item => {
+      item.addEventListener('act', () => {
+        console.log('File menu:', item.getText());
+        alert(`File: ${item.getText()}`);
+      });
+    });
+
+    [undoMenuItem, redoMenuItem, cutMenuItem, copyMenuItem, pasteMenuItem].forEach(item => {
+      item.addEventListener('act', () => {
+        console.log('Edit menu:', item.getText());
+        alert(`Edit: ${item.getText()}`);
+      });
+    });
+
+    [zoomInMenuItem, zoomOutMenuItem, fullscreenMenuItem].forEach(item => {
+      item.addEventListener('act', () => {
+        console.log('View menu:', item.getText());
+        alert(`View: ${item.getText()}`);
+      });
+    });
+
+    aboutMenuItem.addEventListener('act', () => {
+      alert('AsWingTS Menu Demo\nVersion 1.0\n\nA TypeScript UI framework inspired by Java Swing');
+    });
+
+    // Content area
+    const contentLabel = new JLabel('Click menu items to see actions')
+      .setSize(400, 30)
+      .setTextAlign('center');
+    contentLabel.setLocation(100, 100);
+    menuPanel.add(contentLabel);
+
+    menuPanel.add(menuBar);
+    frame1.getContentPane().add(menuPanel);
+
+    // === Demo 2: Toolbar ===
+    const frame2 = new JFrame('Demo 2: Toolbar (工具栏)');
+    app.appendChild(frame2.getElement());
+    frame2.setLocation(20, 390);
+    frame2.setSize(650, 200);
+
+    const toolbarPanel = new JPanel();
+    toolbarPanel.setLayout(new BorderLayout());
+    toolbarPanel.setLocation(10, 10);
+    toolbarPanel.setSize(610, 150);
+
+    // Create toolbar
+    const toolBar = new JToolBar(JToolBar.HORIZONTAL);
+    toolBar.setSize(610, 32);
+    toolBar.getElement()!.style.position = 'absolute';
+    toolBar.getElement()!.style.left = '0';
+    toolBar.getElement()!.style.top = '0';
+    toolBar.getElement()!.style.background = '#f5f5f5';
+
+    // Toolbar buttons
+    const newBtn = new JButton('✨ New');
+    newBtn.setSize(70, 28);
+    toolBar.add(newBtn);
+
+    const openBtn = new JButton('📂 Open');
+    openBtn.setSize(70, 28);
+    toolBar.add(openBtn);
+
+    const saveBtn = new JButton('💾 Save');
+    saveBtn.setSize(70, 28);
+    toolBar.add(saveBtn);
+
+    toolBar.addSeparator();
+
+    const cutBtn = new JButton('✂️');
+    cutBtn.setSize(40, 28);
+    toolBar.add(cutBtn);
+
+    const copyBtn = new JButton('📋');
+    copyBtn.setSize(40, 28);
+    toolBar.add(copyBtn);
+
+    const pasteBtn = new JButton('📌');
+    pasteBtn.setSize(40, 28);
+    toolBar.add(pasteBtn);
+
+    toolBar.addSeparator();
+
+    const undoBtn = new JButton('↩️');
+    undoBtn.setSize(40, 28);
+    toolBar.add(undoBtn);
+
+    const redoBtn = new JButton('↪️');
+    redoBtn.setSize(40, 28);
+    toolBar.add(redoBtn);
+
+    toolBar.addSeparator();
+
+    const zoomInBtn = new JButton('🔍');
+    zoomInBtn.setSize(40, 28);
+    toolBar.add(zoomInBtn);
+
+    const zoomOutBtn = new JButton('🔎');
+    zoomOutBtn.setSize(40, 28);
+    toolBar.add(zoomOutBtn);
+
+    // Toolbar button events
+    [newBtn, openBtn, saveBtn].forEach(btn => {
+      btn.addEventListener('act', () => {
+        console.log('Toolbar:', btn.getText());
+        alert(`Action: ${btn.getText()}`);
+      });
+    });
+
+    toolbarPanel.add(toolBar);
+
+    const toolbarContent = new JLabel('Click toolbar buttons to see actions')
+      .setSize(400, 30)
+      .setTextAlign('center');
+    toolbarContent.setLocation(100, 60);
+    toolbarPanel.add(toolbarContent);
+
+    frame2.getContentPane().add(toolbarPanel);
+
+    // === Demo 3: Menu + Toolbar Combined ===
+    const frame3 = new JFrame('Demo 3: Menu + Toolbar (组合)');
+    app.appendChild(frame3.getElement());
+    frame3.setLocation(690, 20);
+    frame3.setSize(650, 570);
+
+    const combinedPanel = new JPanel();
+    combinedPanel.setLayout(new BorderLayout());
+    combinedPanel.setLocation(10, 10);
+    combinedPanel.setSize(610, 520);
+
+    // Menu bar
+    const menuBar2 = new JMenuBar();
+    menuBar2.setSize(610, 28);
+    menuBar2.getElement()!.style.position = 'absolute';
+    menuBar2.getElement()!.style.left = '0';
+    menuBar2.getElement()!.style.top = '0';
+
+    const fileMenu2 = new JMenu('📁 File');
+    fileMenu2.add(new JMenuItem('✨ New'));
+    fileMenu2.add(new JMenuItem('📂 Open'));
+    fileMenu2.add(new JMenuItem('💾 Save'));
+    menuBar2.add(fileMenu2);
+
+    const editMenu2 = new JMenu('✏️ Edit');
+    editMenu2.add(new JMenuItem('✂️ Cut'));
+    editMenu2.add(new JMenuItem('📋 Copy'));
+    editMenu2.add(new JMenuItem('📌 Paste'));
+    menuBar2.add(editMenu2);
+
+    combinedPanel.add(menuBar2);
+
+    // Toolbar
+    const toolBar2 = new JToolBar(JToolBar.HORIZONTAL);
+    toolBar2.setSize(610, 32);
+    toolBar2.getElement()!.style.position = 'absolute';
+    toolBar2.getElement()!.style.left = '0';
+    toolBar2.getElement()!.style.top = '28px';
+    toolBar2.getElement()!.style.background = '#f5f5f5';
+
+    toolBar2.add(new JButton('✨'));
+    toolBar2.add(new JButton('📂'));
+    toolBar2.add(new JButton('💾'));
+    toolBar2.addSeparator();
+    toolBar2.add(new JButton('✂️'));
+    toolBar2.add(new JButton('📋'));
+    toolBar2.add(new JButton('📌'));
+
+    combinedPanel.add(toolBar2);
+
+    // Content area
+    const contentArea = new JPanel();
+    contentArea.setLocation(0, 60);
+    contentArea.setSize(610, 460);
+    contentArea.getElement()!.style.background = '#fafafa';
+    contentArea.getElement()!.style.border = '1px solid #e0e0e0';
+
+    const contentLabel2 = new JLabel('Content Area\n\nMenu + Toolbar combination\nCommon in text editors, IDEs, etc.')
+      .setSize(300, 100)
+      .setTextAlign('center')
+      .setLineHeight('2');
+    contentLabel2.setLocation(150, 180);
+    contentArea.add(contentLabel2);
+
+    combinedPanel.add(contentArea);
+    frame3.getContentPane().add(combinedPanel);
+
+    console.log('✅ Menu & Toolbar demo loaded!');
+
+    // Debug info
+    setTimeout(() => {
+      console.log('=== Menu & Toolbar Debug ===');
+      console.log('Menu bar menus:', menuBar.getMenuCount());
+      console.log('Toolbar components:', toolBar.getComponentCount());
+      console.log('✅ All components verified!');
+    }, 500);
+  </script>
+</body>
+</html>

@@ -44,6 +44,17 @@ export { JSeparator } from './org/aswing/JSeparator.js';
 export { JMenuBar } from './org/aswing/JMenuBar.js';
 export { JMenu } from './org/aswing/JMenu.js';
 export { JMenuItem } from './org/aswing/JMenuItem.js';
+export { JTable } from './org/aswing/table/JTable.js';
+export { JTree, TreePath } from './org/aswing/tree/JTree.js';
+
+// Table
+export { TableModel, TableModelEvent, TableModelListener, AbstractTableModel, DefaultTableModel } from './org/aswing/table/TableModel.js';
+export { TableCellRenderer, DefaultTableCellRenderer, BooleanCellRenderer } from './org/aswing/table/TableCellRenderer.js';
+
+// Tree
+export { TreeNode, DefaultTreeNode } from './org/aswing/tree/TreeNode.js';
+export { TreeModel, TreeModelEvent, TreeModelListener, DefaultTreeModel } from './org/aswing/tree/TreeModel.js';
+export { TreeCellRenderer, DefaultTreeCellRenderer } from './org/aswing/tree/TreeCellRenderer.js';
 
 // Geometry
 export { IntDimension } from './org/aswing/geom/IntDimension.js';

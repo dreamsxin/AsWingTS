@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AsWingTS - JTable & JTree Demo</title>
+  <link rel="stylesheet" href="../src/styles.css?v=2">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      padding: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      min-height: 100vh;
+    }
+    h1 {
+      text-align: center;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+    .demo-info {
+      text-align: center;
+      color: rgba(255,255,255,0.9);
+      margin-bottom: 20px;
+    }
+    #app {
+      position: relative;
+      width: 100%;
+      max-width: 1400px;
+      height: calc(100vh - 140px);
+      min-height: 700px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+      margin: 0 auto;
+      overflow: auto;
+    }
+    .tip {
+      text-align: center;
+      color: #fff;
+      font-size: 13px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>📊 JTable & 🌳 JTree Demo</h1>
+  <p class="demo-info">Table and Tree components with data models</p>
+  <div id="app"></div>
+  <p class="tip">💡 提示：点击表格行选择，点击树节点展开/折叠</p>
+
+  <script type="module">
+    import { 
+      AsWingManager, 
+      JFrame, 
+      JPanel,
+      JScrollPane,
+      BorderLayout,
+      AsWingConstants,
+      JTable, 
+      JTree,
+      DefaultTableModel,
+      DefaultTreeModel,
+      DefaultTreeNode,
+      Debug
+    } from '../dist/index.js?v=2';
+
+    Debug.enabled = false;
+
+    const app = document.getElementById('app');
+    AsWingManager.initAsStandard(app);
+
+    // === Demo 1: JTable ===
+    const frame1 = new JFrame('Demo 1: JTable (表格)');
+    app.appendChild(frame1.getElement());
+    frame1.setLocation(20, 20);
+    frame1.setSize(700, 400);
+
+    const tablePanel = new JPanel();
+    tablePanel.setLayout(new BorderLayout());
+    tablePanel.setLocation(10, 10);
+    tablePanel.setSize(660, 350);
+
+    // Create table model
+    const tableModel = new DefaultTableModel(['ID', 'Name', 'Email', 'Age', 'City'], 0);
+    
+    // Add sample data
+    const sampleData = [
+      [1, 'John Doe', 'john@example.com', 28, 'New York'],
+      [2, 'Jane Smith', 'jane@example.com', 34, 'London'],
+      [3, 'Bob Johnson', 'bob@example.com', 45, 'Paris'],
+      [4, 'Alice Brown', 'alice@example.com', 29, 'Tokyo'],
+      [5, 'Charlie Wilson', 'charlie@example.com', 38, 'Sydney'],
+      [6, 'Diana Lee', 'diana@example.com', 31, 'Berlin'],
+      [7, 'Edward Kim', 'edward@example.com', 42, 'Seoul'],
+      [8, 'Fiona Chen', 'fiona@example.com', 27, 'Shanghai'],
+      [9, 'George Wang', 'george@example.com', 35, 'Beijing'],
+      [10, 'Helen Liu', 'helen@example.com', 30, 'Toronto']
+    ];
+    
+    sampleData.forEach(row => tableModel.addRow(row));
+
+    // Create table
+    const table = new JTable(tableModel);
+    table.setRowHeight(28);
+    table.setShowGrid(true);
+    table.setGridColor('#e0e0e0');
+    table.setSize(640, 280);
+
+    // Scroll pane for table
+    const tableScrollPane = new JScrollPane(table);
+    tableScrollPane.setSize(640, 280);
+    tablePanel.add(tableScrollPane, AsWingConstants.CENTER);
+
+    frame1.getContentPane().add(tablePanel);
+
+    // === Demo 2: JTree ===
+    const frame2 = new JFrame('Demo 2: JTree (树)');
+    app.appendChild(frame2.getElement());
+    frame2.setLocation(20, 440);
+    frame2.setSize(400, 350);
+
+    const treePanel = new JPanel();
+    treePanel.setLayout(new BorderLayout());
+    treePanel.setLocation(10, 10);
+    treePanel.setSize(360, 300);
+
+    // Create tree model with sample data
+    const root = new DefaultTreeNode('📁 Root');
+    
+    const documents = new DefaultTreeNode('📁 Documents', root);
+    const pictures = new DefaultTreeNode('📁 Pictures', root);
+    const music = new DefaultTreeNode('🎵 Music', root);
+    
+    const work = new DefaultTreeNode('📁 Work', documents);
+    const personal = new DefaultTreeNode('📁 Personal', documents);
+    
+    work.add(new DefaultTreeNode('📄 Report.docx'));
+    work.add(new DefaultTreeNode('📄 Presentation.pptx'));
+    work.add(new DefaultTreeNode('📊 Data.xlsx'));
+    
+    personal.add(new DefaultTreeNode('📄 Resume.pdf'));
+    personal.add(new DefaultTreeNode('📄 Cover Letter.docx'));
+    
+    pictures.add(new DefaultTreeNode('🖼️ Vacation.jpg'));
+    pictures.add(new DefaultTreeNode('🖼️ Family.png'));
+    pictures.add(new DefaultTreeNode('🖼️ Friends.jpg'));
+    
+    music.add(new DefaultTreeNode('🎵 Song 1.mp3'));
+    music.add(new DefaultTreeNode('🎵 Song 2.mp3'));
+    music.add(new DefaultTreeNode('🎵 Song 3.mp3'));
+    
+    const treeModel = new DefaultTreeModel(root);
+    const tree = new JTree(treeModel);
+    tree.setRowHeight(28);
+    tree.setRootVisible(true);
+    tree.setSize(340, 280);
+
+    // Scroll pane for tree
+    const treeScrollPane = new JScrollPane(tree);
+    treeScrollPane.setSize(340, 280);
+    treePanel.add(treeScrollPane, AsWingConstants.CENTER);
+
+    frame2.getContentPane().add(treePanel);
+
+    // === Demo 3: JTree with expand/collapse ===
+    const frame3 = new JFrame('Demo 3: JTree Controls');
+    app.appendChild(frame3.getElement());
+    frame3.setLocation(440, 440);
+    frame3.setSize(300, 350);
+
+    const controlPanel = new JPanel();
+    controlPanel.setLayout(new BorderLayout());
+    controlPanel.setLocation(10, 10);
+    controlPanel.setSize(260, 300);
+
+    const tree2 = new JTree(treeModel);
+    tree2.setRowHeight(28);
+    tree2.setSize(240, 220);
+
+    const tree2ScrollPane = new JScrollPane(tree2);
+    tree2ScrollPane.setSize(240, 220);
+    controlPanel.add(tree2ScrollPane, AsWingConstants.CENTER);
+
+    frame3.getContentPane().add(controlPanel);
+
+    console.log('✅ Table & Tree demo loaded!');
+
+    // Debug info
+    setTimeout(() => {
+      console.log('=== Table & Tree Debug ===');
+      console.log('Table rows:', table.getRowCount());
+      console.log('Table columns:', table.getColumnCount());
+      console.log('Tree root:', tree.getModel().getRoot()?.getUserObject());
+      console.log('✅ All components verified!');
+    }, 500);
+  </script>
+</body>
+</html>

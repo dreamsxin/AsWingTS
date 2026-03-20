@@ -67,6 +67,15 @@ AsWingTS is a TypeScript reimplementation of the AsWing Flash/ActionScript UI fr
 - [x] `JMenuBar` - Menu bar container
 - [x] `JMenu` - Dropdown menu
 - [x] `JMenuItem` - Menu item
+- [x] `JTable` - Data table with model
+- [x] `JTree` - Hierarchical tree with model
+
+**Data Models:**
+- [x] `TableModel` / `DefaultTableModel` - Table data model
+- [x] `TreeModel` / `DefaultTreeModel` - Tree data model
+- [x] `TreeNode` / `DefaultTreeNode` - Tree node
+- [x] `TableCellRenderer` - Table cell renderer
+- [x] `TreeCellRenderer` - Tree cell renderer
 
 **Documentation:**
 - [x] README.md
