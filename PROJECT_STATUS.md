@@ -36,14 +36,23 @@ AsWingTS is a TypeScript reimplementation of the AsWing Flash/ActionScript UI fr
 
 **Layout Managers:**
 - [x] `LayoutManager` interface
+- [x] `LayoutConstraint` interface
 - [x] `EmptyLayout` - Default no-op layout
+- [x] `AbsoluteLayout` - Manual positioning (no automatic layout)
 - [x] `BorderLayout` - Five-area layout (N/S/E/W/Center)
+- [x] `FlowLayout` - Left-to-right flow with wrapping
+- [x] `GridLayout` - Grid of equal-sized cells
+- [x] `BoxLayout` - Single row or column layout
 
 **Components:**
+- [x] `JAbstractButton` - Abstract button base class
 - [x] `JButton` - Clickable button
 - [x] `JLabel` - Text label
 - [x] `JPanel` - Generic container panel
 - [x] `JFrame` - Top-level window with title bar
+- [x] `JTextField` - Single-line text input
+- [x] `JCheckBox` - Checkbox with label
+- [x] `JProgressBar` - Progress indicator (horizontal/vertical)
 
 **Documentation:**
 - [x] README.md

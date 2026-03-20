@@ -77,12 +77,13 @@ export class Container extends Component {
 
   private addImpl(child: Component, constraints: unknown = null, index: number = -1): Component {
     // Remove from previous parent if any
-    if (child.getParent()) {
-      child.getParent()!.remove(child);
+    const oldParent = child.getParent();
+    if (oldParent) {
+      oldParent.remove(child);
     }
 
-    // Set parent reference
-    (child as any)._parent = this;
+    // Set parent reference using internal method
+    child._setParent(this);
 
     // Add to children array
     if (index < 0 || index >= this._children.length) {
@@ -151,8 +152,8 @@ export class Container extends Component {
       childElement.parentElement.removeChild(childElement);
     }
 
-    // Clear parent reference
-    (child as any)._parent = null;
+    // Clear parent reference using internal method
+    child._setParent(null);
 
     // Remove from layout
     this._layout.removeLayoutComponent(child);
@@ -233,10 +234,11 @@ export class Container extends Component {
     return this._layout.minimumLayoutSize(this);
   }
 
-  override setSizeWH(width: number, height: number): void {
+  override setSizeWH(width: number, height: number): this {
     super.setSizeWH(width, height);
     // Re-run layout when container is resized
     this.revalidate();
+    return this;
   }
 
   override toString(): string {

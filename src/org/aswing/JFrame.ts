@@ -154,14 +154,16 @@ export class JFrame extends Container {
 
   /**
    * Override setSizeWH to also resize content pane.
+   * Chainable - returns this for method chaining.
    */
-  override setSizeWH(width: number, height: number): void {
+  override setSizeWH(width: number, height: number): this {
     super.setSizeWH(width, height);
     // Update content pane size to match frame interior size
     if (this._contentPane) {
       const innerHeight = height - this._titleBarHeight;
       this._contentPane.setSizeWH(width, innerHeight > 0 ? innerHeight : 0);
     }
+    return this;
   }
 
   /**
@@ -175,8 +177,9 @@ export class JFrame extends Container {
 
   /**
    * Sets the frame visible.
+   * Chainable - returns this for method chaining.
    */
-  override setVisible(visible: boolean): void {
+  override setVisible(visible: boolean): this {
     super.setVisible(visible);
     if (visible && !this._element?.parentElement) {
       // Add to root container
@@ -185,6 +188,7 @@ export class JFrame extends Container {
         root.appendChild(this._element!);
       }
     }
+    return this;
   }
 
   override getPreferredSize(): IntDimension {

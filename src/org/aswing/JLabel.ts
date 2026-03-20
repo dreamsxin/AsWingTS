@@ -74,13 +74,15 @@ export class JLabel extends Component {
 
   /**
    * Sets the horizontal alignment.
+   * Chainable - returns this for method chaining.
    */
-  setHorizontalAlignment(alignment: string): void {
+  setHorizontalAlignment(alignment: string): this {
     this._horizontalAlignment = alignment;
     if (this._element) {
       this._element.style.textAlign = alignment;
       this._element.style.justifyContent = this.getFlexJustify(alignment);
     }
+    return this;
   }
 
   /**
@@ -92,12 +94,14 @@ export class JLabel extends Component {
 
   /**
    * Sets the vertical alignment.
+   * Chainable - returns this for method chaining.
    */
-  setVerticalAlignment(alignment: string): void {
+  setVerticalAlignment(alignment: string): this {
     this._verticalAlignment = alignment;
     if (this._element) {
       this._element.style.alignItems = this.getFlexAlignment(alignment);
     }
+    return this;
   }
 
   /**

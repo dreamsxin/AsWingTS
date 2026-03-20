@@ -25,6 +25,11 @@ export class Component extends EventTarget {
   protected _opaque: boolean;
   protected _drawTransparentTrigger: boolean;
   protected _element: HTMLElement | null;
+  
+  /**
+   * Internal parent reference - managed by Container class.
+   */
+  _parent: Container | null;
 
   constructor() {
     super();
@@ -41,6 +46,7 @@ export class Component extends EventTarget {
     this._opaque = false;
     this._drawTransparentTrigger = true;
     this._element = null;
+    this._parent = null;
   }
 
   /**
@@ -64,9 +70,11 @@ export class Component extends EventTarget {
 
   /**
    * Sets the component name.
+   * Chainable - returns this for method chaining.
    */
-  setName(name: string): void {
+  setName(name: string): this {
     this._name = name;
+    return this;
   }
 
   /**
@@ -78,8 +86,9 @@ export class Component extends EventTarget {
 
   /**
    * Sets whether the component is visible.
+   * Chainable - returns this for method chaining.
    */
-  setVisible(visible: boolean): void {
+  setVisible(visible: boolean): this {
     if (this._visible !== visible) {
       this._visible = visible;
       if (this._element) {
@@ -91,6 +100,7 @@ export class Component extends EventTarget {
         this.dispatchEvent(new AWEvent(AWEvent.HIDDEN));
       }
     }
+    return this;
   }
 
   /**
@@ -102,13 +112,15 @@ export class Component extends EventTarget {
 
   /**
    * Sets whether the component is enabled.
+   * Chainable - returns this for method chaining.
    */
-  setEnabled(enabled: boolean): void {
+  setEnabled(enabled: boolean): this {
     this._enabled = enabled;
     if (this._element) {
       this._element.style.pointerEvents = enabled ? 'auto' : 'none';
       this._element.style.opacity = enabled ? '1' : '0.5';
     }
+    return this;
   }
 
   /**
@@ -120,22 +132,27 @@ export class Component extends EventTarget {
 
   /**
    * Sets the location of this component.
+   * Chainable - returns this for method chaining.
    */
-  setLocation(x: number, y: number): void {
+  setLocation(x: number, y: number): this {
     this.setLocationPoint(new IntPoint(x, y));
+    return this;
   }
 
   /**
    * Sets the location of this component using a point.
+   * Chainable - returns this for method chaining.
    */
-  setLocationPoint(p: IntPoint): void {
+  setLocationPoint(p: IntPoint): this {
     this.setLocationXY(p.x, p.y);
+    return this;
   }
 
   /**
    * Sets the location of this component with x and y.
+   * Chainable - returns this for method chaining.
    */
-  setLocationXY(x: number, y: number): void {
+  setLocationXY(x: number, y: number): this {
     const oldLocation = new IntPoint(this._x, this._y);
     this._x = x;
     this._y = y;
@@ -152,6 +169,7 @@ export class Component extends EventTarget {
     if (!oldLocation.equals(newLocation)) {
       this.dispatchEvent(new MovedEvent(MovedEvent.MOVED, oldLocation, newLocation));
     }
+    return this;
   }
 
   /**
@@ -177,22 +195,27 @@ export class Component extends EventTarget {
 
   /**
    * Sets the size of this component.
+   * Chainable - returns this for method chaining.
    */
-  setSize(width: number, height: number): void {
+  setSize(width: number, height: number): this {
     this.setSizeDimension(new IntDimension(width, height));
+    return this;
   }
 
   /**
    * Sets the size of this component using a dimension.
+   * Chainable - returns this for method chaining.
    */
-  setSizeDimension(d: IntDimension): void {
+  setSizeDimension(d: IntDimension): this {
     this.setSizeWH(d.width, d.height);
+    return this;
   }
 
   /**
    * Sets the size of this component with width and height.
+   * Chainable - returns this for method chaining.
    */
-  setSizeWH(width: number, height: number): void {
+  setSizeWH(width: number, height: number): this {
     const oldSize = new IntDimension(this._width, this._height);
     this._width = width;
     this._height = height;
@@ -208,6 +231,7 @@ export class Component extends EventTarget {
     if (!oldSize.equals(newSize)) {
       this.dispatchEvent(new ResizedEvent(ResizedEvent.RESIZED, oldSize, newSize));
     }
+    return this;
   }
 
   /**
@@ -248,9 +272,11 @@ export class Component extends EventTarget {
 
   /**
    * Sets the preferred size.
+   * Chainable - returns this for method chaining.
    */
-  setPreferredSize(size: IntDimension): void {
+  setPreferredSize(size: IntDimension): this {
     this._preferredSize = size;
+    return this;
   }
 
   /**
@@ -269,9 +295,11 @@ export class Component extends EventTarget {
 
   /**
    * Sets the minimum size.
+   * Chainable - returns this for method chaining.
    */
-  setMinimumSize(size: IntDimension): void {
+  setMinimumSize(size: IntDimension): this {
     this._minimumSize = size;
+    return this;
   }
 
   /**
@@ -286,9 +314,11 @@ export class Component extends EventTarget {
 
   /**
    * Sets the maximum size.
+   * Chainable - returns this for method chaining.
    */
-  setMaximumSize(size: IntDimension): void {
+  setMaximumSize(size: IntDimension): this {
     this._maximumSize = size;
+    return this;
   }
 
   /**
@@ -303,12 +333,14 @@ export class Component extends EventTarget {
 
   /**
    * Sets whether the component is opaque.
+   * Chainable - returns this for method chaining.
    */
-  setOpaque(opaque: boolean): void {
+  setOpaque(opaque: boolean): this {
     this._opaque = opaque;
     if (this._element) {
       this._element.style.background = opaque ? '' : 'transparent';
     }
+    return this;
   }
 
   /**
@@ -320,9 +352,11 @@ export class Component extends EventTarget {
 
   /**
    * Sets whether to draw transparent trigger.
+   * Chainable - returns this for method chaining.
    */
-  setDrawTransparentTrigger(draw: boolean): void {
+  setDrawTransparentTrigger(draw: boolean): this {
     this._drawTransparentTrigger = draw;
+    return this;
   }
 
   /**
@@ -386,7 +420,126 @@ export class Component extends EventTarget {
   getParent(): Container | null {
     return (this as any)._parent || null;
   }
+
+  // === Style Helper Methods ===
+
+  /**
+   * Sets a CSS style property.
+   * Chainable for convenience.
+   */
+  setStyle(property: string, value: string): this {
+    this.getElement();
+    if (this._element) {
+      (this._element.style as any)[property] = value;
+    }
+    return this;
+  }
+
+  /**
+   * Sets multiple CSS style properties.
+   * Chainable for convenience.
+   */
+  setStyles(styles: Record<string, string>): this {
+    this.getElement();
+    if (this._element) {
+      Object.assign(this._element.style, styles);
+    }
+    return this;
+  }
+
+  /**
+   * Adds a CSS class.
+   */
+  addClass(className: string): this {
+    this.getElement();
+    if (this._element) {
+      this._element.classList.add(className);
+    }
+    return this;
+  }
+
+  /**
+   * Removes a CSS class.
+   */
+  removeClass(className: string): this {
+    this.getElement();
+    if (this._element) {
+      this._element.classList.remove(className);
+    }
+    return this;
+  }
+
+  /**
+   * Sets font weight.
+   */
+  setFontWeight(weight: string): this {
+    return this.setStyle('fontWeight', weight);
+  }
+
+  /**
+   * Sets font size.
+   */
+  setFontSize(size: string): this {
+    return this.setStyle('fontSize', size);
+  }
+
+  /**
+   * Sets text color.
+   */
+  setColor(color: string): this {
+    return this.setStyle('color', color);
+  }
+
+  /**
+   * Sets background color.
+   */
+  setBackground(color: string): this {
+    return this.setStyle('background', color);
+  }
+
+  /**
+   * Sets border.
+   */
+  setBorder(border: string): this {
+    return this.setStyle('border', border);
+  }
+
+  /**
+   * Sets padding.
+   */
+  setPadding(padding: string): this {
+    return this.setStyle('padding', padding);
+  }
+
+  /**
+   * Sets margin.
+   */
+  setMargin(margin: string): this {
+    return this.setStyle('margin', margin);
+  }
+
+  /**
+   * Sets text alignment.
+   */
+  setTextAlign(align: 'left' | 'center' | 'right' | 'justify'): this {
+    return this.setStyle('textAlign', align);
+  }
+
+  /**
+   * Sets line height.
+   */
+  setLineHeight(height: string): this {
+    return this.setStyle('lineHeight', height);
+  }
+
+  /**
+   * Internal method to set parent - only used by Container.
+   * @internal
+   */
+  _setParent(parent: Container | null): void {
+    this._parent = parent;
+  }
 }
 
-// Add parent reference property
+// Initialize parent reference
 (Component as any).prototype._parent = null;

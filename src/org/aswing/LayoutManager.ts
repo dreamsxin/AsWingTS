@@ -52,3 +52,61 @@ export interface LayoutManager {
    */
   invalidateLayout?(): void;
 }
+
+/**
+ * Constraint interface for layout managers.
+ */
+export interface LayoutConstraint {
+  /**
+   * Component alignment (LEFT, CENTER, RIGHT, TOP, BOTTOM).
+   */
+  align?: string;
+  
+  /**
+   * Horizontal gap.
+   */
+  hgap?: number;
+  
+  /**
+   * Vertical gap.
+   */
+  vgap?: number;
+  
+  /**
+   * Grid position (row, column).
+   */
+  gridx?: number;
+  gridy?: number;
+  
+  /**
+   * Grid span (gridwidth, gridheight).
+   */
+  gridwidth?: number;
+  gridheight?: number;
+  
+  /**
+   * Weight for resizing (weightx, weighty).
+   */
+  weightx?: number;
+  weighty?: number;
+  
+  /**
+   * Fill mode (NONE, HORIZONTAL, VERTICAL, BOTH).
+   */
+  fill?: string;
+  
+  /**
+   * Anchor position when component is smaller than display area.
+   */
+  anchor?: string;
+  
+  /**
+   * External padding (insets).
+   */
+  insets?: {
+    top: number;
+    left: number;
+    right: number;
+    bottom: number;
+  };
+}

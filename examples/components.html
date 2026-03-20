@@ -78,8 +78,7 @@
 
     // North - combined title and description
     const northLabel = new JLabel('North Panel ✅ 5 个区域正确布局');
-    northLabel.getElement().style.fontSize = '12px';
-    northLabel.getElement().style.fontWeight = 'bold';
+    northLabel.setFontWeight('bold').setFontSize('12px');
     frame1.getContentPane().add(northLabel, AsWingConstants.NORTH);
 
     // South
@@ -106,47 +105,34 @@
 
     // Status label (CENTER) - with description
     const statusLabel = new JLabel('Click a button!\n✅ 验证：按钮点击事件触发');
-    statusLabel.getElement().style.fontSize = '14px';
-    statusLabel.getElement().style.fontWeight = 'bold';
-    statusLabel.getElement().style.lineHeight = '1.8';
+    statusLabel.setFontWeight('bold').setFontSize('14px').setLineHeight('1.8');
     frame2.getContentPane().add(statusLabel, AsWingConstants.CENTER);
 
     // Button panel (SOUTH)
     const btnPanel = new JPanel();
-    btnPanel.getElement().style.background = '#f9f9f9';
-    btnPanel.getElement().style.padding = '10px';
-    btnPanel.getElement().style.borderTop = '1px solid #eee';
+    btnPanel.setBackground('#f9f9f9').setPadding('10px').setBorder('1px solid #eee');
 
     const btn1 = new JButton('Button 1');
-    btn1.setSize(100, 30);
-    btn1.getElement().style.position = 'absolute';
-    btn1.getElement().style.left = '10px';
-    btn1.getElement().style.top = '10px';
+    btn1.setLocation(10, 10).setSize(100, 30);  // Use API, not direct style
     btn1.addEventListener(AWEvent.ACT, () => {
       statusLabel.setText('Button 1 clicked! 🎯');
-      statusLabel.getElement().style.color = '#d9534f';
+      statusLabel.setColor('#d9534f');  // Use API
     });
     btnPanel.add(btn1);
 
     const btn2 = new JButton('Button 2');
-    btn2.setSize(100, 30);
-    btn2.getElement().style.position = 'absolute';
-    btn2.getElement().style.left = '120px';
-    btn2.getElement().style.top = '10px';
+    btn2.setLocation(120, 10).setSize(100, 30);  // Use API
     btn2.addEventListener(AWEvent.ACT, () => {
       statusLabel.setText('Button 2 clicked! ✅');
-      statusLabel.getElement().style.color = '#5cb85c';
+      statusLabel.setColor('#5cb85c');  // Use API
     });
     btnPanel.add(btn2);
 
     const btn3 = new JButton('Reset');
-    btn3.setSize(100, 30);
-    btn3.getElement().style.position = 'absolute';
-    btn3.getElement().style.left = '230px';
-    btn3.getElement().style.top = '10px';
+    btn3.setLocation(230, 10).setSize(100, 30);  // Use API
     btn3.addEventListener(AWEvent.ACT, () => {
       statusLabel.setText('Click a button!');
-      statusLabel.getElement().style.color = '#333';
+      statusLabel.setColor('#333');  // Use API
     });
     btnPanel.add(btn3);
 
@@ -205,16 +191,12 @@
 
     // Demo 3: Add description inside the nested panel
     const mainPanel = new JPanel();
-    mainPanel.getElement().style.background = '#e8f4f8';
-    mainPanel.getElement().style.border = '2px solid #5bc0de';
-    mainPanel.setLocation(10, 10);
-    mainPanel.setSize(360, 240);
+    mainPanel.setBackground('#e8f4f8').setBorder('2px solid #5bc0de');
+    mainPanel.setLocation(10, 10).setSize(360, 240);
     frame3.getContentPane().add(mainPanel);
 
     const innerLabel = new JLabel('Nested Panel Content\n✅ 验证：面板嵌套显示，自定义样式生效');
-    innerLabel.getElement().style.fontWeight = 'bold';
-    innerLabel.getElement().style.color = '#31708f';
-    innerLabel.getElement().style.lineHeight = '2';
+    innerLabel.setFontWeight('bold').setColor('#31708f').setLineHeight('2');
     mainPanel.add(innerLabel);
 
     const actionBtn = new JButton('Click Me');

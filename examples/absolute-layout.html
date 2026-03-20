@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AsWingTS - AbsoluteLayout Demo</title>
+  <link rel="stylesheet" href="../src/styles.css?v=2">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      padding: 20px;
+      background: #1a1a2e;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      min-height: 100vh;
+    }
+    h1 {
+      text-align: center;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+    .demo-info {
+      text-align: center;
+      color: rgba(255,255,255,0.8);
+      margin-bottom: 20px;
+    }
+    #app {
+      position: relative;
+      width: 100%;
+      max-width: 1200px;
+      height: calc(100vh - 140px);
+      min-height: 600px;
+      background: #16213e;
+      border-radius: 8px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+      margin: 0 auto;
+      overflow: auto;
+    }
+    .tip {
+      text-align: center;
+      color: #e94560;
+      font-size: 13px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎯 AbsoluteLayout Demo</h1>
+  <p class="demo-info">手动定位组件 - 精确控制每个组件的位置和尺寸</p>
+  <div id="app"></div>
+  <p class="tip">💡 提示：AbsoluteLayout 允许完全手动控制组件位置，适合自定义 UI 和拖放界面</p>
+
+  <script type="module">
+    import { 
+      AsWingManager, 
+      JFrame, 
+      JButton, 
+      JLabel, 
+      JPanel,
+      JTextField,
+      JCheckBox,
+      AbsoluteLayout,
+      AbsoluteConstraints,
+      Debug
+    } from '../dist/index.js?v=2';
+
+    // Enable debug
+    Debug.enabled = true;
+    Debug.layout = true;
+
+    const app = document.getElementById('app');
+    AsWingManager.initAsStandard(app);
+
+    // === Demo 1: Basic AbsoluteLayout ===
+    const frame1 = new JFrame('Demo 1: Basic AbsoluteLayout');
+    app.appendChild(frame1.getElement());
+    frame1.setLocation(20, 20);
+    frame1.setSize(550, 280);
+
+    const panel1 = new JPanel();
+    panel1.setLayout(new AbsoluteLayout());
+    panel1.setLocation(10, 10);
+    panel1.setSize(510, 230);
+    panel1.setBackground('#0f3460').setBorder('2px solid #e94560');
+
+    // Manually positioned components - Chainable API!
+    const label1 = new JLabel('📍 Absolute Positioning')
+      .setLocation(20, 15)
+      .setSize(200, 25)
+      .setColor('#fff')
+      .setFontWeight('bold');
+    panel1.add(label1);
+
+    const btn1 = new JButton('Button at (20, 50)')
+      .setLocation(20, 50)
+      .setSize(150, 30);
+    panel1.add(btn1);
+
+    const btn2 = new JButton('Button at (200, 50)')
+      .setLocation(200, 50)
+      .setSize(150, 30);
+    panel1.add(btn2);
+
+    const btn3 = new JButton('Button at (350, 50)')
+      .setLocation(350, 50)
+      .setSize(150, 30);
+    panel1.add(btn3);
+
+    const textField1 = new JTextField('', 15)
+      .setLocation(20, 100)
+      .setSize(200, 30)
+      .setPlaceholder('Enter text at (20, 100)');
+    panel1.add(textField1);
+
+    const checkBox1 = new JCheckBox('Checkbox at (20, 145)', true)
+      .setLocation(20, 145)
+      .setSize(200, 25);
+    panel1.add(checkBox1);
+
+    const checkBox2 = new JCheckBox('Checkbox at (20, 180)', false)
+      .setLocation(20, 180)
+      .setSize(200, 25);
+    panel1.add(checkBox2);
+
+    const infoLabel = new JLabel('🎨 Custom UI Design')
+      .setLocation(300, 120)
+      .setSize(180, 80)
+      .setColor('#e94560')
+      .setFontSize('16px');
+    infoLabel.getElement().style.lineHeight = '2';
+    panel1.add(infoLabel);
+
+    frame1.getContentPane().add(panel1);
+
+    // === Demo 2: Form Layout ===
+    const frame2 = new JFrame('Demo 2: Form Layout (表单布局)');
+    app.appendChild(frame2.getElement());
+    frame2.setLocation(20, 320);
+    frame2.setSize(550, 280);
+
+    const formPanel = new JPanel();
+    formPanel.setLayout(new AbsoluteLayout());
+    formPanel.setLocation(10, 10);
+    formPanel.setSize(510, 230);
+    formPanel.setBackground('#1a1a2e').setBorder('2px solid #4ecca3');
+
+    // Form labels and fields
+    const nameLabel = new JLabel('Name:');
+    nameLabel.setLocation(20, 20);
+    nameLabel.setSize(80, 25);
+    nameLabel.setColor('#4ecca3');
+    formPanel.add(nameLabel);
+
+    const nameField = new JTextField('', 20);
+    nameField.setLocation(110, 20);
+    nameField.setSize(200, 30);
+    nameField.setPlaceholder('Enter your name');
+    formPanel.add(nameField);
+
+    const emailLabel = new JLabel('Email:');
+    emailLabel.setLocation(20, 65);
+    emailLabel.setSize(80, 25);
+    emailLabel.setColor('#4ecca3');
+    formPanel.add(emailLabel);
+
+    const emailField = new JTextField('', 20);
+    emailField.setLocation(110, 65);
+    emailField.setSize(200, 30);
+    emailField.setPlaceholder('Enter your email');
+    formPanel.add(emailField);
+
+    const phoneLabel = new JLabel('Phone:');
+    phoneLabel.setLocation(20, 110);
+    phoneLabel.setSize(80, 25);
+    phoneLabel.setColor('#4ecca3');
+    formPanel.add(phoneLabel);
+
+    const phoneField = new JTextField('', 20);
+    phoneField.setLocation(110, 110);
+    phoneField.setSize(200, 30);
+    phoneField.setPlaceholder('Enter your phone');
+    formPanel.add(phoneField);
+
+    const agreeCheck = new JCheckBox('I agree to terms', false);
+    agreeCheck.setLocation(20, 155);
+    agreeCheck.setSize(200, 25);
+    agreeCheck.setColor('#fff');
+    formPanel.add(agreeCheck);
+
+    const submitBtn = new JButton('Submit');
+    submitBtn.setLocation(110, 190);
+    submitBtn.setSize(100, 30);
+    submitBtn.setBackground('#4ecca3');
+    formPanel.add(submitBtn);
+
+    const cancelBtn = new JButton('Cancel');
+    cancelBtn.setLocation(220, 190);
+    cancelBtn.setSize(100, 30);
+    formPanel.add(cancelBtn);
+
+    frame2.getContentPane().add(formPanel);
+
+    // === Demo 3: Dashboard Widgets ===
+    const frame3 = new JFrame('Demo 3: Dashboard Widgets (仪表盘)');
+    app.appendChild(frame3.getElement());
+    frame3.setLocation(20, 620);
+    frame3.setSize(550, 280);
+
+    const dashPanel = new JPanel();
+    dashPanel.setLayout(new AbsoluteLayout());
+    dashPanel.setLocation(10, 10);
+    dashPanel.setSize(510, 230);
+    dashPanel.setBackground('#2d3436').setBorder('2px solid #fdcb6e');
+
+    // Widget 1
+    const widget1 = new JPanel();
+    widget1.setLocation(20, 20);
+    widget1.setSize(140, 80);
+    widget1.setBackground('#6c5ce7').setBorder('1px solid #a29bfe');
+    dashPanel.add(widget1);
+
+    const w1Label = new JLabel('📊 Users');
+    w1Label.setLocation(10, 10);
+    w1Label.setSize(120, 20);
+    w1Label.setColor('#fff');
+    widget1.add(w1Label);
+
+    const w1Value = new JLabel('1,234');
+    w1Value.setLocation(10, 40);
+    w1Value.setSize(120, 30);
+    w1Value.setColor('#fff').setFontSize('24px').setFontWeight('bold');
+    widget1.add(w1Value);
+
+    // Widget 2
+    const widget2 = new JPanel();
+    widget2.setLocation(180, 20);
+    widget2.setSize(140, 80);
+    widget2.setBackground('#00b894').setBorder('1px solid #55efc4');
+    dashPanel.add(widget2);
+
+    const w2Label = new JLabel('💰 Revenue');
+    w2Label.setLocation(10, 10);
+    w2Label.setSize(120, 20);
+    w2Label.setColor('#fff');
+    widget2.add(w2Label);
+
+    const w2Value = new JLabel('$12.5K');
+    w2Value.setLocation(10, 40);
+    w2Value.setSize(120, 30);
+    w2Value.setColor('#fff').setFontSize('24px').setFontWeight('bold');
+    widget2.add(w2Value);
+
+    // Widget 3
+    const widget3 = new JPanel();
+    widget3.setLocation(340, 20);
+    widget3.setSize(140, 80);
+    widget3.setBackground('#e17055').setBorder('1px solid #fab1a0');
+    dashPanel.add(widget3);
+
+    const w3Label = new JLabel('📦 Orders');
+    w3Label.setLocation(10, 10);
+    w3Label.setSize(120, 20);
+    w3Label.setColor('#fff');
+    widget3.add(w3Label);
+
+    const w3Value = new JLabel('89');
+    w3Value.setLocation(10, 40);
+    w3Value.setSize(120, 30);
+    w3Value.setColor('#fff').setFontSize('24px').setFontWeight('bold');
+    widget3.add(w3Value);
+
+    // Chart placeholder
+    const chartBox = new JPanel();
+    chartBox.setLocation(20, 120);
+    chartBox.setSize(460, 90);
+    chartBox.setBackground('#636e72').setBorder('1px dashed #b2bec3');
+    dashPanel.add(chartBox);
+
+    const chartLabel = new JLabel('📈 Chart Area (460×90)');
+    chartLabel.setLocation(150, 35);
+    chartLabel.setSize(160, 20);
+    chartLabel.setColor('#dfe6e9');
+    chartBox.add(chartLabel);
+
+    frame3.getContentPane().add(dashPanel);
+
+    console.log('✅ AbsoluteLayout demo loaded!');
+
+    // Debug info
+    setTimeout(() => {
+      console.log('=== AbsoluteLayout Debug ===');
+      console.log('Panel1 components:', panel1.getComponentCount());
+      console.log('FormPanel components:', formPanel.getComponentCount());
+      console.log('DashPanel components:', dashPanel.getComponentCount());
+      
+      console.log('--- Widget Positions ---');
+      console.log('Widget1:', widget1.getX(), widget1.getY(), widget1.getWidth(), 'x', widget1.getHeight());
+      console.log('Widget2:', widget2.getX(), widget2.getY(), widget2.getWidth(), 'x', widget2.getHeight());
+      console.log('Widget3:', widget3.getX(), widget3.getY(), widget3.getWidth(), 'x', widget3.getHeight());
+      console.log('ChartBox:', chartBox.getX(), chartBox.getY(), chartBox.getWidth(), 'x', chartBox.getHeight());
+      
+      console.log('✅ All AbsoluteLayout components verified!');
+    }, 500);
+  </script>
+</body>
+</html>

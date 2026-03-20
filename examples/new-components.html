@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AsWingTS - New Components Demo</title>
+  <link rel="stylesheet" href="../src/styles.css?v=2">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      padding: 20px;
+      background: #f5f5f5;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      min-height: 100vh;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+    }
+    .demo-info {
+      text-align: center;
+      color: #666;
+      margin-bottom: 20px;
+    }
+    #app {
+      position: relative;
+      width: 100%;
+      max-width: 1200px;
+      height: calc(100vh - 140px);
+      min-height: 600px;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      margin: 0 auto;
+      overflow: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>🆕 New Components Demo</h1>
+  <p class="demo-info">展示新增组件：JTextField, JCheckBox, JProgressBar</p>
+  <div id="app"></div>
+
+  <script type="module">
+    import { 
+      AsWingManager, 
+      JFrame, 
+      JButton, 
+      JLabel, 
+      JPanel,
+      JTextField,
+      JCheckBox,
+      JProgressBar,
+      BorderLayout,
+      AWEvent,
+      AsWingConstants,
+      Debug
+    } from '../dist/index.js?v=2';
+
+    // Enable debug
+    Debug.enabled = true;
+    Debug.layout = true;
+
+    const app = document.getElementById('app');
+    AsWingManager.initAsStandard(app);
+
+    // === Demo 1: JTextField ===
+    const frame1 = new JFrame('Demo 1: JTextField');
+    app.appendChild(frame1.getElement());
+    frame1.setLocation(20, 20);
+    frame1.setSize(350, 220);  // Increased height for better spacing
+
+    const inputLabel = new JLabel('Enter your name:');
+    inputLabel.setLocation(20, 20);  // Use API, no direct style
+    inputLabel.setSize(150, 25);
+    frame1.getContentPane().add(inputLabel);
+
+    const textField = new JTextField('', 20);
+    textField.setLocation(20, 55);
+    textField.setSize(280, 30);
+    textField.setPlaceholder('Type something...');
+    textField.addEventListener('textChanged', () => {
+      console.log('Text changed:', textField.getText());
+    });
+    textField.addEventListener(AWEvent.ACT, () => {
+      console.log('Enter pressed, text:', textField.getText());
+      resultLabel.setText(`Hello, ${textField.getText()}! 🎉`);
+    });
+    frame1.getContentPane().add(textField);
+
+    const resultLabel = new JLabel('');
+    resultLabel.setLocation(20, 95);
+    resultLabel.setSize(280, 30);
+    // Use API for styling through class or direct element access when necessary
+    resultLabel.getElement().style.fontWeight = 'bold';
+    resultLabel.getElement().style.color = '#667eea';
+    frame1.getContentPane().add(resultLabel);
+
+    const clearBtn = new JButton('Clear');
+    clearBtn.setLocation(20, 140);  // Moved down for better spacing
+    clearBtn.setSize(80, 30);
+    clearBtn.addEventListener(AWEvent.ACT, () => {
+      textField.setText('');
+      resultLabel.setText('');
+      textField.requestFocus();
+    });
+    frame1.getContentPane().add(clearBtn);
+
+    // Debug Demo 1
+    setTimeout(() => {
+      console.log('=== Demo 1: JTextField Debug ===');
+      console.log('Frame1 size:', frame1.getWidth(), 'x', frame1.getHeight());
+      console.log('Frame1 location:', frame1.getX(), frame1.getY());
+      console.log('ContentPane1 size:', frame1.getContentPane().getWidth(), 'x', frame1.getContentPane().getHeight());
+      
+      console.log('--- Input Label ---');
+      console.log('inputLabel location:', inputLabel.getX(), inputLabel.getY());
+      console.log('inputLabel size:', inputLabel.getWidth(), 'x', inputLabel.getHeight());
+      console.log('inputLabel element style:', inputLabel.getElement()?.style.cssText);
+      
+      console.log('--- TextField ---');
+      console.log('textField location:', textField.getX(), textField.getY());
+      console.log('textField size:', textField.getWidth(), 'x', textField.getHeight());
+      console.log('textField element:', textField.getElement());
+      console.log('textField wrapper style:', textField.getElement()?.style.cssText);
+      console.log('textField input style:', textField.getInputElement()?.style.cssText);
+      
+      console.log('--- Result Label ---');
+      console.log('resultLabel location:', resultLabel.getX(), resultLabel.getY());
+      console.log('resultLabel size:', resultLabel.getWidth(), 'x', resultLabel.getHeight());
+      console.log('resultLabel element style:', resultLabel.getElement()?.style.cssText);
+      
+      console.log('--- Clear Button ---');
+      console.log('clearBtn location:', clearBtn.getX(), clearBtn.getY());
+      console.log('clearBtn size:', clearBtn.getWidth(), 'x', clearBtn.getHeight());
+      console.log('clearBtn element style:', clearBtn.getElement()?.style.cssText);
+      
+      console.log('✅ Demo 1 verified!');
+    }, 600);
+
+    // === Demo 2: JCheckBox ===
+    const frame2 = new JFrame('Demo 2: JCheckBox');
+    app.appendChild(frame2.getElement());
+    frame2.setLocation(390, 20);
+    frame2.setSize(350, 220);  // Match Demo1 height for alignment
+
+    const checkbox1 = new JCheckBox('Enable notifications', true);
+    checkbox1.setLocation(20, 30);
+    checkbox1.setSize(200, 25);
+    checkbox1.addEventListener('stateChanged', () => {
+      console.log('Checkbox 1 state:', checkbox1.isChecked());
+    });
+    frame2.getContentPane().add(checkbox1);
+
+    const checkbox2 = new JCheckBox('Accept terms', false);
+    checkbox2.setLocation(20, 60);
+    checkbox2.setSize(200, 25);
+    checkbox2.addEventListener('stateChanged', () => {
+      console.log('Checkbox 2 state:', checkbox2.isChecked());
+      submitBtn.setEnabled(checkbox2.isChecked());
+    });
+    frame2.getContentPane().add(checkbox2);
+
+    const checkbox3 = new JCheckBox('Remember me', false);
+    checkbox3.setLocation(20, 90);
+    checkbox3.setSize(200, 25);
+    frame2.getContentPane().add(checkbox3);
+
+    const submitBtn = new JButton('Submit');
+    submitBtn.setLocation(20, 150);  // Adjusted for new height
+    submitBtn.setSize(100, 30);
+    submitBtn.setEnabled(false);
+    submitBtn.addEventListener(AWEvent.ACT, () => {
+      console.log('Submitted!');
+      console.log('Notifications:', checkbox1.isChecked());
+      console.log('Terms:', checkbox2.isChecked());
+      console.log('Remember:', checkbox3.isChecked());
+    });
+    frame2.getContentPane().add(submitBtn);
+
+    // === Demo 3: JProgressBar ===
+    const frame3 = new JFrame('Demo 3: JProgressBar');
+    app.appendChild(frame3.getElement());
+    frame3.setLocation(20, 260);  // 20px gap after Demo1 (20 + 220 + 20 = 260)
+    frame3.setSize(350, 250);
+
+    const progressLabel = new JLabel('Progress: 0%');
+    progressLabel.setLocation(20, 10);
+    progressLabel.setSize(220, 25);
+    progressLabel.getElement().style.position = 'absolute';
+    frame3.getContentPane().add(progressLabel);
+
+    const progressBar = new JProgressBar(JProgressBar.HORIZONTAL, 0, 100, 0);
+    progressBar.setLocation(20, 40);
+    progressBar.setSize(220, 25);
+    progressBar.setStringPainted(true);
+    frame3.getContentPane().add(progressBar);
+
+    const startBtn = new JButton('Start');
+    startBtn.setLocation(20, 80);
+    startBtn.setSize(80, 30);
+    
+    let progressInterval;
+    startBtn.addEventListener(AWEvent.ACT, () => {
+      if (startBtn.getText() === 'Start') {
+        startBtn.setText('Stop');
+        let value = 0;
+        progressInterval = setInterval(() => {
+          value += 2;
+          if (value > 100) {
+            value = 0;
+          }
+          progressBar.setValue(value);
+          progressLabel.setText(`Progress: ${value}%`);
+          if (value >= 100) {
+            progressLabel.setText('Complete! ✅');
+          }
+        }, 100);
+      } else {
+        startBtn.setText('Start');
+        clearInterval(progressInterval);
+        progressLabel.setText('Paused');
+      }
+    });
+    frame3.getContentPane().add(startBtn);
+
+    const resetBtn = new JButton('Reset');
+    resetBtn.setLocation(110, 80);
+    resetBtn.setSize(80, 30);
+    resetBtn.addEventListener(AWEvent.ACT, () => {
+      progressBar.setValue(0);
+      progressLabel.setText('Progress: 0%');
+      startBtn.setText('Start');
+      clearInterval(progressInterval);
+    });
+    frame3.getContentPane().add(resetBtn);
+
+    // Vertical progress bar - positioned to the right, no overlap
+    const vProgressBar = new JProgressBar(JProgressBar.VERTICAL, 0, 100, 50);
+    vProgressBar.setLocation(260, 40);
+    vProgressBar.setSize(30, 150);
+    vProgressBar.setStringPainted(true);
+    frame3.getContentPane().add(vProgressBar);
+
+    const vProgressLabel = new JLabel('Vertical');
+    vProgressLabel.setLocation(255, 200);
+    vProgressLabel.setSize(50, 20);
+    vProgressLabel.getElement().style.position = 'absolute';
+    vProgressLabel.getElement().style.textAlign = 'center';
+    frame3.getContentPane().add(vProgressLabel);
+
+    console.log('✅ New components demo loaded!');
+
+    // Debug info for all new components
+    setTimeout(() => {
+      console.log('=== New Components Debug ===');
+      
+      console.log('--- JTextField ---');
+      console.log('textField text:', textField.getText());
+      console.log('textField placeholder:', textField.getPlaceholder());
+      console.log('textField editable:', textField.isEditable());
+      console.log('textField columns:', textField.getColumns());
+      console.log('textField location:', textField.getX(), textField.getY());
+      console.log('textField size:', textField.getWidth(), 'x', textField.getHeight());
+      console.log('textField element:', textField.getElement());
+      console.log('textField input element:', textField.getInputElement());
+      console.log('textField input style:', textField.getInputElement()?.style.cssText);
+
+      console.log('--- JCheckBox 1 ---');
+      console.log('checkbox1 text:', checkbox1.getText());
+      console.log('checkbox1 checked:', checkbox1.isChecked());
+      console.log('checkbox1 selected:', checkbox1.isSelected());
+      console.log('checkbox1 location:', checkbox1.getX(), checkbox1.getY());
+      console.log('checkbox1 size:', checkbox1.getWidth(), 'x', checkbox1.getHeight());
+      console.log('checkbox1 element:', checkbox1.getElement());
+      console.log('checkbox1 input element:', checkbox1.getCheckboxElement());
+
+      console.log('--- JCheckBox 2 ---');
+      console.log('checkbox2 text:', checkbox2.getText());
+      console.log('checkbox2 checked:', checkbox2.isChecked());
+      console.log('checkbox2 location:', checkbox2.getX(), checkbox2.getY());
+      console.log('checkbox2 size:', checkbox2.getWidth(), 'x', checkbox2.getHeight());
+
+      console.log('--- JCheckBox 3 ---');
+      console.log('checkbox3 text:', checkbox3.getText());
+      console.log('checkbox3 checked:', checkbox3.isChecked());
+      console.log('checkbox3 location:', checkbox3.getX(), checkbox3.getY());
+      console.log('checkbox3 size:', checkbox3.getWidth(), 'x', checkbox3.getHeight());
+
+      console.log('--- JProgressBar (Horizontal) ---');
+      console.log('progressBar value:', progressBar.getValue());
+      console.log('progressBar min/max:', progressBar.getMinimum(), '/', progressBar.getMaximum());
+      console.log('progressBar orientation:', progressBar.getOrientation());
+      console.log('progressBar stringPainted:', progressBar.isStringPainted());
+      console.log('progressBar location:', progressBar.getX(), progressBar.getY());
+      console.log('progressBar size:', progressBar.getWidth(), 'x', progressBar.getHeight());
+      console.log('progressBar element:', progressBar.getElement());
+      console.log('progressBar wrapper style:', progressBar.getElement()?.style.cssText);
+      
+      // Get inner elements
+      const pbWrapper = progressBar.getElement();
+      if (pbWrapper) {
+        const pbBar = pbWrapper.querySelector('.aswing-progressbar');
+        const pbFill = pbWrapper.querySelector('.aswing-progressbar-fill');
+        const pbLabel = pbWrapper.querySelector('.aswing-progressbar-label');
+        
+        console.log('--- ProgressBar Inner Elements ---');
+        console.log('Bar element:', pbBar);
+        console.log('Bar style:', pbBar?.style.cssText);
+        console.log('Fill element:', pbFill);
+        console.log('Fill style:', pbFill?.style.cssText);
+        console.log('Label element:', pbLabel);
+        console.log('Label style:', pbLabel?.style.cssText);
+      }
+
+      console.log('--- JProgressBar (Vertical) ---');
+      console.log('vProgressBar value:', vProgressBar.getValue());
+      console.log('vProgressBar orientation:', vProgressBar.getOrientation());
+      console.log('vProgressBar location:', vProgressBar.getX(), vProgressBar.getY());
+      console.log('vProgressBar size:', vProgressBar.getWidth(), 'x', vProgressBar.getHeight());
+      console.log('vProgressBar wrapper style:', vProgressBar.getElement()?.style.cssText);
+      
+      // Get inner elements
+      const vPbWrapper = vProgressBar.getElement();
+      if (vPbWrapper) {
+        const vPbBar = vPbWrapper.querySelector('.aswing-progressbar');
+        const vPbFill = vPbWrapper.querySelector('.aswing-progressbar-fill');
+        
+        console.log('--- Vertical ProgressBar Inner Elements ---');
+        console.log('Bar element:', vPbBar);
+        console.log('Bar style:', vPbBar?.style.cssText);
+        console.log('Fill element:', vPbFill);
+        console.log('Fill style:', vPbFill?.style.cssText);
+      }
+
+      console.log('--- JButton (Clear) ---');
+      console.log('clearBtn text:', clearBtn.getText());
+      console.log('clearBtn location:', clearBtn.getX(), clearBtn.getY());
+      console.log('clearBtn size:', clearBtn.getWidth(), 'x', clearBtn.getHeight());
+      console.log('clearBtn element style:', clearBtn.getElement()?.style.cssText);
+
+      console.log('--- JButton (Submit) ---');
+      console.log('submitBtn text:', submitBtn.getText());
+      console.log('submitBtn enabled:', submitBtn.isEnabled());
+      console.log('submitBtn location:', submitBtn.getX(), submitBtn.getY());
+      console.log('submitBtn size:', submitBtn.getWidth(), 'x', submitBtn.getHeight());
+
+      console.log('✅ All new components verified!');
+    }, 500);
+  </script>
+</body>
+</html>

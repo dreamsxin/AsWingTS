@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AsWingTS - Layout Managers Demo</title>
+  <link rel="stylesheet" href="../src/styles.css?v=2">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      padding: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      min-height: 100vh;
+    }
+    h1 {
+      text-align: center;
+      color: #fff;
+      margin-bottom: 20px;
+    }
+    .demo-info {
+      text-align: center;
+      color: rgba(255,255,255,0.9);
+      margin-bottom: 20px;
+    }
+    #app {
+      position: relative;
+      width: 100%;
+      max-width: 1400px;
+      height: calc(100vh - 140px);
+      min-height: 700px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+      margin: 0 auto;
+      overflow: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>📐 Layout Managers Demo</h1>
+  <p class="demo-info">展示多种布局管理器：BorderLayout, FlowLayout, GridLayout, BoxLayout</p>
+  <div id="app"></div>
+
+  <script type="module">
+    import { 
+      AsWingManager, 
+      JFrame, 
+      JButton, 
+      JLabel, 
+      JPanel,
+      JTextField,
+      BorderLayout,
+      FlowLayout,
+      GridLayout,
+      BoxLayout,
+      AsWingConstants,
+      Debug
+    } from '../dist/index.js?v=2';
+
+    // Enable debug
+    Debug.enabled = true;
+    Debug.layout = true;
+
+    const app = document.getElementById('app');
+    AsWingManager.initAsStandard(app);
+
+    // === Demo 1: FlowLayout ===
+    const frame1 = new JFrame('Demo 1: FlowLayout (流式布局)');
+    app.appendChild(frame1.getElement());
+    frame1.setLocation(20, 20);
+    frame1.setSize(420, 220);
+
+    const flowPanel = new JPanel();
+    flowPanel.setLayout(new FlowLayout(AsWingConstants.CENTER, 10, 10));
+    flowPanel.setLocation(10, 10);
+    flowPanel.setSize(380, 180);
+    flowPanel.setBackground('#f5f5f5').setBorder('1px solid #ddd');
+
+    // Add buttons to flow layout
+    for (let i = 1; i <= 8; i++) {
+      const btn = new JButton(`Btn ${i}`);
+      btn.setSize(70, 30);
+      flowPanel.add(btn);
+    }
+    frame1.getContentPane().add(flowPanel);
+
+    // === Demo 2: GridLayout ===
+    const frame2 = new JFrame('Demo 2: GridLayout (网格布局)');
+    app.appendChild(frame2.getElement());
+    frame2.setLocation(460, 20);
+    frame2.setSize(420, 220);
+
+    const gridPanel = new JPanel();
+    gridPanel.setLayout(new GridLayout(3, 3, 5, 5)); // 3x3 grid
+    gridPanel.setLocation(10, 10);
+    gridPanel.setSize(380, 180);
+    gridPanel.setBackground('#f0f8ff').setBorder('1px solid #b0c4de');
+
+    // Add buttons to grid layout
+    for (let i = 1; i <= 9; i++) {
+      const btn = new JButton(`${i}`);
+      gridPanel.add(btn);
+    }
+    frame2.getContentPane().add(gridPanel);
+
+    // === Demo 3: BoxLayout (Vertical) ===
+    const frame3 = new JFrame('Demo 3: BoxLayout Vertical (垂直盒式)');
+    app.appendChild(frame3.getElement());
+    frame3.setLocation(20, 260);
+    frame3.setSize(420, 220);
+
+    const boxVPanel = new JPanel();
+    boxVPanel.setLayout(new BoxLayout(BoxLayout.Y_AXIS, 10));
+    boxVPanel.setLocation(10, 10);
+    boxVPanel.setSize(380, 180);
+    boxVPanel.setBackground('#f0fff0').setBorder('1px solid #90ee90');
+
+    // Add components to vertical box layout
+    const labelsV = ['Top', 'Middle 1', 'Middle 2', 'Bottom'];
+    labelsV.forEach((text, i) => {
+      const label = new JLabel(`📍 ${text}`);
+      label.setSize(360, 35);
+      label.setBackground('#fff').setBorder('1px solid #ccc');
+      label.getElement().style.padding = '8px';
+      boxVPanel.add(label);
+    });
+    frame3.getContentPane().add(boxVPanel);
+
+    // === Demo 4: BoxLayout (Horizontal) ===
+    const frame4 = new JFrame('Demo 4: BoxLayout Horizontal (水平盒式)');
+    app.appendChild(frame4.getElement());
+    frame4.setLocation(460, 260);
+    frame4.setSize(420, 220);
+
+    const boxHPanel = new JPanel();
+    boxHPanel.setLayout(new BoxLayout(BoxLayout.X_AXIS, 10));
+    boxHPanel.setLocation(10, 10);
+    boxHPanel.setSize(380, 180);
+    boxHPanel.setBackground('#fff8dc').setBorder('1px solid #daa520');
+
+    // Add components to horizontal box layout
+    const labelsH = ['Left', 'Center', 'Right'];
+    labelsH.forEach((text) => {
+      const label = new JLabel(`📍 ${text}`);
+      label.setSize(110, 160);
+      label.setBackground('#fff').setBorder('1px solid #ccc');
+      label.getElement().style.padding = '8px';
+      boxHPanel.add(label);
+    });
+    frame4.getContentPane().add(boxHPanel);
+
+    // === Demo 5: BorderLayout ===
+    const frame5 = new JFrame('Demo 5: BorderLayout (边界布局)');
+    app.appendChild(frame5.getElement());
+    frame5.setLocation(20, 500);
+    frame5.setSize(420, 200);
+
+    const borderPanel = new JPanel();
+    borderPanel.setLayout(new BorderLayout(5, 5));
+    borderPanel.setLocation(10, 10);
+    borderPanel.setSize(380, 160);
+    borderPanel.setBackground('#f8f0ff').setBorder('1px solid #dda0dd');
+
+    const north = new JLabel('🔼 North');
+    north.setBackground('#e6e6fa').setBorder('1px solid #9370db');
+    north.getElement().style.padding = '10px';
+    borderPanel.add(north, AsWingConstants.NORTH);
+
+    const south = new JLabel('🔽 South');
+    south.setBackground('#e6e6fa').setBorder('1px solid #9370db');
+    south.getElement().style.padding = '10px';
+    borderPanel.add(south, AsWingConstants.SOUTH);
+
+    const west = new JLabel('◀ West');
+    west.setBackground('#e6e6fa').setBorder('1px solid #9370db');
+    west.getElement().style.padding = '10px';
+    borderPanel.add(west, AsWingConstants.WEST);
+
+    const east = new JLabel('East ▶');
+    east.setBackground('#e6e6fa').setBorder('1px solid #9370db');
+    east.getElement().style.padding = '10px';
+    borderPanel.add(east, AsWingConstants.EAST);
+
+    const center = new JLabel('◆ Center');
+    center.setBackground('#fff').setBorder('1px solid #9370db');
+    center.getElement().style.padding = '10px';
+    borderPanel.add(center, AsWingConstants.CENTER);
+
+    frame5.getContentPane().add(borderPanel);
+
+    // === Demo 6: Mixed Layouts ===
+    const frame6 = new JFrame('Demo 6: Mixed Layouts (混合布局)');
+    app.appendChild(frame6.getElement());
+    frame6.setLocation(460, 500);
+    frame6.setSize(420, 200);
+
+    const mixedPanel = new JPanel();
+    mixedPanel.setLayout(new BorderLayout(5, 5));
+    mixedPanel.setLocation(10, 10);
+    mixedPanel.setSize(380, 160);
+    mixedPanel.setBackground('#f0f8ff').setBorder('1px solid #4682b4');
+
+    // Top: FlowLayout
+    const topPanel = new JPanel();
+    topPanel.setLayout(new FlowLayout(AsWingConstants.CENTER, 5, 5));
+    topPanel.setBackground('#fff').setBorder('1px solid #ccc');
+    for (let i = 1; i <= 3; i++) {
+      const btn = new JButton(`T${i}`);
+      btn.setSize(50, 25);
+      topPanel.add(btn);
+    }
+    mixedPanel.add(topPanel, AsWingConstants.NORTH);
+
+    // Center: GridLayout
+    const centerPanel = new JPanel();
+    centerPanel.setLayout(new GridLayout(2, 2, 3, 3));
+    centerPanel.setBackground('#fff').setBorder('1px solid #ccc');
+    for (let i = 1; i <= 4; i++) {
+      const btn = new JButton(`C${i}`);
+      centerPanel.add(btn);
+    }
+    mixedPanel.add(centerPanel, AsWingConstants.CENTER);
+
+    // Bottom: BoxLayout
+    const bottomPanel = new JPanel();
+    bottomPanel.setLayout(new BoxLayout(BoxLayout.X_AXIS, 5));
+    bottomPanel.setBackground('#fff').setBorder('1px solid #ccc');
+    for (let i = 1; i <= 3; i++) {
+      const btn = new JButton(`B${i}`);
+      btn.setSize(80, 25);
+      bottomPanel.add(btn);
+    }
+    mixedPanel.add(bottomPanel, AsWingConstants.SOUTH);
+
+    frame6.getContentPane().add(mixedPanel);
+
+    console.log('✅ Layout managers demo loaded!');
+
+    // Debug info
+    setTimeout(() => {
+      console.log('=== Layout Demo Debug ===');
+      console.log('FlowLayout components:', flowPanel.getComponentCount());
+      console.log('GridLayout components:', gridPanel.getComponentCount());
+      console.log('BoxLayout V components:', boxVPanel.getComponentCount());
+      console.log('BoxLayout H components:', boxHPanel.getComponentCount());
+      console.log('BorderLayout components:', borderPanel.getComponentCount());
+      console.log('Mixed Layout panels:', mixedPanel.getComponentCount());
+      console.log('✅ All layouts verified!');
+    }, 500);
+  </script>
+</body>
+</html>
