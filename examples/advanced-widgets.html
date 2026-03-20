@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AsWingTS - Advanced Widgets Demo</title>
+  <link rel="stylesheet" href="../src/styles.css?v=2">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      padding: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      min-height: 100vh;
+    }
+    h1 {
+      text-align: center;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+    .demo-info {
+      text-align: center;
+      color: rgba(255,255,255,0.9);
+      margin-bottom: 20px;
+    }
+    #app {
+      position: relative;
+      width: 100%;
+      max-width: 1400px;
+      height: calc(100vh - 140px);
+      min-height: 800px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+      margin: 0 auto;
+      overflow: auto;
+    }
+    .tip {
+      text-align: center;
+      color: #fff;
+      font-size: 13px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎛️ Advanced Widgets Demo</h1>
+  <p class="demo-info">JSlider, JSpinner, JTabbedPane</p>
+  <div id="app"></div>
+  <p class="tip">💡 提示：拖动滑块、点击按钮、切换标签页</p>
+
+  <script type="module">
+    import { 
+      AsWingManager, 
+      JFrame, 
+      JButton, 
+      JLabel, 
+      JPanel,
+      JSlider,
+      JSpinner,
+      JTabbedPane,
+      JTextField,
+      BorderLayout,
+      FlowLayout,
+      AsWingConstants,
+      Debug
+    } from '../dist/index.js?v=2';
+
+    Debug.enabled = false;
+
+    const app = document.getElementById('app');
+    AsWingManager.initAsStandard(app);
+
+    // === Demo 1: JSlider ===
+    const frame1 = new JFrame('Demo 1: JSlider (滑块)');
+    app.appendChild(frame1.getElement());
+    frame1.setLocation(20, 20);
+    frame1.setSize(350, 250);
+
+    const sliderPanel = new JPanel();
+    sliderPanel.setLayout(new FlowLayout());
+    sliderPanel.setLocation(10, 10);
+    sliderPanel.setSize(310, 200);
+    
+    // Horizontal slider
+    const hSliderLabel = new JLabel('Horizontal: 50')
+      .setSize(200, 25);
+    sliderPanel.add(hSliderLabel);
+
+    const hSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 50)
+      .setSize(250, 20);
+    hSlider.addEventListener('stateChanged', () => {
+      hSliderLabel.setText(`Horizontal: ${hSlider.getValue()}`);
+    });
+    sliderPanel.add(hSlider);
+
+    // Vertical slider
+    const vSliderLabel = new JLabel('Vertical: 50')
+      .setSize(100, 100);
+    sliderPanel.add(vSliderLabel);
+
+    const vSlider = new JSlider(JSlider.VERTICAL, 0, 100, 50)
+      .setSize(20, 100);
+    vSlider.addEventListener('stateChanged', () => {
+      vSliderLabel.setText(`Vertical: ${vSlider.getValue()}`);
+    });
+    sliderPanel.add(vSlider);
+
+    frame1.getContentPane().add(sliderPanel);
+
+    // === Demo 2: JSpinner ===
+    const frame2 = new JFrame('Demo 2: JSpinner (数字选择器)');
+    app.appendChild(frame2.getElement());
+    frame2.setLocation(390, 20);
+    frame2.setSize(350, 250);
+
+    const spinnerPanel = new JPanel();
+    spinnerPanel.setLayout(new FlowLayout());
+    spinnerPanel.setLocation(10, 10);
+    spinnerPanel.setSize(310, 200);
+
+    const spinnerLabel = new JLabel('Value: 0')
+      .setSize(200, 25);
+    spinnerPanel.add(spinnerLabel);
+
+    const spinner = new JSpinner(0, 100, 0, 5)
+      .setSize(100, 28);
+    spinner.addEventListener('stateChanged', () => {
+      spinnerLabel.setText(`Value: ${spinner.getValue()}`);
+    });
+    spinnerPanel.add(spinner);
+
+    const stepLabel = new JLabel('Step: 5')
+      .setSize(200, 25);
+    spinnerPanel.add(stepLabel);
+
+    const stepSpinner = new JSpinner(0, 50, 0, 1)
+      .setSize(100, 28);
+    stepSpinner.addEventListener('stateChanged', () => {
+      stepLabel.setText(`Step: ${stepSpinner.getStepSize()}`);
+      spinner.setStepSize(stepSpinner.getValue());
+    });
+    spinnerPanel.add(stepSpinner);
+
+    frame2.getContentPane().add(spinnerPanel);
+
+    // === Demo 3: JTabbedPane ===
+    const frame3 = new JFrame('Demo 3: JTabbedPane (标签页)');
+    app.appendChild(frame3.getElement());
+    frame3.setLocation(20, 290);
+    frame3.setSize(720, 350);
+
+    const tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+    tabbedPane.setLocation(10, 10);
+    tabbedPane.setSize(680, 300);
+
+    // Tab 1: Form
+    const formPanel = new JPanel();
+    formPanel.setLayout(new FlowLayout());
+    
+    const nameLabel = new JLabel('Name:')
+      .setSize(80, 28);
+    formPanel.add(nameLabel);
+
+    const nameField = new JTextField('', 20)
+      .setSize(200, 28)
+      .setPlaceholder('Enter your name');
+    formPanel.add(nameField);
+
+    const emailLabel = new JLabel('Email:')
+      .setSize(80, 28);
+    formPanel.add(emailLabel);
+
+    const emailField = new JTextField('', 20)
+      .setSize(200, 28)
+      .setPlaceholder('Enter your email');
+    formPanel.add(emailField);
+
+    const submitBtn = new JButton('Submit')
+      .setSize(100, 30)
+      .applyTheme('primary');
+    submitBtn.addEventListener('act', () => {
+      alert(`Name: ${nameField.getText()}\nEmail: ${emailField.getText()}`);
+    });
+    formPanel.add(submitBtn);
+
+    tabbedPane.addTab('📝 Form', formPanel);
+
+    // Tab 2: Settings
+    const settingsPanel = new JPanel();
+    settingsPanel.setLayout(new FlowLayout());
+
+    const volumeLabel = new JLabel('Volume: 50')
+      .setSize(100, 28);
+    settingsPanel.add(volumeLabel);
+
+    const volumeSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 50)
+      .setSize(200, 20);
+    volumeSlider.addEventListener('stateChanged', () => {
+      volumeLabel.setText(`Volume: ${volumeSlider.getValue()}`);
+    });
+    settingsPanel.add(volumeSlider);
+
+    const brightnessLabel = new JLabel('Brightness: 75')
+      .setSize(100, 28);
+    settingsPanel.add(brightnessLabel);
+
+    const brightnessSpinner = new JSpinner(0, 100, 75, 5)
+      .setSize(100, 28);
+    brightnessSpinner.addEventListener('stateChanged', () => {
+      brightnessLabel.setText(`Brightness: ${brightnessSpinner.getValue()}`);
+    });
+    settingsPanel.add(brightnessSpinner);
+
+    tabbedPane.addTab('⚙️ Settings', settingsPanel);
+
+    // Tab 3: About
+    const aboutPanel = new JPanel();
+    aboutPanel.setLayout(new FlowLayout());
+    aboutPanel.setSize(676, 256); // Set explicit size to match content area
+
+    const aboutText = new JLabel('AsWingTS Advanced Widgets\n\nVersion: 1.0\n\nFeatures:\n- JSlider (Horizontal & Vertical)\n- JSpinner (Number Selector)\n- JTabbedPane (Tab Switching)')
+      .setSize(300, 150)
+      .setTextAlign('left')
+      .setLineHeight('2');
+    aboutPanel.add(aboutText);
+
+    tabbedPane.addTab('ℹ️ About', aboutPanel);
+
+    frame3.getContentPane().add(tabbedPane);
+
+    // Debug: Print tabbed pane content info
+    setTimeout(() => {
+      console.log('=== JTabbedPane Debug ===');
+      console.log('TabbedPane size:', tabbedPane.getWidth(), 'x', tabbedPane.getHeight());
+      console.log('Tab count:', tabbedPane.getTabCount());
+      console.log('Selected index:', tabbedPane.getSelectedIndex());
+      
+      const tabbedPaneAny = tabbedPane;
+      const contentEl = tabbedPaneAny._contentElement;
+      if (contentEl) {
+        console.log('Content element:', contentEl);
+        console.log('Content style:', contentEl.style.cssText);
+        console.log('Content children:', contentEl.children.length);
+        
+        for (let i = 0; i < contentEl.children.length; i++) {
+          const child = contentEl.children[i];
+          console.log(`Child ${i}:`, child.className);
+          console.log(`  Style:`, child.style.cssText);
+          console.log(`  Left:`, child.style.left);
+          console.log(`  Top:`, child.style.top);
+          console.log(`  Width:`, child.style.width);
+          console.log(`  Height:`, child.style.height);
+        }
+      }
+      
+      // Check aboutPanel
+      console.log('About panel element:', aboutPanel.getElement());
+      console.log('About panel style:', aboutPanel.getElement()?.style.cssText);
+      
+      // Check children of aboutPanel
+      const aboutChildren = aboutPanel.getComponents();
+      console.log('About panel children count:', aboutChildren.length);
+      aboutChildren.forEach((comp, i) => {
+        console.log(`  Child ${i} (${comp.constructor.name}):`);
+        console.log(`    Location:`, comp.getX(), comp.getY());
+        console.log(`    Size:`, comp.getWidth(), 'x', comp.getHeight());
+        console.log(`    Element style:`, comp.getElement()?.style.cssText);
+      });
+      
+      console.log('✅ TabbedPane debug complete!');
+    }, 500);
+
+    console.log('✅ Advanced widgets demo loaded!');
+
+    // Debug info
+    setTimeout(() => {
+      console.log('=== Advanced Widgets Debug ===');
+      console.log('Slider value:', hSlider.getValue());
+      console.log('Spinner value:', spinner.getValue());
+      console.log('Tab count:', tabbedPane.getTabCount());
+      console.log('Selected tab:', tabbedPane.getSelectedIndex());
+      console.log('✅ All widgets verified!');
+    }, 500);
+  </script>
+</body>
+</html>

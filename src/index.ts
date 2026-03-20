@@ -36,6 +36,9 @@ export { JRadioButton, ButtonGroup } from './org/aswing/JRadioButton.js';
 export { JComboBox } from './org/aswing/JComboBox.js';
 export { JList, ListSelectionModel } from './org/aswing/JList.js';
 export { JScrollPane, ScrollPaneConstants } from './org/aswing/JScrollPane.js';
+export { JSlider } from './org/aswing/JSlider.js';
+export { JSpinner } from './org/aswing/JSpinner.js';
+export { JTabbedPane } from './org/aswing/JTabbedPane.js';
 
 // Geometry
 export { IntDimension } from './org/aswing/geom/IntDimension.js';

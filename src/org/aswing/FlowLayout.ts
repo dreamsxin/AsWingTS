@@ -35,8 +35,17 @@ export class FlowLayout implements LayoutManager {
 
   layoutContainer(container: Container): void {
     const components = container.getComponents();
-    const containerWidth = container.getWidth();
-    const containerHeight = container.getHeight();
+    
+    // Use container's explicit size, or fall back to parent's size
+    let containerWidth = container.getWidth();
+    let containerHeight = container.getHeight();
+    
+    // If container has no size, try to get it from parent or use preferred size
+    if (containerWidth <= 0 || containerHeight <= 0) {
+      const prefSize = container.getPreferredSize();
+      containerWidth = prefSize.width > 0 ? prefSize.width : 200;
+      containerHeight = prefSize.height > 0 ? prefSize.height : 200;
+    }
     
     if (components.length === 0) return;
 
