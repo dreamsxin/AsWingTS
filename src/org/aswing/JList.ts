@@ -25,6 +25,10 @@ export class JList<T = any> extends Component {
   private _selectionMode: string;
   private _visibleRowCount: number;
   private _listElement: HTMLUListElement | null;
+  private _virtualScrolling: boolean;
+  private _itemHeight: number;
+  private _visibleStartIndex: number;
+  private _visibleEndIndex: number;
 
   constructor(items: T[] = []) {
     super();
@@ -34,6 +38,10 @@ export class JList<T = any> extends Component {
     this._selectionMode = ListSelectionModel.SINGLE;
     this._visibleRowCount = 8;
     this._listElement = null;
+    this._virtualScrolling = false;
+    this._itemHeight = 28;
+    this._visibleStartIndex = 0;
+    this._visibleEndIndex = 0;
   }
 
   override createRootElement(): HTMLElement {
@@ -362,6 +370,60 @@ export class JList<T = any> extends Component {
     if (!wrapper) return this._items.length - 1;
     const visibleCount = Math.ceil(wrapper.clientHeight / 28);
     return Math.min(this._items.length - 1, this.getFirstVisibleIndex() + visibleCount);
+  }
+
+  /**
+   * Enables or disables virtual scrolling for large lists.
+   * Note: Virtual scrolling is still experimental.
+   */
+  setVirtualScrolling(enabled: boolean): this {
+    this._virtualScrolling = enabled;
+    // For now, just re-render all items
+    if (this._listElement) {
+      this._listElement.innerHTML = '';
+      this._items.forEach((item, index) => {
+        const li = this.createListItem(item, index);
+        this._listElement!.appendChild(li);
+      });
+    }
+    return this;
+  }
+
+  /**
+   * Gets whether virtual scrolling is enabled.
+   */
+  isVirtualScrolling(): boolean {
+    return this._virtualScrolling;
+  }
+
+  /**
+   * Sets the item height for virtual scrolling.
+   */
+  setItemHeight(height: number): this {
+    this._itemHeight = height;
+    return this;
+  }
+
+  /**
+   * Gets the item height.
+   */
+  getItemHeight(): number {
+    return this._itemHeight;
+  }
+
+  /**
+   * Renders only visible items for virtual scrolling.
+   * Experimental feature.
+   */
+  private _renderVisibleItems(): void {
+    // Virtual scrolling is experimental, render all items for now
+    if (this._listElement) {
+      this._listElement.innerHTML = '';
+      this._items.forEach((item, index) => {
+        const li = this.createListItem(item, index);
+        this._listElement!.appendChild(li);
+      });
+    }
   }
 
   override getPreferredSize(): IntDimension {

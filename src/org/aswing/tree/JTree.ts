@@ -47,6 +47,8 @@ export class JTree extends Component {
   private _selectedPath: TreePath | null;
   private _treeElement: HTMLElement | null;
   private _clickOffsetX: number;
+  private _lazyLoading: boolean;
+  private _loadedPaths: Set<string>;
 
   constructor(model?: TreeModel) {
     super();
@@ -62,6 +64,8 @@ export class JTree extends Component {
     this._selectedPath = null;
     this._treeElement = null;
     this._clickOffsetX = 0;
+    this._lazyLoading = false;
+    this._loadedPaths = new Set();
   }
 
   override createRootElement(): HTMLElement {
@@ -363,6 +367,41 @@ export class JTree extends Component {
     this._expandedPaths.clear();
     this.updateUI();
     return this;
+  }
+
+  /**
+   * Enables or disables lazy loading for large trees.
+   */
+  setLazyLoading(enabled: boolean): this {
+    this._lazyLoading = enabled;
+    return this;
+  }
+
+  /**
+   * Gets whether lazy loading is enabled.
+   */
+  isLazyLoading(): boolean {
+    return this._lazyLoading;
+  }
+
+  /**
+   * Marks a path as loaded.
+   */
+  private _markPathLoaded(node: any): void {
+    if (!this._lazyLoading) return;
+    
+    const key = node.getPath().map((n: any) => (this._model as DefaultTreeModel).getValue(n)).join('/');
+    this._loadedPaths.add(key);
+  }
+
+  /**
+   * Checks if a path is loaded.
+   */
+  private _isPathLoaded(node: any): boolean {
+    if (!this._lazyLoading) return true;
+    
+    const key = node.getPath().map((n: any) => (this._model as DefaultTreeModel).getValue(n)).join('/');
+    return this._loadedPaths.has(key);
   }
 
   override getPreferredSize(): IntDimension {

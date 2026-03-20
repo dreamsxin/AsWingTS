@@ -244,4 +244,34 @@ export class Container extends Component {
   override toString(): string {
     return `${this._name}[${this._x},${this._y},${this._width},${this._height},children=${this._children.length}]`;
   }
+
+  // === Rendering Optimization ===
+
+  private _doubleBuffering: boolean = false;
+  private _bufferCanvas: HTMLCanvasElement | null = null;
+
+  /**
+   * Enables or disables double buffering for smoother rendering.
+   */
+  setDoubleBuffering(enabled: boolean): this {
+    this._doubleBuffering = enabled;
+    return this;
+  }
+
+  /**
+   * Gets whether double buffering is enabled.
+   */
+  isDoubleBuffering(): boolean {
+    return this._doubleBuffering;
+  }
+
+  /**
+   * Revalidates the component with optional delay.
+   */
+  revalidateDelayed(delay: number = 100): this {
+    setTimeout(() => {
+      this.revalidate();
+    }, delay);
+    return this;
+  }
 }

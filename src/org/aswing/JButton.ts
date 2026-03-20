@@ -14,6 +14,7 @@ export class JButton extends JAbstractButton {
     const element = document.createElement('button');
     element.className = 'aswing-button';
     element.textContent = this._text;
+    element.style.whiteSpace = 'nowrap';
 
     element.addEventListener('click', (e) => this.handleClick(e));
     element.addEventListener('mousedown', (e) => {

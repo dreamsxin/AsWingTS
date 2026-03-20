@@ -10,6 +10,7 @@ export class JComboBox<T = any> extends Component {
   private _selectedIndex: number;
   private _editable: boolean;
   private _selectElement: HTMLSelectElement | null;
+  private _editorElement: HTMLInputElement | null;
 
   constructor(items: T[] = []) {
     super();
@@ -18,23 +19,51 @@ export class JComboBox<T = any> extends Component {
     this._selectedIndex = items.length > 0 ? 0 : -1;
     this._editable = false;
     this._selectElement = null;
+    this._editorElement = null;
   }
 
   override createRootElement(): HTMLElement {
     const wrapper = document.createElement('div');
     wrapper.className = 'aswing-combobox-wrapper';
     wrapper.style.position = 'absolute';
+    wrapper.style.display = 'flex';
+
+    if (this._editable) {
+      // Editor input
+      this._editorElement = document.createElement('input');
+      this._editorElement.type = 'text';
+      this._editorElement.className = 'aswing-combobox-editor';
+      this._editorElement.style.flex = '1';
+      this._editorElement.style.height = '32px';
+      this._editorElement.style.padding = '6px 12px';
+      this._editorElement.style.fontSize = '13px';
+      this._editorElement.style.border = '1px solid #ccc';
+      this._editorElement.style.borderRight = 'none';
+      this._editorElement.style.borderRadius = '3px 0 0 3px';
+      this._editorElement.value = this._items.length > 0 ? this.getItemText(this._items[this._selectedIndex]) : '';
+
+      this._editorElement.addEventListener('input', (e) => {
+        this.dispatchEvent(new AWEvent('itemStateChanged'));
+      });
+
+      this._editorElement.addEventListener('change', () => {
+        this.dispatchEvent(new AWEvent(AWEvent.ACT));
+      });
+
+      wrapper.appendChild(this._editorElement);
+    }
 
     this._selectElement = document.createElement('select');
     this._selectElement.className = 'aswing-combobox';
-    this._selectElement.style.width = '150px';
+    this._selectElement.style.width = this._editable ? 'auto' : '150px';
     this._selectElement.style.height = '32px';
     this._selectElement.style.padding = '6px 12px';
     this._selectElement.style.fontSize = '13px';
     this._selectElement.style.border = '1px solid #ccc';
-    this._selectElement.style.borderRadius = '3px';
+    this._selectElement.style.borderRadius = this._editable ? '0 3px 3px 0' : '3px';
     this._selectElement.style.background = '#fff';
     this._selectElement.style.cursor = 'pointer';
+    this._selectElement.style.flex = this._editable ? '0 0 auto' : '1';
 
     // Populate options
     this._items.forEach((item, index) => {
@@ -49,6 +78,9 @@ export class JComboBox<T = any> extends Component {
     this._selectElement.addEventListener('change', (e) => {
       const newIndex = parseInt((e.target as HTMLSelectElement).value);
       this._selectedIndex = newIndex;
+      if (this._editable && this._editorElement) {
+        this._editorElement.value = this.getItemText(this._items[newIndex]);
+      }
       this.dispatchEvent(new AWEvent('itemStateChanged'));
       this.dispatchEvent(new AWEvent(AWEvent.ACT));
     });
@@ -230,7 +262,6 @@ export class JComboBox<T = any> extends Component {
 
   /**
    * Sets whether the combo box is editable.
-   * Note: This is a visual setting only in this implementation.
    */
   setEditable(editable: boolean): this {
     this._editable = editable;
@@ -242,6 +273,26 @@ export class JComboBox<T = any> extends Component {
    */
   isEditable(): boolean {
     return this._editable;
+  }
+
+  /**
+   * Gets the editor text (for editable combo boxes).
+   */
+  getEditorText(): string {
+    if (this._editable && this._editorElement) {
+      return this._editorElement.value;
+    }
+    return this._selectedIndex >= 0 ? this.getItemText(this._items[this._selectedIndex]) : '';
+  }
+
+  /**
+   * Sets the editor text (for editable combo boxes).
+   */
+  setEditorText(text: string): this {
+    if (this._editable && this._editorElement) {
+      this._editorElement.value = text;
+    }
+    return this;
   }
 
   override getPreferredSize(): IntDimension {

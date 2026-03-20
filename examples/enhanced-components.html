@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AsWingTS - Enhanced Components Demo</title>
+  <link rel="stylesheet" href="../src/styles.css?v=2">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      padding: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      min-height: 100vh;
+    }
+    h1 { text-align: center; color: #fff; margin-bottom: 10px; }
+    .demo-info { text-align: center; color: rgba(255,255,255,0.9); margin-bottom: 20px; }
+    #app {
+      position: relative;
+      width: 100%;
+      max-width: 1400px;
+      height: calc(100vh - 140px);
+      min-height: 800px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+      margin: 0 auto;
+      overflow: auto;
+    }
+    .section-title {
+      font-size: 16px;
+      font-weight: bold;
+      color: #667eea;
+      margin: 10px 0;
+      padding: 8px;
+      background: #f5f5f5;
+      border-left: 3px solid #667eea;
+    }
+  </style>
+</head>
+<body>
+  <h1>🆕 Enhanced Components Demo</h1>
+  <p class="demo-info">JTextField Password, JTextArea Line Numbers, JComboBox Editable, JProgressBar Animation</p>
+  <div id="app"></div>
+
+  <script type="module">
+    import { 
+      AsWingManager, JFrame, JPanel, JLabel, JButton,
+      JTextField, JTextArea, JComboBox, JProgressBar,
+      BorderLayout, FlowLayout, AsWingConstants
+    } from '../dist/index.js?v=2';
+
+    const app = document.getElementById('app');
+    AsWingManager.initAsStandard(app);
+
+    // === Demo 1: JTextField Password Mode ===
+    const frame1 = new JFrame('Demo 1: Password Field');
+    app.appendChild(frame1.getElement());
+    frame1.setLocation(20, 20);
+    frame1.setSize(350, 250);
+
+    const panel1 = new JPanel();
+    panel1.setLayout(new FlowLayout());
+    panel1.setLocation(10, 10);
+    panel1.setSize(310, 200);
+
+    const userLabel = new JLabel('Username:')
+      .setSize(100, 28);
+    panel1.add(userLabel);
+
+    const userField = new JTextField('', 20)
+      .setSize(200, 28)
+      .setPlaceholder('Enter username');
+    panel1.add(userField);
+
+    const passLabel = new JLabel('Password:')
+      .setSize(100, 28);
+    panel1.add(passLabel);
+
+    const passField = new JTextField('', 20)
+      .setSize(200, 28)
+      .setPlaceholder('Enter password');
+    passField.setPasswordMode(true);
+    panel1.add(passField);
+
+    const emailLabel = new JLabel('Email:')
+      .setSize(100, 28);
+    panel1.add(emailLabel);
+
+    const emailField = new JTextField('', 20)
+      .setSize(200, 28)
+      .setPlaceholder('Enter email');
+    emailField.setValidator(text => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(text));
+    panel1.add(emailField);
+
+    const loginBtn = new JButton('Login')
+      .setSize(100, 30)
+      .applyTheme('primary');
+    loginBtn.addEventListener('act', () => {
+      console.log('Username:', userField.getText());
+      console.log('Password:', passField.getText());
+      console.log('Email valid:', emailField.isValid());
+      
+      if (!emailField.isValid()) {
+        alert('Invalid email format!');
+      } else {
+        alert(`Login:\nUser: ${userField.getText()}\nPass: ${'*'.repeat(passField.getText().length)}`);
+      }
+    });
+    panel1.add(loginBtn);
+
+    frame1.getContentPane().add(panel1);
+
+    // === Demo 2: JTextArea with Line Numbers ===
+    const frame2 = new JFrame('Demo 2: Code Editor');
+    app.appendChild(frame2.getElement());
+    frame2.setLocation(390, 20);
+    frame2.setSize(500, 400);
+
+    const panel2 = new JPanel();
+    panel2.setLayout(new BorderLayout());
+    panel2.setLocation(10, 10);
+    panel2.setSize(460, 350);
+
+    const title2 = new JLabel('JTextArea with Line Numbers')
+      .setSize(300, 25);
+    title2.getElement().style.fontWeight = 'bold';
+    title2.getElement().style.color = '#667eea';
+    panel2.add(title2, AsWingConstants.NORTH);
+
+    const codeArea = new JTextArea(`function hello() {
+  console.log('Hello, World!');
+  return true;
+}
+
+class Example {
+  constructor() {
+    this.value = 0;
+  }
+  
+  increment() {
+    this.value++;
+  }
+}`, 15, 40);
+    codeArea.setLineNumbersEnabled(true);
+    codeArea.setSize(440, 280);
+    panel2.add(codeArea, AsWingConstants.CENTER);
+
+    const btnPanel = new JPanel();
+    btnPanel.setLayout(new FlowLayout());
+    
+    const clearBtn = new JButton('Clear')
+      .setSize(80, 28);
+    clearBtn.addEventListener('act', () => codeArea.setText(''));
+    btnPanel.add(clearBtn);
+
+    const lineCountLabel = new JLabel('Lines: 0')
+      .setSize(100, 28);
+    btnPanel.add(lineCountLabel);
+
+    codeArea.addEventListener('textChanged', () => {
+      lineCountLabel.setText(`Lines: ${codeArea.getLineCount()}`);
+    });
+
+    panel2.add(btnPanel, AsWingConstants.SOUTH);
+
+    frame2.getContentPane().add(panel2);
+
+    // === Demo 3: JComboBox Editable ===
+    const frame3 = new JFrame('Demo 3: Editable ComboBox');
+    app.appendChild(frame3.getElement());
+    frame3.setLocation(20, 290);
+    frame3.setSize(350, 300);
+
+    const panel3 = new JPanel();
+    panel3.setLayout(new FlowLayout());
+    panel3.setLocation(10, 10);
+    panel3.setSize(310, 250);
+
+    const comboLabel = new JLabel('Select or Type:')
+      .setSize(150, 28);
+    panel3.add(comboLabel);
+
+    const items = ['Apple', 'Banana', 'Cherry', 'Date', 'Elderberry', 'Fig', 'Grape'];
+    const comboBox = new JComboBox(items);
+    comboBox.setEditable(true);
+    comboBox.setSize(200, 32);
+    panel3.add(comboBox);
+
+    const resultLabel = new JLabel('Result: -')
+      .setSize(200, 28);
+    panel3.add(resultLabel);
+
+    const selectBtn = new JButton('Select')
+      .setSize(100, 30);
+    selectBtn.addEventListener('act', () => {
+      const text = comboBox.getEditorText();
+      resultLabel.setText(`Result: ${text}`);
+      console.log('Selected:', text);
+    });
+    panel3.add(selectBtn);
+
+    const addBtn = new JButton('Add Item')
+      .setSize(100, 30);
+    addBtn.addEventListener('act', () => {
+      const text = comboBox.getEditorText();
+      if (text) {
+        comboBox.addItem(text);
+        console.log('Added:', text);
+        console.log('Total items:', comboBox.getItemCount());
+      }
+    });
+    panel3.add(addBtn);
+
+    const countLabel = new JLabel(`Items: ${items.length}`)
+      .setSize(150, 28);
+    panel3.add(countLabel);
+
+    comboBox.addEventListener('act', () => {
+      countLabel.setText(`Items: ${comboBox.getItemCount()}`);
+    });
+
+    frame3.getContentPane().add(panel3);
+
+    // === Demo 4: JProgressBar Animation ===
+    const frame4 = new JFrame('Demo 4: Progress Animation');
+    app.appendChild(frame4.getElement());
+    frame4.setLocation(390, 440);
+    frame4.setSize(500, 250);
+
+    const panel4 = new JPanel();
+    panel4.setLayout(new FlowLayout());
+    panel4.setLocation(10, 10);
+    panel4.setSize(460, 200);
+
+    const progressLabel = new JLabel('Progress: 0%')
+      .setSize(200, 28);
+    panel4.add(progressLabel);
+
+    const progressBar = new JProgressBar(JProgressBar.HORIZONTAL, 0, 100, 0);
+    progressBar.setSize(350, 30);
+    progressBar.setStringPainted(true);
+    progressBar.setAnimationEnabled(true);
+    panel4.add(progressBar);
+
+    let progress = 0;
+    let interval = null;
+
+    const startBtn = new JButton('Start Progress')
+      .setSize(120, 30)
+      .applyTheme('primary');
+    startBtn.addEventListener('act', () => {
+      if (interval) {
+        clearInterval(interval);
+        interval = null;
+        startBtn.setText('Start Progress');
+      } else {
+        progress = 0;
+        interval = setInterval(() => {
+          progress += 1;
+          if (progress > 100) {
+            progress = 0;
+          }
+          progressBar.setValue(progress);
+          progressLabel.setText(`Progress: ${progress}%`);
+        }, 50);
+        startBtn.setText('Stop Progress');
+      }
+    });
+    panel4.add(startBtn);
+
+    const indeterminateBtn = new JButton('Indeterminate')
+      .setSize(130, 30);
+    indeterminateBtn.addEventListener('act', () => {
+      const isIndeterminate = progressBar.isIndeterminate();
+      progressBar.setIndeterminate(!isIndeterminate);
+      indeterminateBtn.setText(isIndeterminate ? 'Indeterminate' : 'Stop Animation');
+      
+      if (!isIndeterminate) {
+        if (interval) {
+          clearInterval(interval);
+          interval = null;
+          startBtn.setText('Start Progress');
+        }
+      }
+    });
+    panel4.add(indeterminateBtn);
+
+    frame4.getContentPane().add(panel4);
+
+    console.log('✅ Enhanced components demo loaded!');
+    console.log('Password field:', passField.isEchoChar ? 'enabled' : 'disabled');
+    console.log('Line numbers:', codeArea.isLineNumbersEnabled());
+    console.log('ComboBox editable:', comboBox.isEditable());
+    console.log('Progress animation:', progressBar.isAnimationEnabled());
+  </script>
+</body>
+</html>

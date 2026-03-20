@@ -10,6 +10,9 @@ export class JProgressBar extends Component {
   private _value: number;
   private _stringPainted: boolean;
   private _orientation: string;
+  private _indeterminate: boolean;
+  private _animationEnabled: boolean;
+  private _animationFrame: number | null;
   private _barElement: HTMLElement | null;
   private _fillElement: HTMLElement | null;
   private _labelElement: HTMLElement | null;
@@ -22,6 +25,9 @@ export class JProgressBar extends Component {
     this._maximum = maximum;
     this._value = value;
     this._stringPainted = false;
+    this._indeterminate = false;
+    this._animationEnabled = true;
+    this._animationFrame = null;
     this._barElement = null;
     this._fillElement = null;
     this._labelElement = null;
@@ -204,6 +210,54 @@ export class JProgressBar extends Component {
       }
     }
     return this;
+  }
+
+  /**
+   * Sets whether the progress bar is indeterminate.
+   */
+  setIndeterminate(indeterminate: boolean): this {
+    (this as any)._indeterminate = indeterminate;
+    if (indeterminate) {
+      this._startAnimation();
+    } else {
+      this._stopAnimation();
+    }
+    return this;
+  }
+
+  /**
+   * Gets whether the progress bar is indeterminate.
+   */
+  isIndeterminate(): boolean {
+    return (this as any)._indeterminate || false;
+  }
+
+  /**
+   * Sets whether animation is enabled.
+   */
+  setAnimationEnabled(enabled: boolean): this {
+    (this as any)._animationEnabled = enabled;
+    return this;
+  }
+
+  /**
+   * Starts the indeterminate animation.
+   */
+  private _startAnimation(): void {
+    const fillEl = (this as any)._fillElement as HTMLElement | null;
+    if (!fillEl) return;
+    
+    fillEl.classList.add('indeterminate');
+  }
+
+  /**
+   * Stops the indeterminate animation.
+   */
+  private _stopAnimation(): void {
+    const fillEl = (this as any)._fillElement as HTMLElement | null;
+    if (fillEl) {
+      fillEl.classList.remove('indeterminate');
+    }
   }
 
   override toString(): string {

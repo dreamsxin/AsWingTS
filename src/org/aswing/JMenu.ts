@@ -160,6 +160,8 @@ export class JMenu extends JButton {
         itemEl.style.background = 'transparent';
         itemEl.style.textAlign = 'left';
         itemEl.style.borderRadius = '0';
+        itemEl.style.whiteSpace = 'nowrap';
+        itemEl.style.overflow = 'hidden';
         this._popupElement!.appendChild(itemEl);
       }
     });

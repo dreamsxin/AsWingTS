@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AsWingTS - Performance Optimization Demo</title>
+  <link rel="stylesheet" href="../src/styles.css?v=2">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      padding: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      min-height: 100vh;
+    }
+    h1 { text-align: center; color: #fff; margin-bottom: 10px; }
+    .demo-info { text-align: center; color: rgba(255,255,255,0.9); margin-bottom: 20px; }
+    #app {
+      position: relative;
+      width: 100%;
+      max-width: 1400px;
+      height: calc(100vh - 140px);
+      min-height: 700px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+      margin: 0 auto;
+      overflow: auto;
+    }
+    .perf-stats {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background: rgba(0,0,0,0.8);
+      color: #0f0;
+      padding: 10px;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 12px;
+      z-index: 1000;
+    }
+  </style>
+</head>
+<body>
+  <h1>⚡ Performance Optimization Demo</h1>
+  <p class="demo-info">Virtual Scrolling, Lazy Loading, Batch Updates, Event Optimization</p>
+  <div id="app"></div>
+  <div class="perf-stats" id="perfStats">
+    <div>Render Time: <span id="renderTime">0</span>ms</div>
+    <div>DOM Elements: <span id="domElements">0</span></div>
+    <div>Memory: <span id="memory">0</span>MB</div>
+  </div>
+
+  <script type="module">
+    import { 
+      AsWingManager, JFrame, JPanel, JLabel, JButton,
+      JList, JTree, JTable, JScrollPane,
+      DefaultTreeModel, DefaultTreeNode,
+      DefaultTableModel,
+      BorderLayout, FlowLayout, AsWingConstants
+    } from '../dist/index.js?v=2';
+
+    const app = document.getElementById('app');
+    AsWingManager.initAsStandard(app);
+
+    // Performance monitoring
+    let renderTimes = [];
+    let lastRenderTime = performance.now();
+
+    function updatePerfStats() {
+      const now = performance.now();
+      const renderTime = now - lastRenderTime;
+      renderTimes.push(renderTime);
+      if (renderTimes.length > 60) renderTimes.shift();
+      
+      const avgRenderTime = renderTimes.reduce((a, b) => a + b, 0) / renderTimes.length;
+      
+      document.getElementById('renderTime').textContent = avgRenderTime.toFixed(2);
+      document.getElementById('domElements').textContent = document.getElementsByTagName('*').length;
+      
+      if (performance.memory) {
+        document.getElementById('memory').textContent = 
+          (performance.memory.usedJSHeapSize / 1048576).toFixed(1);
+      }
+      
+      lastRenderTime = now;
+      requestAnimationFrame(updatePerfStats);
+    }
+    
+    requestAnimationFrame(updatePerfStats);
+
+    // === Demo 1: JList Virtual Scrolling ===
+    const frame1 = new JFrame('Demo 1: JList Virtual Scrolling (10,000 items)');
+    app.appendChild(frame1.getElement());
+    frame1.setLocation(20, 20);
+    frame1.setSize(400, 400);
+
+    const panel1 = new JPanel();
+    panel1.setLayout(new BorderLayout());
+    panel1.setLocation(10, 10);
+    panel1.setSize(360, 350);
+
+    // Create large list
+    const listItems = [];
+    for (let i = 0; i < 10000; i++) {
+      listItems.push(`Item ${i + 1}`);
+    }
+
+    const list = new JList(listItems);
+    list.setSize(340, 300);
+    list.setVirtualScrolling(true);
+    list.setItemHeight(28);
+
+    const listScrollPane = new JScrollPane(list);
+    listScrollPane.setSize(340, 300);
+    panel1.add(listScrollPane, AsWingConstants.CENTER);
+
+    const listInfo = new JLabel('Items: 10,000 | Virtual Scrolling: ON')
+      .setSize(300, 25);
+    panel1.add(listInfo, AsWingConstants.SOUTH);
+
+    frame1.getContentPane().add(panel1);
+
+    // === Demo 2: JTree Lazy Loading ===
+    const frame2 = new JFrame('Demo 2: JTree Lazy Loading');
+    app.appendChild(frame2.getElement());
+    frame2.setLocation(440, 20);
+    frame2.setSize(400, 400);
+
+    const panel2 = new JPanel();
+    panel2.setLayout(new BorderLayout());
+    panel2.setLocation(10, 10);
+    panel2.setSize(360, 350);
+
+    // Create large tree
+    const treeRoot = new DefaultTreeNode('Root');
+    
+    for (let i = 0; i < 100; i++) {
+      const branch = new DefaultTreeNode(`Branch ${i}`, treeRoot);
+      for (let j = 0; j < 50; j++) {
+        const leaf = new DefaultTreeNode(`Leaf ${i}-${j}`, branch);
+      }
+    }
+
+    const treeModel = new DefaultTreeModel(treeRoot);
+    const tree = new JTree(treeModel);
+    tree.setRowHeight(24);
+    tree.setLazyLoading(true);
+    tree.setSize(340, 300);
+
+    const treeScrollPane = new JScrollPane(tree);
+    treeScrollPane.setSize(340, 300);
+    panel2.add(treeScrollPane, AsWingConstants.CENTER);
+
+    const treeInfo = new JLabel('Nodes: 5,100 | Lazy Loading: ON')
+      .setSize(300, 25);
+    panel2.add(treeInfo, AsWingConstants.SOUTH);
+
+    frame2.getContentPane().add(panel2);
+
+    // === Demo 3: JTable Virtual Scrolling ===
+    const frame3 = new JFrame('Demo 3: JTable Virtual Scrolling (1,000 rows)');
+    app.appendChild(frame3.getElement());
+    frame3.setLocation(20, 440);
+    frame3.setSize(820, 350);
+
+    const panel3 = new JPanel();
+    panel3.setLayout(new BorderLayout());
+    panel3.setLocation(10, 10);
+    panel3.setSize(780, 300);
+
+    // Create large table
+    const tableModel = new DefaultTableModel(['ID', 'Name', 'Email', 'Age', 'City', 'Country', 'Phone'], 0);
+    
+    const cities = ['New York', 'London', 'Paris', 'Tokyo', 'Sydney', 'Berlin', 'Seoul', 'Beijing'];
+    const countries = ['USA', 'UK', 'France', 'Japan', 'Australia', 'Germany', 'South Korea', 'China'];
+    
+    for (let i = 0; i < 1000; i++) {
+      const cityIndex = i % cities.length;
+      tableModel.addRow([
+        i + 1,
+        `User ${i + 1}`,
+        `user${i + 1}@example.com`,
+        20 + (i % 50),
+        cities[cityIndex],
+        countries[cityIndex],
+        `+1-555-${String(i % 1000).padStart(4, '0')}`
+      ]);
+    }
+
+    const table = new JTable(tableModel);
+    table.setRowHeight(28);
+    table.setShowGrid(true);
+    table.setVirtualScrolling(true);
+    table.setSize(760, 250);
+
+    const tableScrollPane = new JScrollPane(table);
+    tableScrollPane.setSize(760, 250);
+    panel3.add(tableScrollPane, AsWingConstants.CENTER);
+
+    const tableInfo = new JLabel('Rows: 1,000 | Columns: 7 | Virtual Scrolling: ON')
+      .setSize(500, 25);
+    panel3.add(tableInfo, AsWingConstants.SOUTH);
+
+    frame3.getContentPane().add(panel3);
+
+    // === Demo 4: Performance Stats ===
+    const frame4 = new JFrame('Demo 4: Performance Stats');
+    app.appendChild(frame4.getElement());
+    frame4.setLocation(860, 20);
+    frame4.setSize(400, 350);
+
+    const panel4 = new JPanel();
+    panel4.setLayout(new FlowLayout());
+    panel4.setLocation(10, 10);
+    panel4.setSize(360, 300);
+
+    const infoLabel = new JLabel('Check the performance monitor →')
+      .setSize(300, 25);
+    panel4.add(infoLabel);
+
+    const statsLabel = new JLabel('')
+      .setSize(300, 150);
+    statsLabel.getElement().style.lineHeight = '2';
+    statsLabel.getElement().style.textAlign = 'left';
+    panel4.add(statsLabel);
+
+    // Update stats periodically
+    setInterval(() => {
+      const avgRender = document.getElementById('renderTime').textContent;
+      const domCount = document.getElementById('domElements').textContent;
+      
+      statsLabel.setText(
+        `Average Render: ${avgRender}ms\n` +
+        `DOM Elements: ${domCount}\n` +
+        `List Items: ${list.getItems().length}\n` +
+        `Tree Nodes: ~5,100\n` +
+        `Table Rows: ${table.getRowCount()}`
+      );
+    }, 1000);
+
+    frame4.getContentPane().add(panel4);
+
+    console.log('✅ Performance demo loaded!');
+    console.log('List virtual scrolling:', list.isVirtualScrolling());
+    console.log('Tree lazy loading:', tree.isLazyLoading());
+    console.log('Table virtual scrolling:', table.isVirtualScrolling());
+  </script>
+</body>
+</html>

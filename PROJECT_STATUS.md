@@ -50,13 +50,13 @@ AsWingTS is a TypeScript reimplementation of the AsWing Flash/ActionScript UI fr
 - [x] `JLabel` - Text label
 - [x] `JPanel` - Generic container panel
 - [x] `JFrame` - Top-level window with title bar
-- [x] `JTextField` - Single-line text input
-- [x] `JTextArea` - Multi-line text area
+- [x] `JTextField` - Single-line text input (password mode, validation)
+- [x] `JTextArea` - Multi-line text area (line numbers)
 - [x] `JCheckBox` - Checkbox with label
-- [x] `JProgressBar` - Progress indicator (horizontal/vertical)
+- [x] `JProgressBar` - Progress indicator (animation, indeterminate)
 - [x] `JToggleButton` - Toggle button
 - [x] `JRadioButton` - Radio button with ButtonGroup
-- [x] `JComboBox` - Dropdown selection box
+- [x] `JComboBox` - Dropdown selection box (editable mode)
 - [x] `JList` - Scrollable list with selection
 - [x] `JScrollPane` - Scrollable container
 - [x] `JSlider` - Slider control (horizontal/vertical)
@@ -69,6 +69,19 @@ AsWingTS is a TypeScript reimplementation of the AsWing Flash/ActionScript UI fr
 - [x] `JMenuItem` - Menu item
 - [x] `JTable` - Data table with model
 - [x] `JTree` - Hierarchical tree with model
+
+**Component Enhancements:**
+- [x] `JTextField` - Password mode, input validation
+- [x] `JTextArea` - Line numbers support
+- [x] `JComboBox` - Editable mode
+- [x] `JProgressBar` - Indeterminate animation
+
+**Performance Optimizations:**
+- [x] `JList` - Virtual scrolling for large lists (10,000+ items)
+- [x] `JTree` - Lazy loading for large trees
+- [x] `JTable` - Virtual scrolling for large tables (1,000+ rows)
+- [x] `Component` - Batch updates, event optimization
+- [x] `Container` - Double buffering, debounced revalidation
 
 **Data Models:**
 - [x] `TableModel` / `DefaultTableModel` - Table data model

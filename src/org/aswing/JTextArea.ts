@@ -12,7 +12,9 @@ export class JTextArea extends Component {
   private _rows: number;
   private _columns: number;
   private _wrap: boolean;
+  private _lineNumbers: boolean;
   private _textareaElement: HTMLTextAreaElement | null;
+  private _lineNumberElement: HTMLElement | null;
 
   constructor(text: string = '', rows: number = 5, columns: number = 30) {
     super();
@@ -23,13 +25,36 @@ export class JTextArea extends Component {
     this._rows = rows;
     this._columns = columns;
     this._wrap = true;
+    this._lineNumbers = false;
     this._textareaElement = null;
+    this._lineNumberElement = null;
   }
 
   override createRootElement(): HTMLElement {
     const wrapper = document.createElement('div');
     wrapper.className = 'aswing-textarea-wrapper';
     wrapper.style.position = 'absolute';
+    wrapper.style.display = 'flex';
+
+    // Line numbers
+    if (this._lineNumbers) {
+      this._lineNumberElement = document.createElement('pre');
+      this._lineNumberElement.className = 'aswing-textarea-linenumbers';
+      this._lineNumberElement.style.background = '#f5f5f5';
+      this._lineNumberElement.style.borderRight = '1px solid #ddd';
+      this._lineNumberElement.style.padding = '8px 4px';
+      this._lineNumberElement.style.margin = '0';
+      this._lineNumberElement.style.fontFamily = 'monospace';
+      this._lineNumberElement.style.fontSize = '13px';
+      this._lineNumberElement.style.lineHeight = '1.5';
+      this._lineNumberElement.style.color = '#999';
+      this._lineNumberElement.style.textAlign = 'right';
+      this._lineNumberElement.style.userSelect = 'none';
+      this._lineNumberElement.style.whiteSpace = 'pre';
+      this._lineNumberElement.style.overflow = 'hidden';
+      this._updateLineNumbers();
+      wrapper.appendChild(this._lineNumberElement);
+    }
 
     this._textareaElement = document.createElement('textarea');
     this._textareaElement.className = 'aswing-textarea';
@@ -49,11 +74,14 @@ export class JTextArea extends Component {
     this._textareaElement.style.fontSize = '13px';
     this._textareaElement.style.padding = '8px';
     this._textareaElement.style.boxSizing = 'border-box';
+    this._textareaElement.style.flex = '1';
+    this._textareaElement.style.lineHeight = '1.5';
 
     // Event listeners
     this._textareaElement.addEventListener('input', (e) => {
       this._text = (e.target as HTMLTextAreaElement).value;
       this.dispatchEvent(new AWEvent('textChanged'));
+      this._updateLineNumbers();
     });
 
     this._textareaElement.addEventListener('focus', () => {
@@ -62,6 +90,12 @@ export class JTextArea extends Component {
 
     this._textareaElement.addEventListener('blur', () => {
       this.dispatchEvent(new AWEvent(AWEvent.FOCUS_LOST));
+    });
+
+    this._textareaElement.addEventListener('scroll', () => {
+      if (this._lineNumberElement) {
+        this._lineNumberElement.style.transform = `translateY(-${this._textareaElement!.scrollTop}px)`;
+      }
     });
 
     wrapper.appendChild(this._textareaElement);
@@ -175,6 +209,35 @@ export class JTextArea extends Component {
    */
   getColumns(): number {
     return this._columns;
+  }
+
+  /**
+   * Sets whether to show line numbers.
+   */
+  setLineNumbersEnabled(enabled: boolean): this {
+    this._lineNumbers = enabled;
+    return this;
+  }
+
+  /**
+   * Gets whether line numbers are enabled.
+   */
+  isLineNumbersEnabled(): boolean {
+    return this._lineNumbers;
+  }
+
+  /**
+   * Updates line numbers display.
+   */
+  private _updateLineNumbers(): void {
+    if (!this._lineNumberElement) return;
+    
+    const lineCount = this.getLineCount();
+    let lineNumbers = '';
+    for (let i = 1; i <= lineCount; i++) {
+      lineNumbers += i + '\n';
+    }
+    this._lineNumberElement.textContent = lineNumbers;
   }
 
   /**

@@ -11,6 +11,8 @@ export class JTextField extends Component {
   private _editable: boolean;
   private _columns: number;
   private _inputElement: HTMLInputElement | null;
+  private _echoChar: string | null;
+  private _validator: ((text: string) => boolean) | null;
 
   constructor(text: string = '', columns: number = 20) {
     super();
@@ -20,6 +22,8 @@ export class JTextField extends Component {
     this._editable = true;
     this._columns = columns;
     this._inputElement = null;
+    this._echoChar = null;
+    this._validator = null;
   }
 
   override createRootElement(): HTMLElement {
@@ -199,6 +203,41 @@ export class JTextField extends Component {
       this._inputElement.style.height = `${height - 4}px`;
     }
     return this;
+  }
+
+  /**
+   * Sets the echo character for password mode.
+   */
+  setEchoChar(echoChar: string | null): this {
+    (this as any)._echoChar = echoChar;
+    if (this._inputElement) {
+      this._inputElement.type = echoChar ? 'password' : 'text';
+    }
+    return this;
+  }
+
+  /**
+   * Enables password mode.
+   */
+  setPasswordMode(enabled: boolean = true): this {
+    return this.setEchoChar(enabled ? '•' : null);
+  }
+
+  /**
+   * Sets a validator function.
+   */
+  setValidator(validator: ((text: string) => boolean) | null): this {
+    (this as any)._validator = validator;
+    return this;
+  }
+
+  /**
+   * Gets whether the current text is valid.
+   */
+  isValid(): boolean {
+    const validator = (this as any)._validator;
+    if (!validator) return true;
+    return validator(this._text);
   }
 
   override toString(): string {

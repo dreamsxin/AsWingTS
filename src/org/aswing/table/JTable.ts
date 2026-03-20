@@ -34,6 +34,9 @@ export class JTable extends Component {
   private _bodyElement: HTMLElement | null;
   private _selectedRow: number;
   private _selectedColumn: number;
+  private _virtualScrolling: boolean;
+  private _visibleStartRow: number;
+  private _visibleEndRow: number;
 
   constructor(model?: TableModel) {
     super();
@@ -50,6 +53,9 @@ export class JTable extends Component {
     this._bodyElement = null;
     this._selectedRow = -1;
     this._selectedColumn = -1;
+    this._virtualScrolling = false;
+    this._visibleStartRow = 0;
+    this._visibleEndRow = 0;
     
     this.initColumnModel();
   }
@@ -138,8 +144,9 @@ export class JTable extends Component {
       rowElement.style.height = `${this._rowHeight}px`;
       rowElement.style.borderBottom = this._showGrid ? `1px solid ${this._gridColor}` : 'none';
       
-      // Selection
-      if (row === this._selectedRow) {
+      // Row selection styling
+      const isRowSelected = row === this._selectedRow;
+      if (isRowSelected) {
         rowElement.style.background = '#e6f2ff';
       }
 
@@ -153,15 +160,25 @@ export class JTable extends Component {
         cellElement.style.overflow = 'hidden';
         cellElement.style.textOverflow = 'ellipsis';
         cellElement.style.whiteSpace = 'nowrap';
+        cellElement.style.cursor = 'pointer';
         
         const value = this._model.getValueAt(row, col);
         cellElement.textContent = String(value != null ? value : '');
         
-        // Selection
-        if (row === this._selectedRow && col === this._selectedColumn) {
+        // Cell selection styling (overrides row selection)
+        const isCellSelected = (row === this._selectedRow && col === this._selectedColumn);
+        if (isCellSelected) {
           cellElement.style.background = '#007bff';
           cellElement.style.color = '#fff';
         }
+
+        // Click handler for selection
+        cellElement.addEventListener('click', (e) => {
+          e.stopPropagation();
+          this._selectedRow = row;
+          this._selectedColumn = col;
+          this.updateUI();
+        });
 
         rowElement.appendChild(cellElement);
       }
@@ -282,5 +299,77 @@ export class JTable extends Component {
 
   override toString(): string {
     return `JTable[rows=${this.getRowCount()},columns=${this.getColumnCount()}]`;
+  }
+
+  /**
+   * Enables or disables virtual scrolling for large tables.
+   */
+  setVirtualScrolling(enabled: boolean): this {
+    this._virtualScrolling = enabled;
+    if (enabled && this.getRowCount() > 100) {
+      this._renderVisibleRows();
+    } else {
+      this.updateUI();
+    }
+    return this;
+  }
+
+  /**
+   * Gets whether virtual scrolling is enabled.
+   */
+  isVirtualScrolling(): boolean {
+    return this._virtualScrolling;
+  }
+
+  /**
+   * Renders only visible rows for virtual scrolling.
+   */
+  private _renderVisibleRows(): void {
+    if (!this._bodyElement) return;
+
+    const rowCount = this.getRowCount();
+    const columnCount = this.getColumnCount();
+    
+    // Calculate visible range
+    this._visibleStartRow = 0;
+    this._visibleEndRow = Math.min(rowCount, 50); // Render first 50 rows
+
+    this._bodyElement.innerHTML = '';
+    
+    for (let row = this._visibleStartRow; row < this._visibleEndRow; row++) {
+      const rowElement = document.createElement('div');
+      rowElement.className = 'aswing-table-row';
+      rowElement.style.display = 'flex';
+      rowElement.style.height = `${this._rowHeight}px`;
+      rowElement.style.borderBottom = this._showGrid ? `1px solid ${this._gridColor}` : 'none';
+      
+      if (row === this._selectedRow) {
+        rowElement.style.background = '#e6f2ff';
+      }
+
+      for (let col = 0; col < columnCount; col++) {
+        const cellElement = document.createElement('div');
+        cellElement.className = 'aswing-table-cell';
+        cellElement.style.flex = '0 0 auto';
+        cellElement.style.width = `${this._columnModel[col].width || 100}px`;
+        cellElement.style.padding = '4px 8px';
+        cellElement.style.borderRight = this._showGrid ? `1px solid ${this._gridColor}` : 'none';
+        cellElement.style.overflow = 'hidden';
+        cellElement.style.textOverflow = 'ellipsis';
+        cellElement.style.whiteSpace = 'nowrap';
+        
+        const value = this._model.getValueAt(row, col);
+        cellElement.textContent = String(value != null ? value : '');
+        
+        if (row === this._selectedRow && col === this._selectedColumn) {
+          cellElement.style.background = '#007bff';
+          cellElement.style.color = '#fff';
+        }
+
+        rowElement.appendChild(cellElement);
+      }
+
+      this._bodyElement.appendChild(rowElement);
+    }
   }
 }

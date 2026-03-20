@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AsWingTS - Menu & Toolbar Demo</title>
+  <link rel="stylesheet" href="../src/styles.css?v=2">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      padding: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      min-height: 100vh;
+    }
+    h1 { text-align: center; color: #fff; margin-bottom: 10px; }
+    .demo-info { text-align: center; color: rgba(255,255,255,0.9); margin-bottom: 20px; }
+    #app {
+      position: relative;
+      width: 100%;
+      max-width: 1200px;
+      height: calc(100vh - 140px);
+      min-height: 600px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+      margin: 0 auto;
+      overflow: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>📋 Menu & Toolbar Demo</h1>
+  <p class="demo-info">JMenuBar, JMenu, JMenuItem, JToolBar, JSeparator</p>
+  <div id="app"></div>
+
+  <script type="module">
+    import { 
+      AsWingManager, JFrame, JPanel, JLabel, JButton,
+      BorderLayout, AsWingConstants,
+      JMenuBar, JMenu, JMenuItem, JToolBar, JSeparator
+    } from '../dist/index.js?v=2';
+
+    const app = document.getElementById('app');
+    AsWingManager.initAsStandard(app);
+
+    // === Demo 1: Menu Bar ===
+    const frame1 = new JFrame('Demo 1: Menu Bar');
+    app.appendChild(frame1.getElement());
+    frame1.setLocation(20, 20);
+    frame1.setSize(550, 300);
+    frame1.setClosable(true);
+
+    const panel1 = new JPanel();
+    panel1.setLayout(new BorderLayout());
+    panel1.setLocation(10, 10);
+    panel1.setSize(510, 250);
+
+    // Create menu bar
+    const menuBar = new JMenuBar();
+    menuBar.setSize(510, 28);
+    const menuBarEl = menuBar.getElement();
+    if (menuBarEl) {
+      menuBarEl.style.position = 'absolute';
+      menuBarEl.style.left = '0';
+      menuBarEl.style.top = '0';
+    }
+
+    // File menu
+    const fileMenu = new JMenu('📁 File');
+    fileMenu.add(new JMenuItem('✨ New'));
+    fileMenu.add(new JMenuItem('📂 Open'));
+    fileMenu.add(new JMenuItem('💾 Save'));
+    fileMenu.addSeparator();
+    fileMenu.add(new JMenuItem('🚪 Exit'));
+    menuBar.add(fileMenu);
+
+    // Edit menu
+    const editMenu = new JMenu('✏️ Edit');
+    editMenu.add(new JMenuItem('✂️ Cut'));
+    editMenu.add(new JMenuItem('📋 Copy'));
+    editMenu.add(new JMenuItem('📌 Paste'));
+    menuBar.add(editMenu);
+
+    // Help menu
+    const helpMenu = new JMenu('❓ Help');
+    helpMenu.add(new JMenuItem('ℹ️ About'));
+    menuBar.add(helpMenu);
+
+    // Menu events
+    fileMenu.add(new JMenuItem('🚪 Exit')).addEventListener('act', () => {
+      alert('Exit clicked!');
+    });
+
+    panel1.add(menuBar);
+
+    const label1 = new JLabel('Click menu items')
+      .setSize(200, 30)
+      .setTextAlign('center');
+    label1.setLocation(150, 100);
+    panel1.add(label1);
+
+    frame1.getContentPane().add(panel1);
+
+    // === Demo 2: Toolbar ===
+    const frame2 = new JFrame('Demo 2: Toolbar');
+    app.appendChild(frame2.getElement());
+    frame2.setLocation(20, 340);
+    frame2.setSize(550, 250);
+    frame2.setClosable(true);
+
+    const panel2 = new JPanel();
+    panel2.setLayout(new BorderLayout());
+    panel2.setLocation(10, 10);
+    panel2.setSize(510, 200);
+
+    // Create toolbar
+    const toolBar = new JToolBar(JToolBar.HORIZONTAL);
+    toolBar.setSize(510, 32);
+    const toolBarEl = toolBar.getElement();
+    if (toolBarEl) {
+      toolBarEl.style.position = 'absolute';
+      toolBarEl.style.left = '0';
+      toolBarEl.style.top = '0';
+      toolBarEl.style.background = '#f5f5f5';
+    }
+
+    // Add buttons
+    const btn1 = new JButton('✨ New');
+    btn1.setSize(70, 28);
+    toolBar.add(btn1);
+
+    const btn2 = new JButton('📂 Open');
+    btn2.setSize(70, 28);
+    toolBar.add(btn2);
+
+    toolBar.addSeparator();
+
+    const btn3 = new JButton('✂️');
+    btn3.setSize(40, 28);
+    toolBar.add(btn3);
+
+    const btn4 = new JButton('📋');
+    btn4.setSize(40, 28);
+    toolBar.add(btn4);
+
+    panel2.add(toolBar);
+
+    const label2 = new JLabel('Click toolbar buttons')
+      .setSize(200, 30)
+      .setTextAlign('center');
+    label2.setLocation(150, 80);
+    panel2.add(label2);
+
+    frame2.getContentPane().add(panel2);
+
+    console.log('✅ Menu & Toolbar demo loaded!');
+    console.log('Menus:', menuBar.getMenuCount());
+    console.log('Toolbar items:', toolBar.getComponentCount());
+  </script>
+</body>
+</html>

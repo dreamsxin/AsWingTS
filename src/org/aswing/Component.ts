@@ -697,6 +697,58 @@ export class Component extends EventTarget {
   onMouseLeave(): void {
     // To be overridden
   }
+
+  // === Performance Optimization ===
+
+  private _batchUpdates: boolean = false;
+  private _pendingUpdates: Array<() => void> = [];
+  private _updateScheduled: boolean = false;
+
+  /**
+   * Enables or disables batch updates for performance.
+   */
+  setBatchUpdates(enabled: boolean): this {
+    this._batchUpdates = enabled;
+    if (!enabled && this._pendingUpdates.length > 0) {
+      this.flushUpdates();
+    }
+    return this;
+  }
+
+  /**
+   * Gets whether batch updates are enabled.
+   */
+  isBatchUpdates(): boolean {
+    return this._batchUpdates;
+  }
+
+  /**
+   * Queues an update for batch processing.
+   */
+  queueUpdate(update: () => void): this {
+    if (this._batchUpdates) {
+      this._pendingUpdates.push(update);
+      if (!this._updateScheduled) {
+        this._updateScheduled = true;
+        requestAnimationFrame(() => this.flushUpdates());
+      }
+    } else {
+      update();
+    }
+    return this;
+  }
+
+  /**
+   * Flushes all pending updates.
+   */
+  flushUpdates(): this {
+    while (this._pendingUpdates.length > 0) {
+      const update = this._pendingUpdates.shift();
+      if (update) update();
+    }
+    this._updateScheduled = false;
+    return this;
+  }
 }
 
 // Initialize parent reference

@@ -168,6 +168,14 @@ export class JFrame extends Container {
       this._setupDragging(element);
     }
 
+    // Bring to front on click
+    const bringToFront = () => {
+      element.style.zIndex = '1000';
+    };
+    
+    element.addEventListener('mousedown', bringToFront);
+    element.addEventListener('focus', bringToFront);
+
     // Attach content pane element
     if (this._contentPane) {
       const contentElement = this._contentPane.getElement()!;
@@ -399,9 +407,6 @@ export class JFrame extends Container {
     });
 
     document.addEventListener('mouseup', () => {
-      if (this._isDragging && this._element) {
-        this._element.style.zIndex = '';
-      }
       this._isDragging = false;
     });
   }
